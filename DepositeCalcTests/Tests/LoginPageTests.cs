@@ -30,7 +30,29 @@ namespace DepositeCalcTests.Tests
             Thread.Sleep(500);
 
             // Assert
-            Assert.AreEqual("User not found!", errMessage.Text);
+            Assert.AreEqual("Incorrect password!", errMessage.Text);
+            driver.Quit();
+        }
+
+        [Test]
+        public void LoginWithoutUserNameTest()
+        {
+            // Arrange
+            ChromeOptions options = new ChromeOptions { AcceptInsecureCertificates = true };
+            IWebDriver driver = new ChromeDriver(options);
+
+            driver.Url = "https://localhost:5001/";
+            IWebElement passworldFld = driver.FindElement(By.Id("password"));
+            IWebElement loginBtn = driver.FindElement(By.XPath("//button[@id='login']"));
+            IWebElement errMessage = driver.FindElement(By.Id("errorMessage"));
+
+            // Act
+            passworldFld.SendKeys("newyork1");
+            loginBtn.Click();
+            Thread.Sleep(500);
+
+            // Assert
+            Assert.AreEqual("Incorrect user name!", errMessage.Text);
             driver.Quit();
         }
     }
