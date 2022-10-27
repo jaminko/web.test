@@ -55,5 +55,25 @@ namespace DepositeCalcTests.Tests
             Assert.AreEqual("Incorrect user name!", errMessage.Text);
             driver.Quit();
         }
+
+        [Test]
+        public void LoginWithEmptyFieldsTest()
+        {
+            // Arrange
+            ChromeOptions options = new ChromeOptions { AcceptInsecureCertificates = true };
+            IWebDriver driver = new ChromeDriver(options);
+
+            driver.Url = "https://localhost:5001/";
+            IWebElement loginBtn = driver.FindElement(By.XPath("//button[@id='login']"));
+            IWebElement errMessage = driver.FindElement(By.Id("errorMessage"));
+
+            // Act
+            loginBtn.Click();
+            Thread.Sleep(500);
+
+            // Assert
+            Assert.AreEqual("User not found!", errMessage.Text);
+            driver.Quit();
+        }
     }
 }
