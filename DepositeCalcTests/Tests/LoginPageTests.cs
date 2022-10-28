@@ -22,7 +22,7 @@ namespace DepositeCalcTests.Tests
 
             driver.Url = "https://localhost:5001/";
             IWebElement loginFld = driver.FindElement(By.Id("login"));
-            IWebElement loginBtn = driver.FindElement(By.XPath("//button[@id='login']"));
+            IWebElement loginBtn = driver.FindElement(By.XPath("//button[@id='loginBtn']"));
             IWebElement errMessage = driver.FindElement(By.Id("errorMessage"));
 
             // Act
@@ -44,7 +44,7 @@ namespace DepositeCalcTests.Tests
 
             driver.Url = "https://localhost:5001/";
             IWebElement passworldFld = driver.FindElement(By.Id("password"));
-            IWebElement loginBtn = driver.FindElement(By.XPath("//button[@id='login']"));
+            IWebElement loginBtn = driver.FindElement(By.XPath("//button[@id='loginBtn']"));
             IWebElement errMessage = driver.FindElement(By.Id("errorMessage"));
 
             // Act
@@ -65,7 +65,7 @@ namespace DepositeCalcTests.Tests
             IWebDriver driver = new ChromeDriver(options);
 
             driver.Url = "https://localhost:5001/";
-            IWebElement loginBtn = driver.FindElement(By.XPath("//button[@id='login']"));
+            IWebElement loginBtn = driver.FindElement(By.XPath("//button[@id='loginBtn']"));
             IWebElement errMessage = driver.FindElement(By.Id("errorMessage"));
 
             // Act
@@ -88,7 +88,7 @@ namespace DepositeCalcTests.Tests
             IWebElement loginFldSignature = driver.FindElement(By.XPath("//th[@class='user']"));
 
             // Assert
-            Assert.AreEqual("User", loginFldSignature.Text);
+            Assert.AreEqual("User:", loginFldSignature.Text);
             driver.Quit();
         }
 
@@ -103,7 +103,7 @@ namespace DepositeCalcTests.Tests
             IWebElement passwordFldSignature = driver.FindElement(By.XPath("//th[@class='pass']"));
 
             // Assert
-            Assert.AreEqual("Password", passwordFldSignature.Text);
+            Assert.AreEqual("Password:", passwordFldSignature.Text);
             driver.Quit();
         }
 
@@ -117,8 +117,8 @@ namespace DepositeCalcTests.Tests
             driver.Url = "https://localhost:5001/";
             IWebElement loginFld = driver.FindElement(By.Id("login"));
             IWebElement passworldFld = driver.FindElement(By.Id("password"));
-            IWebElement loginBtn = driver.FindElement(By.XPath("//button[@id='login']"));
-            String currentURL = driver.Url;
+            IWebElement loginBtn = driver.FindElement(By.XPath("//button[@id='loginBtn']"));
+            String expectedUrl = "https://localhost:5001/Calculator";
 
             // Act
             loginFld.SendKeys("test");
@@ -127,7 +127,7 @@ namespace DepositeCalcTests.Tests
 
             // Assert
             Assert.IsTrue(driver.FindElement(By.Id("amount")).Displayed);
-            Assert.AreNotEqual(currentURL, driver.Url);
+            Assert.AreEqual(expectedUrl, driver.Url);
             driver.Quit();
         }
     }
