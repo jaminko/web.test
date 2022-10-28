@@ -75,5 +75,22 @@ namespace DepositeCalcTests.Tests
             Assert.AreEqual("User not found!", errMessage.Text);
             driver.Quit();
         }
+
+        [Test]
+        public void LoginFieldSignatureTest()
+        {
+            // Arrange
+            ChromeOptions options = new ChromeOptions { AcceptInsecureCertificates = true };
+            IWebDriver driver = new ChromeDriver(options);
+
+            driver.Url = "https://localhost:5001/";
+            IWebElement loginFldSignature = driver.FindElement(By.XPath("//th[@class='user']"));
+
+            // Assert
+            Assert.AreEqual("Login:", loginFldSignature.Text);
+            driver.Quit();
+        }
+
+
     }
 }
