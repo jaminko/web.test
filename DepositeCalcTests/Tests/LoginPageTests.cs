@@ -87,10 +87,8 @@ namespace DepositeCalcTests.Tests
             IWebElement loginFldSignature = driver.FindElement(By.XPath("//th[@class='user']"));
 
             // Assert
-            Assert.AreEqual("Login:", loginFldSignature.Text);
+            Assert.AreEqual("User:", loginFldSignature.Text);
             driver.Quit();
         }
-
-
     }
 }
