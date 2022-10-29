@@ -34,11 +34,7 @@ namespace DepositeCalcTests.Tests
             var loginPage = new LoginPage(driver);
 
             // Act
-            loginPage.LoginFld.SendKeys(login);
-            loginPage.PassworldFld.SendKeys(password);
-
-            loginPage.LoginBtn.Click();
-            Thread.Sleep(500);
+            loginPage.Login(login, password);
 
             // Assert
             Assert.AreEqual(expectedErrMsg, loginPage.ErrMessage);
@@ -52,10 +48,7 @@ namespace DepositeCalcTests.Tests
             String expectedUrl = "https://localhost:5001/Calculator";
 
             // Act
-            loginPage.LoginFld.SendKeys("test");
-            loginPage.PassworldFld.SendKeys("newyork1");
-            loginPage.LoginBtn.Click();
-            Thread.Sleep(500);
+            loginPage.Login();
 
             // Assert
             Assert.AreEqual(expectedUrl, driver.Url);
