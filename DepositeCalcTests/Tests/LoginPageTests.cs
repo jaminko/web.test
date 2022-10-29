@@ -1,3 +1,4 @@
+using DepositeCalcTests.Pages;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -8,9 +9,20 @@ namespace DepositeCalcTests.Tests
 {
     public class LoginPageTests
     {
+        private IWebDriver driver;
+
         [SetUp]
         public void Setup()
         {
+            ChromeOptions options = new ChromeOptions { AcceptInsecureCertificates = true };
+            driver = new ChromeDriver(options);
+            driver.Url = "https://localhost:5001/";
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            driver.Quit();
         }
 
         [TestCase("Test", "", "Incorrect password!")]
@@ -19,49 +31,34 @@ namespace DepositeCalcTests.Tests
         public void NegativeTest(string login, string password, string expectedErrMsg)
         {
             // Arrange
-            ChromeOptions options = new ChromeOptions { AcceptInsecureCertificates = true };
-            IWebDriver driver = new ChromeDriver(options);
-
-            driver.Url = "https://localhost:5001/";
-            IWebElement loginFld = driver.FindElement(By.XPath("//th[text()='User:']/..//input"));
-            IWebElement loginBtn = driver.FindElement(By.XPath("//button[@id='loginBtn']"));
-            IWebElement errMessage = driver.FindElement(By.Id("errorMessage"));
-            IWebElement passworldFld = driver.FindElement(By.XPath("//th[text()='Password:']/..//input"));
+            var loginPage = new LoginPage(driver);
 
             // Act
-            loginFld.SendKeys(login);
-            passworldFld.SendKeys(password);
+            loginPage.LoginFld.SendKeys(login);
+            loginPage.PassworldFld.SendKeys(password);
 
-            loginBtn.Click();
+            loginPage.LoginBtn.Click();
             Thread.Sleep(500);
 
             // Assert
-            Assert.AreEqual(expectedErrMsg, errMessage.Text);
-            driver.Quit();
+            Assert.AreEqual(expectedErrMsg, loginPage.ErrMessage);
         }
 
         [Test]
         public void ValidLoginTest()
         {
             // Arrange
-            ChromeOptions options = new ChromeOptions { AcceptInsecureCertificates = true };
-            IWebDriver driver = new ChromeDriver(options);
-
-            driver.Url = "https://localhost:5001/";
-            IWebElement loginFld = driver.FindElement(By.Id("login"));
-            IWebElement passworldFld = driver.FindElement(By.Id("password"));
-            IWebElement loginBtn = driver.FindElement(By.XPath("//button[@id='loginBtn']"));
+            var loginPage = new LoginPage(driver);
             String expectedUrl = "https://localhost:5001/Calculator";
 
             // Act
-            loginFld.SendKeys("test");
-            passworldFld.SendKeys("newyork1");
-            loginBtn.Click();
+            loginPage.LoginFld.SendKeys("test");
+            loginPage.PassworldFld.SendKeys("newyork1");
+            loginPage.LoginBtn.Click();
+            Thread.Sleep(500);
 
             // Assert
-            Assert.IsTrue(driver.FindElement(By.Id("amount")).Displayed);
             Assert.AreEqual(expectedUrl, driver.Url);
-            driver.Quit();
         }
     }
 }
