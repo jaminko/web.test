@@ -1,16 +1,13 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace DepositeCalcTests.Pages
 {
     internal class LoginPage
     {
-        private IWebDriver driver;
+        private readonly IWebDriver driver;
         public LoginPage(IWebDriver driver)
         {
             this.driver = driver;
@@ -24,9 +21,11 @@ namespace DepositeCalcTests.Pages
         {
             get
             {
-                IWebElement errMessage = driver.FindElement(By.Id("errorMessage"));
-                string message = errMessage.Text;
-                return message;
+                var locator = By.Id("errorMessage");
+                IWebElement errMessage = driver.FindElement(locator);
+                new WebDriverWait(driver, TimeSpan.FromSeconds(2))
+                    .Until(ExpectedConditions.ElementIsVisible(locator));
+                return errMessage.Text;
             }
         }
 
@@ -35,7 +34,6 @@ namespace DepositeCalcTests.Pages
             LoginFld.SendKeys(login);
             PassworldFld.SendKeys(password);
             LoginBtn.Click();
-            Thread.Sleep(500);
         }
     }
 }

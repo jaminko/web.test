@@ -16,6 +16,8 @@ namespace DepositeCalcTests.Tests
         {
             ChromeOptions options = new ChromeOptions { AcceptInsecureCertificates = true };
             driver = new ChromeDriver(options);
+            driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(30);
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
             driver.Url = "https://localhost:5001/";
         }
 
@@ -25,7 +27,7 @@ namespace DepositeCalcTests.Tests
             driver.Quit();
         }
 
-        [TestCase("Test", "", "Incorrect password!")]
+        [TestCase("test", "", "Incorrect password!")]
         [TestCase("", "newyork1", "Incorrect user name!")]
         [TestCase("", "", "User not found!")]
         public void NegativeTest(string login, string password, string expectedErrMsg)
@@ -49,6 +51,7 @@ namespace DepositeCalcTests.Tests
 
             // Act
             loginPage.Login();
+            Thread.Sleep(500);
 
             // Assert
             Assert.AreEqual(expectedUrl, driver.Url);
