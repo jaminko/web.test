@@ -23,8 +23,7 @@ namespace DepositeCalcTests.Pages
             {
                 var locator = By.Id("errorMessage");
                 IWebElement errMessage = driver.FindElement(locator);
-                new WebDriverWait(driver, TimeSpan.FromSeconds(2))
-                    .Until(ExpectedConditions.ElementIsVisible(locator));
+                new WebDriverWait(driver, TimeSpan.FromSeconds(2)).Until(_ => errMessage.Text.Length > 0);
                 return errMessage.Text;
             }
         }

@@ -27,10 +27,10 @@ namespace DepositeCalcTests.Tests
             driver.Quit();
         }
 
-        [TestCase("test", "", "Incorrect password!")]
-        [TestCase("", "newyork1", "Incorrect user name!")]
-        [TestCase("", "", "User not found!")]
-        public void NegativeTest(string login, string password, string expectedErrMsg)
+        [TestCase("test", "")]
+        [TestCase("", "newyork1")]
+        [TestCase("", "")]
+        public void NegativeTest(string login, string password)
         {
             // Arrange
             var loginPage = new LoginPage(driver);
@@ -39,7 +39,7 @@ namespace DepositeCalcTests.Tests
             loginPage.Login(login, password);
 
             // Assert
-            Assert.AreEqual(expectedErrMsg, loginPage.ErrMessage);
+            Assert.AreEqual("Incorrect credentials", loginPage.ErrMessage);
         }
 
         [Test]
