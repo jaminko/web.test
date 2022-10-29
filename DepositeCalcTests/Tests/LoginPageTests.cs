@@ -23,10 +23,10 @@ namespace DepositeCalcTests.Tests
             IWebDriver driver = new ChromeDriver(options);
 
             driver.Url = "https://localhost:5001/";
-            IWebElement loginFld = driver.FindElement(By.Id("login"));
+            IWebElement loginFld = driver.FindElement(By.XPath("//th[text()='User:']/..//input"));
             IWebElement loginBtn = driver.FindElement(By.XPath("//button[@id='loginBtn']"));
             IWebElement errMessage = driver.FindElement(By.Id("errorMessage"));
-            IWebElement passworldFld = driver.FindElement(By.Id("password"));
+            IWebElement passworldFld = driver.FindElement(By.XPath("//th[text()='Password:']/..//input"));
 
             // Act
             loginFld.SendKeys(login);
@@ -37,36 +37,6 @@ namespace DepositeCalcTests.Tests
 
             // Assert
             Assert.AreEqual(expectedErrMsg, errMessage.Text);
-            driver.Quit();
-        }
-
-        [Test]
-        public void LoginFieldSignatureTest()
-        {
-            // Arrange
-            ChromeOptions options = new ChromeOptions { AcceptInsecureCertificates = true };
-            IWebDriver driver = new ChromeDriver(options);
-
-            driver.Url = "https://localhost:5001/";
-            IWebElement loginFldSignature = driver.FindElement(By.XPath("//th[@class='user']"));
-
-            // Assert
-            Assert.AreEqual("User:", loginFldSignature.Text);
-            driver.Quit();
-        }
-
-        [Test]
-        public void PasswordFieldSignatureTest()
-        {
-            // Arrange
-            ChromeOptions options = new ChromeOptions { AcceptInsecureCertificates = true };
-            IWebDriver driver = new ChromeDriver(options);
-
-            driver.Url = "https://localhost:5001/";
-            IWebElement passwordFldSignature = driver.FindElement(By.XPath("//th[@class='pass']"));
-
-            // Assert
-            Assert.AreEqual("Password:", passwordFldSignature.Text);
             driver.Quit();
         }
 
