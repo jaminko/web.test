@@ -13,8 +13,10 @@ namespace DepositeCalcTests.Tests
         {
         }
 
-        [Test]
-        public void LoginWithoutPasswordTest()
+        [TestCase("Test", "", "Incorrect password!")]
+        [TestCase("", "newyork1", "Incorrect user name!")]
+        [TestCase("", "", "User not found!")]
+        public void NegativeTest(string login, string password, string expectedErrMsg)
         {
             // Arrange
             ChromeOptions options = new ChromeOptions { AcceptInsecureCertificates = true };
@@ -24,56 +26,17 @@ namespace DepositeCalcTests.Tests
             IWebElement loginFld = driver.FindElement(By.Id("login"));
             IWebElement loginBtn = driver.FindElement(By.XPath("//button[@id='loginBtn']"));
             IWebElement errMessage = driver.FindElement(By.Id("errorMessage"));
-
-            // Act
-            loginFld.SendKeys("test");
-            loginBtn.Click();
-            Thread.Sleep(500);
-
-            // Assert
-            Assert.AreEqual("Incorrect password!", errMessage.Text);
-            driver.Quit();
-        }
-
-        [Test]
-        public void LoginWithoutUserNameTest()
-        {
-            // Arrange
-            ChromeOptions options = new ChromeOptions { AcceptInsecureCertificates = true };
-            IWebDriver driver = new ChromeDriver(options);
-
-            driver.Url = "https://localhost:5001/";
             IWebElement passworldFld = driver.FindElement(By.Id("password"));
-            IWebElement loginBtn = driver.FindElement(By.XPath("//button[@id='loginBtn']"));
-            IWebElement errMessage = driver.FindElement(By.Id("errorMessage"));
 
             // Act
-            passworldFld.SendKeys("newyork1");
+            loginFld.SendKeys(login);
+            passworldFld.SendKeys(password);
+
             loginBtn.Click();
             Thread.Sleep(500);
 
             // Assert
-            Assert.AreEqual("Incorrect user name!", errMessage.Text);
-            driver.Quit();
-        }
-
-        [Test]
-        public void LoginWithEmptyFieldsTest()
-        {
-            // Arrange
-            ChromeOptions options = new ChromeOptions { AcceptInsecureCertificates = true };
-            IWebDriver driver = new ChromeDriver(options);
-
-            driver.Url = "https://localhost:5001/";
-            IWebElement loginBtn = driver.FindElement(By.XPath("//button[@id='loginBtn']"));
-            IWebElement errMessage = driver.FindElement(By.Id("errorMessage"));
-
-            // Act
-            loginBtn.Click();
-            Thread.Sleep(500);
-
-            // Assert
-            Assert.AreEqual("User not found!", errMessage.Text);
+            Assert.AreEqual(expectedErrMsg, errMessage.Text);
             driver.Quit();
         }
 
