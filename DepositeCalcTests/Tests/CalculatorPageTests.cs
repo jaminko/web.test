@@ -3,7 +3,6 @@ using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
-using System.Threading;
 
 namespace DepositeCalcTests.Tests
 {
@@ -24,7 +23,7 @@ namespace DepositeCalcTests.Tests
         [TearDown]
         public void TearDown()
         {
-            driver.Quit();
+            //driver.Quit();
         }
 
         [TestCase("", "", "")]
@@ -97,8 +96,8 @@ namespace DepositeCalcTests.Tests
             string expectedIncome = string.Format("{0:0.00}", incomeCalculation);
 
             // Assert
-            Assert.AreEqual(expectedInterestEarned, calculatorPage.getInterestEarnedFldValue(), "Incorrect value in the Interest earned field");
-            Assert.AreEqual(expectedIncome, calculatorPage.getIncomeFldValue(), "Incorrect value in the Income field");
+            Assert.AreEqual(expectedInterestEarned, calculatorPage.GetInterestEarnedFldValue(), "Incorrect value in the Interest earned field");
+            Assert.AreEqual(expectedIncome, calculatorPage.GetIncomeFldValue(), "Incorrect value in the Income field");
         }
 
         [TestCase(1, 1, 1)]
@@ -127,8 +126,8 @@ namespace DepositeCalcTests.Tests
             string expectedIncome = string.Format("{0:0.00}", incomeCalculation);
 
             // Assert
-            Assert.AreEqual(expectedInterestEarned, calculatorPage.getInterestEarnedFldValue(), "Incorrect value in the Interest earned field");
-            Assert.AreEqual(expectedIncome, calculatorPage.getIncomeFldValue(), "Incorrect value in the Income field");
+            Assert.AreEqual(expectedInterestEarned, calculatorPage.GetInterestEarnedFldValue(), "Incorrect value in the Interest earned field");
+            Assert.AreEqual(expectedIncome, calculatorPage.GetIncomeFldValue(), "Incorrect value in the Income field");
         }
 
         [TestCase(100001, 1, 1)]
@@ -174,6 +173,31 @@ namespace DepositeCalcTests.Tests
 
             // Assert
             Assert.AreEqual(calculatorPage.GetCalculateBtnCurrentStatus(), calculateBtnStatusBeforeTest, "Calculate button is clickable. This means that an incorrect value may be entered in one of the text fields");
+        }
+
+        [TestCase("January")]
+        [TestCase("February")]
+        [TestCase("March")]
+        [TestCase("April")]
+        [TestCase("May")]
+        [TestCase("Jun")]
+        [TestCase("July")]
+        [TestCase("August")]
+        [TestCase("September")]
+        [TestCase("October")]
+        [TestCase("November")]
+        [TestCase("December")]
+        public void StartDateMonthTest(string month)
+        {
+            // Arrange
+            var calculatorPage = new CalculatorPage(driver);
+
+            // Act
+            calculatorPage.ClickMonthDropDown();
+            calculatorPage.ClickOnMonth(month);
+
+            // Assert
+            Assert.AreEqual(calculatorPage.GetMonthStartDate(), calculatorPage.GetMonthEndDate(), "Error");
         }
     }
 }
