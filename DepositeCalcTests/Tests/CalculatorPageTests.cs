@@ -24,7 +24,7 @@ namespace DepositeCalcTests.Tests
         [TearDown]
         public void TearDown()
         {
-            driver.Quit();
+            //driver.Quit();
         }
 
         [TestCase("", "", "")]
@@ -117,7 +117,7 @@ namespace DepositeCalcTests.Tests
 
             // Act
             calculatorPage.ValidCalculation(depositAmount, interestRate, investmentTerm);
-            calculatorPage.ClickOnFinancialYear360RadioBtn ();
+            calculatorPage.ClickOnFinancialYear360RadioBtn();
             calculatorPage.ClickOnCalculateBtn();
 
             double oneDayPercentageCalculation = (depositAmount * (interestRate * 0.01) / 360) * investmentTerm;
@@ -131,5 +131,25 @@ namespace DepositeCalcTests.Tests
             Assert.AreEqual(expectedIncome, calculatorPage.getIncomeFldValue(), "Incorrect value in the Income field");
         }
 
+        [TestCase(100001, 1, 1)]
+        [TestCase(100002, 1, 1)]
+        [TestCase(10, 101, 1)]
+        [TestCase(10, 102, 1)]
+        [TestCase(10, 1, 366)]
+        [TestCase(10, 1, 367)]
+
+        public void NegativeCalculation365Test(double depositAmount, double interestRate, double investmentTerm)
+        {
+            // Arrange
+            var calculatorPage = new CalculatorPage(driver);
+            string calculateBtnStatusBeforeTest = "true";
+
+            // Act
+            calculatorPage.ValidCalculation(depositAmount, interestRate, investmentTerm);
+            calculatorPage.ClickOnFinancialYear365RadioBtn();
+
+            // Assert
+            Assert.AreEqual(calculatorPage.GetCalculateBtnCurrentStatus(), calculateBtnStatusBeforeTest, "Calculate button is clickable. This means that an incorrect value may be entered in one of the text fields");
+        }
     }
 }
