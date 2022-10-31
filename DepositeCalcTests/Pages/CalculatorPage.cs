@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.DevTools.V104.IndexedDB;
 using OpenQA.Selenium.Support.UI;
 using System;
 
@@ -33,6 +34,8 @@ namespace DepositeCalcTests.Pages
         private IWebElement MonthNovember => driver.FindElement(By.XPath("//option[@value='November']"));
         private IWebElement MonthDecember => driver.FindElement(By.XPath("//option[@value='December']"));
         private IWebElement YearDropDown => driver.FindElement(By.XPath("//select[@id='year']"));
+        private IWebElement Year2024 => driver.FindElement(By.XPath("//option[@value='2024']"));
+        private IWebElement Year2028 => driver.FindElement(By.XPath("//option[@value='2028']"));
         private IWebElement CalculateBtn => driver.FindElement(By.XPath("//button[@id='calculateBtn']"));
         private IWebElement IncomeFld => driver.FindElement(By.XPath("//th[text()='Income: *']/..//input"));
         private IWebElement InterestEarnedFld => driver.FindElement(By.XPath("//th[text()='Intereset earned: *']/..//input"));
@@ -102,11 +105,6 @@ namespace DepositeCalcTests.Pages
         public void ClickMonthDropDown()
         {
             MonthDropDown.Click();
-        }
-
-        public void ClickYearDropDown()
-        {
-            YearDropDown.Click();
         }
 
         public string GetMonthStartDate()
@@ -201,6 +199,21 @@ namespace DepositeCalcTests.Pages
             string year = EndDateFld.GetAttribute("value");
             int yearAfterCalculate = Convert.ToInt32(year.Substring(6, 4));
             return yearAfterCalculate;
+        }
+
+        public void ClickOnYearDropDown()
+        {
+            YearDropDown.Click();
+        }
+
+        public void ClickOnYear2024()
+        {
+            Year2024.Click();
+        }
+
+        public void ClickOnYear2028()
+        {
+            Year2028.Click();
         }
     }
 }

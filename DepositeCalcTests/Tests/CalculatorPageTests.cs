@@ -234,5 +234,39 @@ namespace DepositeCalcTests.Tests
             Assert.AreEqual(calculatorPage.GetDayStartDate(), calculatorPage.GetDayEndDate(), "Day is incorrect");
             Assert.AreEqual(calculatorPage.GetYearStartDate() + 1, calculatorPage.GetYearEndDate(), "Year is incorrect");
         }
+
+        [TestCase("February", "29")]
+        public void Leap2024YearTests(string month, string day)
+        {
+            // Arrange
+            var calculatorPage = new CalculatorPage(driver);
+
+            // Act
+            calculatorPage.ClickOnYearDropDown();
+            calculatorPage.ClickOnYear2024();
+            calculatorPage.ClickMonthDropDown();
+            calculatorPage.ClickOnMonth(month);
+            calculatorPage.SendKeysToDayDropDown(day);
+
+            // Assert
+            Assert.AreEqual(calculatorPage.GetMonthStartDate(), calculatorPage.GetMonthEndDate(), "Month is incorrect");
+        }
+
+        [TestCase("February", "29")]
+        public void Leap2028YearTests(string month, string day)
+        {
+            // Arrange
+            var calculatorPage = new CalculatorPage(driver);
+
+            // Act
+            calculatorPage.ClickOnYearDropDown();
+            calculatorPage.ClickOnYear2028();
+            calculatorPage.ClickMonthDropDown();
+            calculatorPage.ClickOnMonth(month);
+            calculatorPage.SendKeysToDayDropDown(day);
+
+            // Assert
+            Assert.AreEqual(calculatorPage.GetMonthStartDate(), calculatorPage.GetMonthEndDate(), "Month is incorrect");
+        }
     }
 }
