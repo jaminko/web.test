@@ -239,7 +239,7 @@ namespace DepositeCalcTests.Tests
 
             // Assert
             Assert.AreEqual(calculatorPage.GetDayStartDate(), calculatorPage.GetDayEndDate(), "Error");
-
+            Assert.AreEqual(calculatorPage.GetYearStartDate()+1, calculatorPage.GetYearEndDate(), "Error");
         }
     }
 }

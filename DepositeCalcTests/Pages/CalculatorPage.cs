@@ -192,16 +192,20 @@ namespace DepositeCalcTests.Pages
             return day.Substring(0, 2);
         }
 
-        public string GetYearStartDate()
+        public int GetYearStartDate()
         {
             string year = YearDropDown.GetAttribute("value");
-            return year;
+            int yearBeforeCalculate = Convert.ToInt32(year);
+            return yearBeforeCalculate;
         }
 
-        public string GetYearEndDate()
+        public int GetYearEndDate()
         {
             string year = EndDateFld.GetAttribute("value");
-            return year.Substring(6, 4);
+            int yearAfterCalculate = Convert.ToInt32(year.Substring(6, 4));
+            return yearAfterCalculate;
+
+
         }
     }
 }
