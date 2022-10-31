@@ -27,6 +27,12 @@
                         <td>Investment term: *</td>
                         <td colspan="2"><input id="term" oninput="VerifyTerm('term', 0);" /></td>
                     </tr>
+                    <tr id="finYear">
+                        <td>Financial year: *</td>
+                        @*<td><input type="radio" onchange="SetYear(360)" checked="checked">365 days</td>*@
+                        <td><input type="radio" onchange="SetYear(360)">365 days</td>
+                        <td><input type="radio" onchange="SetYear(365)">360 days</td>
+                    </tr>
                     <tr>
                         <td>Start date:</td>
                         <td colspan="2">
@@ -34,12 +40,6 @@
                             <select id="month" onchange="ResetMonth();CalculateDate();"></select>
                             <select id="year" onchange="ResetMonth();CalculateDate();"></select>
                         </td>
-                    </tr>
-                    <tr id="finYear">
-                        <td>Financial year: *</td>
-                        @*<td><input type="radio" onchange="SetYear(360)" checked="checked">365 days</td>*@
-                        <td><input type="radio" onchange="SetYear(360)">365 days</td>
-                        <td><input type="radio" onchange="SetYear(365)">360 days</td>
                     </tr>
                     <tr>
                         <td></td>
