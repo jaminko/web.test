@@ -57,6 +57,8 @@ namespace DepositeCalcTests.Pages
         public void ClickOnCalculateBtn()
         {
             CalculateBtn.Click();
+            new WebDriverWait(driver, TimeSpan.FromSeconds(2)).Until(_ => InterestEarnedFld.GetAttribute("value") != null);
+
         }
 
         public string GetCalculateBtnCurrentStatus()
