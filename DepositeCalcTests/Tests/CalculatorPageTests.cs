@@ -50,5 +50,40 @@ namespace DepositeCalcTests.Tests
             // Assert
             Assert.AreEqual(calculatorPage.GetCalculateBtnCurrentStatus(), calculateBtnStatusBeforeTest, "Calculate button is clickable");
         }
+
+        [TestCase(1, 1, 1)]
+        [TestCase(10, 10, 1)]
+        [TestCase(99000, 10, 1)]
+        [TestCase(100000, 10, 1)]
+        [TestCase(10, 99, 1)]
+        [TestCase(10, 100, 1)]
+        [TestCase(10, 99, 1)]
+        [TestCase(10, 99, 360)]
+        [TestCase(10, 99, 365)]
+
+        public void ValidCalculation365Test(double depositAmount, double interestRate, double investmentTerm)
+        {
+            // Arrange
+            var calculatorPage = new CalculatorPage(driver);
+
+            // Act
+            calculatorPage.ValidCalculation(depositAmount, interestRate, investmentTerm);
+            Thread.Sleep(200);
+            calculatorPage.ClickOnFinancialYear365RadioBtn();
+            Thread.Sleep(500);
+            calculatorPage.ClickOnCalculateBtn();
+            Thread.Sleep(500);
+
+            double oneDayPercentageCalculation = (depositAmount * (interestRate * 0.01) / 365) * investmentTerm;
+            double incomeCalculation = depositAmount + oneDayPercentageCalculation;
+
+            string expectedInterestEarned = string.Format("{0:0.00}", oneDayPercentageCalculation);
+            string expectedIncome = string.Format("{0:0.00}", incomeCalculation);
+
+            // Assert
+            Assert.AreEqual(expectedInterestEarned, calculatorPage.getInterestEarnedFldValue(), "Incorrect value in the Interest earned field");
+            Assert.AreEqual(expectedIncome, calculatorPage.getIncomeFldValue(), "Incorrect value in the Income field");
+        }
+
     }
 }
