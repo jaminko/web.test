@@ -33,7 +33,6 @@ namespace DepositeCalcTests.Tests
         [TestCase("1", "", "")]
         [TestCase("1", "", "1")]
         [TestCase("1", "1", "")]
-
         public void MandaroryTextFieldsWith365BtnTest(string depositAmount, string interestRate, string investmentTerm)
         {
             // Arrange
@@ -55,7 +54,6 @@ namespace DepositeCalcTests.Tests
         [TestCase("1", "", "")]
         [TestCase("1", "", "1")]
         [TestCase("1", "1", "")]
-
         public void MandaroryTextFieldsWith360BtnTest(string depositAmount, string interestRate, string investmentTerm)
         {
             // Arrange
@@ -78,7 +76,6 @@ namespace DepositeCalcTests.Tests
         [TestCase(10, 100, 1)]
         [TestCase(10, 50, 364)]
         [TestCase(10, 50, 365)]
-
         public void ValidCalculation365Test(double depositAmount, double interestRate, double investmentTerm)
         {
             // Arrange
@@ -95,7 +92,7 @@ namespace DepositeCalcTests.Tests
             string expectedInterestEarned = string.Format("{0:0.00}", oneDayPercentageCalculation);
             string expectedIncome = string.Format("{0:0.00}", incomeCalculation);
 
-            // Assert
+            // Asserts
             Assert.AreEqual(expectedInterestEarned, calculatorPage.GetInterestEarnedFldValue(), "Incorrect value in the Interest earned field");
             Assert.AreEqual(expectedIncome, calculatorPage.GetIncomeFldValue(), "Incorrect value in the Income field");
         }
@@ -108,7 +105,6 @@ namespace DepositeCalcTests.Tests
         [TestCase(10, 100, 1)]
         [TestCase(10, 50, 359)]
         [TestCase(10, 50, 360)]
-
         public void ValidCalculation360Test(double depositAmount, double interestRate, double investmentTerm)
         {
             // Arrange
@@ -125,7 +121,7 @@ namespace DepositeCalcTests.Tests
             string expectedInterestEarned = string.Format("{0:0.00}", oneDayPercentageCalculation);
             string expectedIncome = string.Format("{0:0.00}", incomeCalculation);
 
-            // Assert
+            // Asserts
             Assert.AreEqual(expectedInterestEarned, calculatorPage.GetInterestEarnedFldValue(), "Incorrect value in the Interest earned field");
             Assert.AreEqual(expectedIncome, calculatorPage.GetIncomeFldValue(), "Incorrect value in the Income field");
         }
@@ -136,7 +132,6 @@ namespace DepositeCalcTests.Tests
         [TestCase(10, 102, 1)]
         [TestCase(10, 1, 366)]
         [TestCase(10, 1, 367)]
-
         public void NegativeCalculation365Test(double depositAmount, double interestRate, double investmentTerm)
         {
             // Arrange
@@ -159,8 +154,6 @@ namespace DepositeCalcTests.Tests
         [TestCase(10, 1, 365)]
         [TestCase(10, 1, 366)]
         [TestCase(10, 1, 367)]
-
-
         public void NegativeCalculation360Test(double depositAmount, double interestRate, double investmentTerm)
         {
             // Arrange
@@ -197,13 +190,13 @@ namespace DepositeCalcTests.Tests
             calculatorPage.ClickOnMonth(month);
 
             // Assert
-            Assert.AreEqual(calculatorPage.GetMonthStartDate(), calculatorPage.GetMonthEndDate(), "Error");
+            Assert.AreEqual(calculatorPage.GetMonthStartDate(), calculatorPage.GetMonthEndDate(), "Month is incorrect");
         }
 
-        [TestCase("January","01")]
+        [TestCase("January", "01")]
         [TestCase("January", "31")]
         [TestCase("February", "01")]
-        [TestCase("February","28")]
+        [TestCase("February", "28")]
         [TestCase("March", "01")]
         [TestCase("March", "31")]
         [TestCase("April", "01")]
@@ -237,9 +230,9 @@ namespace DepositeCalcTests.Tests
             calculatorPage.SendKeysToDayDropDown(day);
             calculatorPage.ClickOnCalculateBtn();
 
-            // Assert
-            Assert.AreEqual(calculatorPage.GetDayStartDate(), calculatorPage.GetDayEndDate(), "Error");
-            Assert.AreEqual(calculatorPage.GetYearStartDate()+1, calculatorPage.GetYearEndDate(), "Error");
+            // Asserts
+            Assert.AreEqual(calculatorPage.GetDayStartDate(), calculatorPage.GetDayEndDate(), "Day is incorrect");
+            Assert.AreEqual(calculatorPage.GetYearStartDate() + 1, calculatorPage.GetYearEndDate(), "Year is incorrect");
         }
     }
 }
