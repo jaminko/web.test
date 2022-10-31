@@ -23,7 +23,7 @@ namespace DepositeCalcTests.Tests
         [TearDown]
         public void TearDown()
         {
-            //driver.Quit();
+            driver.Quit();
         }
 
         [TestCase("", "", "")]
@@ -198,6 +198,48 @@ namespace DepositeCalcTests.Tests
 
             // Assert
             Assert.AreEqual(calculatorPage.GetMonthStartDate(), calculatorPage.GetMonthEndDate(), "Error");
+        }
+
+        [TestCase("January","01")]
+        [TestCase("January", "31")]
+        [TestCase("February", "01")]
+        [TestCase("February","28")]
+        [TestCase("March", "01")]
+        [TestCase("March", "31")]
+        [TestCase("April", "01")]
+        [TestCase("April", "30")]
+        [TestCase("May", "01")]
+        [TestCase("May", "31")]
+        [TestCase("Jun", "01")]
+        [TestCase("Jun", "30")]
+        [TestCase("July", "01")]
+        [TestCase("July", "31")]
+        [TestCase("August", "01")]
+        [TestCase("August", "31")]
+        [TestCase("September", "01")]
+        [TestCase("September", "30")]
+        [TestCase("October", "01")]
+        [TestCase("October", "31")]
+        [TestCase("November", "01")]
+        [TestCase("November", "30")]
+        [TestCase("December", "01")]
+        [TestCase("December", "31")]
+        public void StartDate365DaysTest(string month, string day)
+        {
+            // Arrange
+            var calculatorPage = new CalculatorPage(driver);
+
+            // Act
+            calculatorPage.ValidCalculation(1, 10, 365);
+            calculatorPage.ClickOnFinancialYear365RadioBtn();
+            calculatorPage.ClickMonthDropDown();
+            calculatorPage.ClickOnMonth(month);
+            calculatorPage.SendKeysToDayDropDown(day);
+            calculatorPage.ClickOnCalculateBtn();
+
+            // Assert
+            Assert.AreEqual(calculatorPage.GetDayStartDate(), calculatorPage.GetDayEndDate(), "Error");
+
         }
     }
 }

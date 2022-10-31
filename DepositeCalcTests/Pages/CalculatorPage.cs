@@ -97,15 +97,14 @@ namespace DepositeCalcTests.Pages
         {
             DayDropDown.Click();
         }
+        public void SendKeysToDayDropDown(string kay)
+        {
+            DayDropDown.SendKeys(kay);
+        }
 
         public void ClickMonthDropDown()
         {
             MonthDropDown.Click();
-        }
-
-        public void SendKeysMonthDropDown(string kay)
-        {
-            MonthDropDown.SendKeys(kay);
         }
 
         public void ClickYearDropDown()
@@ -181,6 +180,28 @@ namespace DepositeCalcTests.Pages
             else MonthDecember.Click();
         }
 
+        public string GetDayStartDate()
+        {
+            string day = DayDropDown.GetAttribute("value");
+            return day;
+        }
 
+        public string GetDayEndDate()
+        {
+            string day = EndDateFld.GetAttribute("value");
+            return day.Substring(0, 2);
+        }
+
+        public string GetYearStartDate()
+        {
+            string year = YearDropDown.GetAttribute("value");
+            return year;
+        }
+
+        public string GetYearEndDate()
+        {
+            string year = EndDateFld.GetAttribute("value");
+            return year.Substring(6, 4);
+        }
     }
 }
