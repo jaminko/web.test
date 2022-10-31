@@ -13,7 +13,7 @@
 
                 <table>
                     <tr>
-                        <td>Deposit Ammount: *</td>
+                        <td>Deposit amount: *</td>
                         @*<td><input id="amount" oninput="VerifyNumber('amount', 0, 100000);"></td>*@
                         <td><input id="amount" oninput="VerifyNumber('amount', 0, 100001);"></td>
                         <td id="currency">$</td>
@@ -24,37 +24,37 @@
                         <td>%</td>
                     </tr>
                     <tr>
-                        <td>Investment Term: *</td>
+                        <td>Investment term: *</td>
                         <td colspan="2"><input id="term" oninput="VerifyTerm('term', 0);" /></td>
                     </tr>
+                    <tr id="finYear">
+                        <td>Financial year: *</td>
+                        @*<td><input type="radio" onchange="SetYear(360)" checked="checked">365 days</td>*@
+                        <td><input type="radio" onchange="SetYear(360)">365 days</td>
+                        <td><input type="radio" onchange="SetYear(365)">360 days</td>
+                    </tr>
                     <tr>
-                        <td>Start Date:</td>
+                        <td>Start date:</td>
                         <td colspan="2">
                             <select id="day" onchange="CalculateDate()"></select>
                             <select id="month" onchange="ResetMonth();CalculateDate();"></select>
                             <select id="year" onchange="ResetMonth();CalculateDate();"></select>
                         </td>
                     </tr>
-                    <tr id="finYear">
-                        <td>Financial Year: *</td>
-                        @*<td><input type="radio" onchange="SetYear(360)" checked="checked">365 days</td>*@
-                        <td><input type="radio" onchange="SetYear(360)">365 days</td>
-                        <td><input type="radio" onchange="SetYear(365)">360 days</td>
-                    </tr>
                     <tr>
                         <td></td>
                         <td><button class="btn btn-sm btn-primary" id="calculateBtn" onclick="Calculate().then(Save)">Calculate</button></td>
                     </tr>
                     <tr>
-                        <th>Intereset Earned: *</th>
-                        <th><input id="interest" readonly /></th>
-                    </tr>
-                    <tr>
-                        <th>lncome: *</th>
+                        <th>Income: *</th>
                         <th><input id="income" readonly /></th>
                     </tr>
                     <tr>
-                        <th>End Date: *</th>
+                        <th>Intereset earned: *</th>
+                        <th><input id="interest" readonly /></th>
+                    </tr>
+                    <tr>
+                        <th>End date: *</th>
                         <th><input id="endDate" readonly /></th>
                     </tr>
                     <tr><td colspan="3">* - mandatory fields</td></tr>

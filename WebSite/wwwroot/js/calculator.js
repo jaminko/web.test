@@ -88,9 +88,9 @@ async function ResetMonth() {
             SetDay(day < 31 ? day : 30);
             break;
         default:
-            //AddOptions('day', 1, leapYear ? 29 : 28);
+            AddOptions('day', 1, leapYear ? 29 : 28);
             //SetDay(day <= (leapYear ? 29 : 28) ? day : (leapYear ? 29 : 28));
-            AddOptions('day', 1, 28);
+            //AddOptions('day', 1, 28);
             SetDay(day < 29 ? day : 28);
             break;
     }
@@ -189,11 +189,12 @@ async function Save() {
 }
 
 function SetCalculateButtonState() {
+    var finYear = !document.querySelector('#finYear td:nth-child(2) input').checked && !document.querySelector('#finYear td:nth-child(3) input').checked;
     var amount = Number(document.getElementById('amount').value);
     var days = Number(document.getElementById('term').value);
     var percent = Number(document.getElementById('percent').value);
 
-    document.getElementById('calculateBtn').disabled = (amount == 0 || days == 0 || percent == 0);
+    document.getElementById('calculateBtn').disabled = (finYear || amount == 0 || days == 0 || percent == 0);
 }
 
 async function Calculate() {
@@ -220,6 +221,8 @@ SetYear = function (year) {
     } else {
         document.querySelector('#finYear td:nth-child(3) input').checked = false;
     }
+		
+		SetCalculateButtonState();
 }
 
 SetCurrency = function () {

@@ -57,7 +57,7 @@ namespace WebSite.DB
 
             // Wrong months order, mistake in month name
             Constants.Delete("month");
-            Constants.Add("month", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+            Constants.Add("month", "January", "February", "March", "May", "April", "June", "July", "August", "September", "October", "November", "December");
 
             Constants.Delete("month");
             Constants.Add("month", "January", "February", "March", "May", "April", "Jun", "July", "August", "September", "October", "November", "December");
