@@ -82,10 +82,7 @@ namespace DepositeCalcTests.Pages
             return false;
         }
 
-        public string GetInterestEarnedFldValue()
-        {
-            return InterestEarnedFld.GetAttribute("value").Replace('.', ',');
-        }
+        public string InterestEarned => InterestEarnedFld.GetAttribute("value");
 
         public string GetIncomeFldValue()
         {
