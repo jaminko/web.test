@@ -63,13 +63,7 @@ namespace DepositeCalcTests.Tests
         }
 
         [TestCase(1, 1, 1)]
-        [TestCase(10, 10, 1)]
-        [TestCase(99000, 10, 1)]
-        [TestCase(100000, 10, 1)]
-        [TestCase(10, 99, 1)]
-        [TestCase(10, 100, 1)]
-        [TestCase(10, 50, 364)]
-        [TestCase(10, 50, 365)]
+        [TestCase(100000, 100, 365)]
         public void ValidCalculation365Test(double depositAmount, double interestRate, double investmentTerm)
         {
             // Arrange
