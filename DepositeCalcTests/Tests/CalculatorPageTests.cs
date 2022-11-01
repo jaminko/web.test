@@ -64,7 +64,8 @@ namespace DepositeCalcTests.Tests
 
         [TestCase(1, 1, 1)]
         [TestCase(100000, 100, 365)]
-        public void ValidCalculation365Test(double depositAmount, double interestRate, double investmentTerm)
+        [TestCase(100000, 100, 365, "100 000.00", "200 000.00"]
+        public void ValidCalculation365Test(double depositAmount, double interestRate, double investmentTerm, string expectedIncome, string expectedInterest)
         {
             // Arrange
             var calculatorPage = new CalculatorPage(driver);
