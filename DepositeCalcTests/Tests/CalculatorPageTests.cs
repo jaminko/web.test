@@ -37,14 +37,13 @@ namespace DepositeCalcTests.Tests
         {
             // Arrange
             var calculatorPage = new CalculatorPage(driver);
-            string calculateBtnStatusBeforeTest = "true";
 
             // Act
             calculatorPage.MandatoryTextFields(depositAmount, interestRate, investmentTerm);
             calculatorPage.ClickOnFinancialYear365RadioBtn();
 
             // Assert
-            Assert.AreEqual(calculatorPage.GetCalculateBtnCurrentStatus(), calculateBtnStatusBeforeTest, "Calculate button is clickable. This means that one of the text fields or one of the Financial year radio buttons are not mandatory");
+            Assert.IsTrue(calculatorPage.GetCalculateBtnCurrentStatus(), "Calculate button is clickable. This means that one of the text fields or one of the Financial year radio buttons are not mandatory");
         }
 
         [TestCase("", "", "")]
@@ -58,14 +57,13 @@ namespace DepositeCalcTests.Tests
         {
             // Arrange
             var calculatorPage = new CalculatorPage(driver);
-            string calculateBtnStatusBeforeTest = "true";
 
             // Act
             calculatorPage.MandatoryTextFields(depositAmount, interestRate, investmentTerm);
             calculatorPage.ClickOnFinancialYear360RadioBtn();
 
             // Assert
-            Assert.AreEqual(calculatorPage.GetCalculateBtnCurrentStatus(), calculateBtnStatusBeforeTest, "Calculate button is clickable. This means that one of the text fields or one of the Financial year radio buttons are not mandatory");
+            Assert.IsTrue(calculatorPage.GetCalculateBtnCurrentStatus(), "Calculate button is clickable. This means that one of the text fields or one of the Financial year radio buttons are not mandatory");
         }
 
         [TestCase(1, 1, 1)]
@@ -136,14 +134,13 @@ namespace DepositeCalcTests.Tests
         {
             // Arrange
             var calculatorPage = new CalculatorPage(driver);
-            string calculateBtnStatusBeforeTest = "true";
 
             // Act
             calculatorPage.ValidCalculation(depositAmount, interestRate, investmentTerm);
             calculatorPage.ClickOnFinancialYear365RadioBtn();
 
             // Assert
-            Assert.AreEqual(calculatorPage.GetCalculateBtnCurrentStatus(), calculateBtnStatusBeforeTest, "Calculate button is clickable. This means that an incorrect value may be entered in one of the text fields");
+            Assert.IsTrue(calculatorPage.GetCalculateBtnCurrentStatus(), "Calculate button is clickable. This means that an invalid value may be entered in one of the text fields");
         }
 
         [TestCase(100001, 1, 1)]
@@ -158,14 +155,13 @@ namespace DepositeCalcTests.Tests
         {
             // Arrange
             var calculatorPage = new CalculatorPage(driver);
-            string calculateBtnStatusBeforeTest = "true";
 
             // Act
             calculatorPage.ValidCalculation(depositAmount, interestRate, investmentTerm);
             calculatorPage.ClickOnFinancialYear360RadioBtn();
 
             // Assert
-            Assert.AreEqual(calculatorPage.GetCalculateBtnCurrentStatus(), calculateBtnStatusBeforeTest, "Calculate button is clickable. This means that an incorrect value may be entered in one of the text fields");
+            Assert.IsTrue(calculatorPage.GetCalculateBtnCurrentStatus(), "Calculate button is clickable. This means that an invalid value may be entered in one of the text fields");
         }
 
         [TestCase("January")]
@@ -190,7 +186,7 @@ namespace DepositeCalcTests.Tests
             calculatorPage.ClickOnMonth(month);
 
             // Assert
-            Assert.AreEqual(calculatorPage.GetMonthStartDate(), calculatorPage.GetMonthEndDate(), "Month is incorrect");
+            Assert.AreEqual(calculatorPage.GetMonthStartDate(), calculatorPage.GetMonthEndDate(), "Start date month and End date month values do not match");
         }
 
         [TestCase("January", "01")]

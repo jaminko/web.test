@@ -73,9 +73,13 @@ namespace DepositeCalcTests.Pages
             new WebDriverWait(driver, TimeSpan.FromSeconds(2)).Until(_ => InterestEarnedFld.GetAttribute("value") != null);
         }
 
-        public string GetCalculateBtnCurrentStatus()
+        public bool GetCalculateBtnCurrentStatus()
         {
-            return CalculateBtn.GetDomAttribute("disabled");
+            if (CalculateBtn.GetDomAttribute("disabled") != null)
+            {
+                return true;
+            }
+            return false;
         }
 
         public string GetInterestEarnedFldValue()
