@@ -115,11 +115,8 @@ namespace DepositeCalcTests.Tests
         }
 
         [TestCase(100001, 1, 1)]
-        [TestCase(100002, 1, 1)]
         [TestCase(10, 101, 1)]
-        [TestCase(10, 102, 1)]
         [TestCase(10, 1, 366)]
-        [TestCase(10, 1, 367)]
         public void NegativeCalculation365Test(double depositAmount, double interestRate, double investmentTerm)
         {
             // Arrange
