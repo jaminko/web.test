@@ -3,6 +3,8 @@ using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace DepositeCalcTests.Tests
 {
@@ -26,11 +28,7 @@ namespace DepositeCalcTests.Tests
             driver.Quit();
         }
 
-        [TestCase("", "", "")]
-        [TestCase("", "", "1")]
-        [TestCase("", "1", "")]
         [TestCase("", "1", "1")]
-        [TestCase("1", "", "")]
         [TestCase("1", "", "1")]
         [TestCase("1", "1", "")]
         public void MandaroryTextFieldsWith365BtnTest(string depositAmount, string interestRate, string investmentTerm)
@@ -67,13 +65,7 @@ namespace DepositeCalcTests.Tests
         }
 
         [TestCase(1, 1, 1)]
-        [TestCase(10, 10, 1)]
-        [TestCase(99000, 10, 1)]
-        [TestCase(100000, 10, 1)]
-        [TestCase(10, 99, 1)]
-        [TestCase(10, 100, 1)]
-        [TestCase(10, 50, 364)]
-        [TestCase(10, 50, 365)]
+        [TestCase(100000, 100, 365)]
         public void ValidCalculation365Test(double depositAmount, double interestRate, double investmentTerm)
         {
             // Arrange
@@ -97,8 +89,8 @@ namespace DepositeCalcTests.Tests
 
         [TestCase(1, 1, 1)]
         [TestCase(10, 10, 1)]
-        [TestCase(99000, 10, 1)]
-        [TestCase(100000, 10, 1)]
+        [TestCase(9999, 10, 1)]
+        [TestCase(10000, 10, 1)]
         [TestCase(10, 99, 1)]
         [TestCase(10, 100, 1)]
         [TestCase(10, 50, 359)]

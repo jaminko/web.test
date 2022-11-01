@@ -2,6 +2,7 @@
 using OpenQA.Selenium.DevTools.V104.IndexedDB;
 using OpenQA.Selenium.Support.UI;
 using System;
+using System.Globalization;
 
 namespace DepositeCalcTests.Pages
 {
