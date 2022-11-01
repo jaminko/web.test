@@ -57,14 +57,31 @@ namespace DepositeCalcTests.Pages
             new WebDriverWait(driver, TimeSpan.FromSeconds(2)).Until(_ => CalculateBtn.GetAttribute("disable") != string.Empty);
         }
 
-        public void ClickOnFinancialYear365RadioBtn()
+        public string FinancialYear
         {
-            FinancialYear365Days.Click();
-        }
-
-        public void ClickOnFinancialYear360RadioBtn()
-        {
-            FinancialYear360Days.Click();
+            get 
+            {
+                if (FinancialYear365Days.Selected) return "365";
+                if (FinancialYear360Days.Selected) return "360";
+                return null;
+            }
+            
+            set
+            {
+                if (value == "360")
+                {
+                    FinancialYear360Days.Click();
+                    return;
+                }
+                
+                if (value == "365")
+                {
+                    FinancialYear365Days.Click();
+                    return;
+                }
+                
+                throw new Exception("Invalid financial year value");
+            }
         }
 
         public void ClickOnCalculateBtn()
