@@ -26,11 +26,7 @@ namespace DepositeCalcTests.Tests
             driver.Quit();
         }
 
-        [TestCase("", "", "")]
-        [TestCase("", "", "1")]
-        [TestCase("", "1", "")]
         [TestCase("", "1", "1")]
-        [TestCase("1", "", "")]
         [TestCase("1", "", "1")]
         [TestCase("1", "1", "")]
         public void MandaroryTextFieldsWith365BtnTest(string depositAmount, string interestRate, string investmentTerm)
