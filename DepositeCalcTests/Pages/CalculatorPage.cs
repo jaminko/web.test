@@ -1,8 +1,6 @@
 ﻿using OpenQA.Selenium;
-using OpenQA.Selenium.DevTools.V104.IndexedDB;
 using OpenQA.Selenium.Support.UI;
 using System;
-using System.Globalization;
 
 namespace DepositeCalcTests.Pages
 {
@@ -14,7 +12,6 @@ namespace DepositeCalcTests.Pages
         {
             this.driver = driver;
         }
-
         private IWebElement DepositAmountFld => driver.FindElement(By.XPath("//td[text()='Deposit amount: *']/..//input"));
         private IWebElement InterestRateFld => driver.FindElement(By.XPath("//td[text()='Rate of interest: *']/..//input"));
         private IWebElement InvestmentTermFld => driver.FindElement(By.XPath("//td[text()='Investment term: *']/..//input"));
@@ -55,17 +52,36 @@ namespace DepositeCalcTests.Pages
             DepositAmountFld.SendKeys(Convert.ToString(depositAmount));
             InterestRateFld.SendKeys(Convert.ToString(interestRate));
             InvestmentTermFld.SendKeys(Convert.ToString(investmentTerm));
-            new WebDriverWait(driver, TimeSpan.FromSeconds(2)).Until(_ => CalculateBtn.GetAttribute("disable") != string.Empty);
+            new WebDriverWait(driver, TimeSpan.FromSeconds(3)).Until(_ => CalculateBtn.GetAttribute("disable") != string.Empty);
         }
 
-        public void ClickOnFinancialYear365RadioBtn()
+        public string FinancialYear
         {
-            FinancialYear365Days.Click();
-        }
+            get 
+            {
+                if (FinancialYear365Days.Selected) return "365";
+                if (FinancialYear360Days.Selected) return "360";
+                return null;
+            }
+            
+            set
+            {
+                if (value == "360")
+                {
+                    FinancialYear360Days.Click();
 
-        public void ClickOnFinancialYear360RadioBtn()
-        {
-            FinancialYear360Days.Click();
+                    // $"{day}/{month}/{yeat}"
+                    return;
+                }
+                
+                if (value == "365")
+                {
+                    FinancialYear365Days.Click();
+                    return;
+                }
+                
+                throw new Exception("Invalid financial year value");
+            }
         }
 
         public void ClickOnCalculateBtn()
@@ -74,24 +90,11 @@ namespace DepositeCalcTests.Pages
             new WebDriverWait(driver, TimeSpan.FromSeconds(2)).Until(_ => InterestEarnedFld.GetAttribute("value") != null);
         }
 
-        public bool GetCalculateBtnCurrentStatus()
-        {
-            if (CalculateBtn.GetDomAttribute("disabled") != null)
-            {
-                return true;
-            }
-            return false;
-        }
+        public bool IsCalculateBtnDisabled => !CalculateBtn.Enabled;
 
-        public string GetInterestEarnedFldValue()
-        {
-            return InterestEarnedFld.GetAttribute("value").Replace('.', ',');
-        }
+        public string InterestEarned => InterestEarnedFld.GetAttribute("value");
 
-        public string GetIncomeFldValue()
-        {
-            return IncomeFld.GetAttribute("value").Replace('.', ',');
-        }
+        public string Income => IncomeFld.GetAttribute("value");
 
         public string EndDateFldValue()
         {
