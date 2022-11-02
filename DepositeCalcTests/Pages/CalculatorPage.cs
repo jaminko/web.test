@@ -1,6 +1,7 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System;
+using System.Globalization;
 
 namespace DepositeCalcTests.Pages
 {
@@ -57,13 +58,13 @@ namespace DepositeCalcTests.Pages
 
         public string FinancialYear
         {
-            get 
+            get
             {
                 if (FinancialYear365Days.Selected) return "365";
                 if (FinancialYear360Days.Selected) return "360";
                 return null;
             }
-            
+
             set
             {
                 if (value == "360")
@@ -73,13 +74,13 @@ namespace DepositeCalcTests.Pages
                     // $"{day}/{month}/{yeat}"
                     return;
                 }
-                
+
                 if (value == "365")
                 {
                     FinancialYear365Days.Click();
                     return;
                 }
-                
+
                 throw new Exception("Invalid financial year value");
             }
         }
@@ -146,12 +147,6 @@ namespace DepositeCalcTests.Pages
                     return month = "12";
             }
             return month;
-        }
-
-        public string GetMonthEndDate()
-        {
-            string month = EndDateFld.GetAttribute("value");
-            return month.Substring(3, 2);
         }
 
         public void ClickOnMonth(string month)
@@ -222,6 +217,59 @@ namespace DepositeCalcTests.Pages
         public void ClickOnYear2028()
         {
             Year2028.Click();
+        }
+
+        public void SelectMonth(string month)
+        {
+            var selectMonthDropDown = MonthDropDown;
+            var selectMonthDropDownElement = new SelectElement(selectMonthDropDown);
+            selectMonthDropDownElement.SelectByText(month);
+        }
+
+        public string StartDateMonth
+        {
+            get
+            {
+                return MonthDropDown.GetAttribute("value");
+            }
+
+            set
+            {
+                if (value == "360")
+                {
+                    FinancialYear360Days.Click();
+
+                    // $"{day}/{month}/{yeat}"
+                    return;
+                }
+
+                if (value == "365")
+                {
+                    FinancialYear365Days.Click();
+                    return;
+                }
+
+                throw new Exception("Invalid financial year value");
+            }
+        }
+
+        public string GetMonthEndDateText()
+        {
+            string EndDate = EndDateFld.GetAttribute("value");
+            return EndDate.Substring(3, 2);
+        }
+
+        public string monthParseToText()
+        {
+            string numberStr = GetMonthEndDateText();
+            int number;
+
+            bool isParsable = Int32.TryParse(numberStr, out number);
+
+            if (isParsable)
+                return CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(number);
+            else
+                return null;
         }
     }
 }
