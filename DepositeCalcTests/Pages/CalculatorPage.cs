@@ -20,18 +20,6 @@ namespace DepositeCalcTests.Pages
         private IWebElement FinancialYear360Days => driver.FindElement(By.XPath("//td[text()='Financial year: *']/..//input[@onchange='SetYear(365)']"));
         private IWebElement DayDropDown => driver.FindElement(By.XPath("//select[@id='day']"));
         private IWebElement MonthDropDown => driver.FindElement(By.XPath("//select[@id='month']"));
-        private IWebElement MonthJanuary => driver.FindElement(By.XPath("//option[@value='January']"));
-        private IWebElement MonthFebruary => driver.FindElement(By.XPath("//option[@value='February']"));
-        private IWebElement MonthMarch => driver.FindElement(By.XPath("//option[@value='March']"));
-        private IWebElement MonthApril => driver.FindElement(By.XPath("//option[@value='April']"));
-        private IWebElement MonthMay => driver.FindElement(By.XPath("//option[@value='May']"));
-        private IWebElement MonthJun => driver.FindElement(By.XPath("//option[@value='Jun']"));
-        private IWebElement MonthJuly => driver.FindElement(By.XPath("//option[@value='July']"));
-        private IWebElement MonthAugust => driver.FindElement(By.XPath("//option[@value='August']"));
-        private IWebElement MonthSeptember => driver.FindElement(By.XPath("//option[@value='September']"));
-        private IWebElement MonthOctober => driver.FindElement(By.XPath("//option[@value='October']"));
-        private IWebElement MonthNovember => driver.FindElement(By.XPath("//option[@value='November']"));
-        private IWebElement MonthDecember => driver.FindElement(By.XPath("//option[@value='December']"));
         private IWebElement YearDropDown => driver.FindElement(By.XPath("//select[@id='year']"));
         private IWebElement Year2024 => driver.FindElement(By.XPath("//option[@value='2024']"));
         private IWebElement Year2028 => driver.FindElement(By.XPath("//option[@value='2028']"));
@@ -111,73 +99,6 @@ namespace DepositeCalcTests.Pages
             DayDropDown.SendKeys(kay);
         }
 
-        public void ClickMonthDropDown()
-        {
-            MonthDropDown.Click();
-        }
-
-        public string GetMonthStartDate()
-        {
-            String month = MonthDropDown.GetAttribute("value");
-            switch (month)
-            {
-                case "January":
-                    return month = "01";
-                case "February":
-                    return month = "02";
-                case "March":
-                    return month = "03";
-                case "April":
-                    return month = "04";
-                case "May":
-                    return month = "05";
-                case "Jun":
-                    return month = "06";
-                case "July":
-                    return month = "07";
-                case "August":
-                    return month = "08";
-                case "September":
-                    return month = "09";
-                case "October":
-                    return month = "10";
-                case "November":
-                    return month = "11";
-                case "December":
-                    return month = "12";
-            }
-            return month;
-        }
-
-        public void ClickOnMonth(string month)
-        {
-            if (month == "January")
-                MonthJanuary.Click();
-            else if (month == "February")
-                MonthFebruary.Click();
-            else if (month == "March")
-                MonthMarch.Click();
-            else if (month == "April")
-                MonthApril.Click();
-            else if (month == "May")
-                MonthMay.Click();
-            else if (month == "Jun")
-                MonthJun.Click();
-            else if (month == "July")
-                MonthJuly.Click();
-            else if (month == "August")
-                MonthAugust.Click();
-            else if (month == "September")
-                MonthSeptember.Click();
-            else if (month == "October")
-                MonthOctober.Click();
-            else if (month == "November")
-                MonthNovember.Click();
-            else if (month == "November")
-                MonthNovember.Click();
-            else MonthDecember.Click();
-        }
-
         public string GetDayStartDate()
         {
             string day = DayDropDown.GetAttribute("value");
@@ -219,11 +140,25 @@ namespace DepositeCalcTests.Pages
             Year2028.Click();
         }
 
+        public void SelectDay(string day)
+        {
+            var selectDayDropDown = DayDropDown;
+            var selectDayDropDownElement = new SelectElement(selectDayDropDown);
+            selectDayDropDownElement.SelectByText(day);
+        }
+
         public void SelectMonth(string month)
         {
             var selectMonthDropDown = MonthDropDown;
             var selectMonthDropDownElement = new SelectElement(selectMonthDropDown);
             selectMonthDropDownElement.SelectByText(month);
+        }
+
+        public void SelectYear(string year)
+        {
+            var selectYearDropDown = YearDropDown;
+            var selectYearhDropDownElement = new SelectElement(selectYearDropDown);
+            selectYearhDropDownElement.SelectByText(year);
         }
 
         public string StartDateMonth
@@ -259,7 +194,7 @@ namespace DepositeCalcTests.Pages
             return EndDate.Substring(3, 2);
         }
 
-        public string monthParseToText()
+        public string monthNumberParseToText()
         {
             string numberStr = GetMonthEndDateText();
             int number;

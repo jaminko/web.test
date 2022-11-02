@@ -145,35 +145,35 @@ namespace DepositeCalcTests.Tests
 
             // Act
             calculatorPage.SelectMonth(monthText);
-            calculatorPage.monthParseToText();
+            calculatorPage.monthNumberParseToText();
 
             // Assert
-            Assert.AreEqual(calculatorPage.StartDateMonth, calculatorPage.monthParseToText(), "Start date month and end date month values do not match");
+            Assert.AreEqual(calculatorPage.StartDateMonth, calculatorPage.monthNumberParseToText(), "Start date month and end date month values do not match");
         }
 
-        [TestCase("January", "01")]
+        [TestCase("January", "1")]
         [TestCase("January", "31")]
-        [TestCase("February", "01")]
+        [TestCase("February", "1")]
         [TestCase("February", "28")]
-        [TestCase("March", "01")]
+        [TestCase("March", "1")]
         [TestCase("March", "31")]
-        [TestCase("April", "01")]
+        [TestCase("April", "1")]
         [TestCase("April", "30")]
-        [TestCase("May", "01")]
+        [TestCase("May", "1")]
         [TestCase("May", "31")]
-        [TestCase("Jun", "01")]
+        [TestCase("Jun", "1")]
         [TestCase("Jun", "30")]
-        [TestCase("July", "01")]
+        [TestCase("July", "1")]
         [TestCase("July", "31")]
-        [TestCase("August", "01")]
+        [TestCase("August", "1")]
         [TestCase("August", "31")]
-        [TestCase("September", "01")]
+        [TestCase("September", "1")]
         [TestCase("September", "30")]
-        [TestCase("October", "01")]
+        [TestCase("October", "1")]
         [TestCase("October", "31")]
-        [TestCase("November", "01")]
+        [TestCase("November", "1")]
         [TestCase("November", "30")]
-        [TestCase("December", "01")]
+        [TestCase("December", "1")]
         [TestCase("December", "31")]
         public void StartDate365DaysTest(string month, string day)
         {
@@ -183,14 +183,14 @@ namespace DepositeCalcTests.Tests
             // Act
             calculatorPage.FinancialYear = "365";
             calculatorPage.ValidCalculation(100, 10, 365);
-            calculatorPage.ClickMonthDropDown();
-            calculatorPage.ClickOnMonth(month);
-            calculatorPage.SendKeysToDayDropDown(day);
+            calculatorPage.SelectMonth(month);
+            calculatorPage.SelectDay(day);
+            calculatorPage.SelectYear("2022");
             calculatorPage.ClickOnCalculateBtn();
 
             // Asserts
             Assert.AreEqual(calculatorPage.GetDayStartDate(), calculatorPage.GetDayEndDate(), "Day is incorrect");
-            //Assert.AreEqual(calculatorPage.GetYearStartDate() + 1, calculatorPage.GetYearEndDate(), "Year is incorrect");
+            Assert.AreEqual(calculatorPage.GetYearStartDate() + 1, calculatorPage.GetYearEndDate(), "Year is incorrect");
         }
 
         [TestCase("February", "29")]
@@ -202,12 +202,12 @@ namespace DepositeCalcTests.Tests
             // Act
             calculatorPage.ClickOnYearDropDown();
             calculatorPage.ClickOnYear2024();
-            calculatorPage.ClickMonthDropDown();
-            calculatorPage.ClickOnMonth(month);
-            calculatorPage.SendKeysToDayDropDown(day);
+            calculatorPage.SelectMonth(month);
+            calculatorPage.SelectDay(day);
 
             // Assert
-            Assert.AreEqual(month, calculatorPage.GetMonthEndDateText(), "Month is incorrect");
+            Assert.AreEqual(month, calculatorPage.monthNumberParseToText(), "Month is incorrect");
+            Assert.AreEqual(day, calculatorPage.GetDayEndDate(), "Day is incorrect");
         }
 
         [TestCase("February", "29")]
@@ -219,12 +219,12 @@ namespace DepositeCalcTests.Tests
             // Act
             calculatorPage.ClickOnYearDropDown();
             calculatorPage.ClickOnYear2028();
-            calculatorPage.ClickMonthDropDown();
-            calculatorPage.ClickOnMonth(month);
-            calculatorPage.SendKeysToDayDropDown(day);
+            calculatorPage.SelectMonth(month);
+            calculatorPage.SelectDay(day);
 
             // Assert
-            Assert.AreEqual(month, calculatorPage.GetMonthEndDateText(), "Month is incorrect");
+            Assert.AreEqual(month, calculatorPage.monthNumberParseToText(), "Month is incorrect");
+            Assert.AreEqual(day, calculatorPage.GetDayEndDate(), "Day is incorrect");
         }
     }
 }
