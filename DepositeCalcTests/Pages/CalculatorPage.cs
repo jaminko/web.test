@@ -27,20 +27,12 @@ namespace DepositeCalcTests.Pages
         private IWebElement InterestEarnedFld => driver.FindElement(By.XPath("//th[text()='Intereset earned: *']/..//input"));
         private IWebElement EndDateFld => driver.FindElement(By.XPath("//th[text()='End date: *']/..//input"));
 
-        public void MandatoryTextFields(string depositAmount, string interestRate, string investmentTerm)
+        public void FillingMandatoryTextFields(string depositAmount, string interestRate, string investmentTerm)
         {
             DepositAmountFld.SendKeys(depositAmount);
             InterestRateFld.SendKeys(interestRate);
             InvestmentTermFld.SendKeys(investmentTerm);
             new WebDriverWait(driver, TimeSpan.FromSeconds(2)).Until(_ => CalculateBtn.GetAttribute("disable") != string.Empty);
-        }
-
-        public void ValidCalculation(double depositAmount, double interestRate, double investmentTerm)
-        {
-            DepositAmountFld.SendKeys(Convert.ToString(depositAmount));
-            InterestRateFld.SendKeys(Convert.ToString(interestRate));
-            InvestmentTermFld.SendKeys(Convert.ToString(investmentTerm));
-            new WebDriverWait(driver, TimeSpan.FromSeconds(3)).Until(_ => CalculateBtn.GetAttribute("disable") != string.Empty);
         }
 
         public string FinancialYear

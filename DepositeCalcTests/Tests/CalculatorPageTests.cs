@@ -35,23 +35,23 @@ namespace DepositeCalcTests.Tests
             var calculatorPage = new CalculatorPage(driver);
 
             // Act
-            calculatorPage.MandatoryTextFields(depositAmount, interestRate, investmentTerm);
+            calculatorPage.FillingMandatoryTextFields(depositAmount, interestRate, investmentTerm);
             calculatorPage.FinancialYear = financialYear;
 
             // Assert
             Assert.IsTrue(calculatorPage.IsCalculateBtnDisabled, "Calculate button is clickable. This means that one of the text fields or one of the Financial year radio buttons are not mandatory");
         }
 
-        [TestCase(1, 1, 1, "1.00", "0.00")]
-        [TestCase(10000, 100, 365, "20,000.00", "10,000.00")]
-        public void ValidCalculation365Test(double depositAmount, double interestRate, double investmentTerm, string expectedIncome, string expectedInterestEarned)
+        [TestCase("360", "100000", "100", "360", "200,000.00", "100,000.00")]
+        [TestCase("365", "100000", "100", "365", "200,000.00", "100,000.00")]
+        public void ValidCalculationTest(string financialYear, string depositAmount, string interestRate, string investmentTerm, string expectedIncome, string expectedInterestEarned)
         {
             // Arrange
             var calculatorPage = new CalculatorPage(driver);
 
             // Act
-            calculatorPage.FinancialYear = "365";
-            calculatorPage.ValidCalculation(depositAmount, interestRate, investmentTerm);
+            calculatorPage.FinancialYear = financialYear;
+            calculatorPage.FillingMandatoryTextFields(depositAmount, interestRate, investmentTerm);
             calculatorPage.Calculate();
 
             // Asserts
@@ -59,50 +59,18 @@ namespace DepositeCalcTests.Tests
             Assert.AreEqual(expectedInterestEarned, calculatorPage.InterestEarned, "Incorrect value in the Interest earned field");
         }
 
-        [TestCase(1, 1, 1, "1.00", "0.00")]
-        [TestCase(10000, 100, 360, "20,000.00", "10,000.00")]
-        public void ValidCalculation360Test(double depositAmount, double interestRate, double investmentTerm, string expectedIncome, string expectedInterestEarned)
-        {
-            // Arrange
-            var calculatorPage = new CalculatorPage(driver);
-
-            // Act
-            calculatorPage.FinancialYear = "360";
-            calculatorPage.ValidCalculation(depositAmount, interestRate, investmentTerm);
-            calculatorPage.Calculate();
-
-            // Asserts 
-            Assert.AreEqual(expectedIncome, calculatorPage.Income, "Incorrect value in the Interest earned field");
-            Assert.AreEqual(expectedInterestEarned, calculatorPage.InterestEarned, "Incorrect value in the Income field");
-        }
-
-        [TestCase(1000001, 1, 1)]
-        [TestCase(10, 101, 1)]
-        [TestCase(10, 1, 366)]
-        public void NegativeCalculation365Test(double depositAmount, double interestRate, double investmentTerm)
+        [TestCase("360", "1000001", "10", "360")]
+        [TestCase("365", "1000000", "101", "365")]
+        [TestCase("360", "1000000", "100", "361")]
+        [TestCase("365", "1000000", "100", "366")]
+        public void NegativeCalculationTest(string financialYear, string depositAmount, string interestRate, string investmentTerm)
         {
             // Arrange
             var calculatorPage = new CalculatorPage(driver);
 
             // Act
             calculatorPage.FinancialYear = "365";
-            calculatorPage.ValidCalculation(depositAmount, interestRate, investmentTerm);
-
-            // Assert
-            Assert.IsTrue(calculatorPage.IsCalculateBtnDisabled, "Calculate button is clickable. This means that an invalid value may be entered in one of the text fields");
-        }
-
-        [TestCase(1000001, 1, 1)]
-        [TestCase(10, 101, 1)]
-        [TestCase(10, 1, 361)]
-        public void NegativeCalculation360Test(double depositAmount, double interestRate, double investmentTerm)
-        {
-            // Arrange
-            var calculatorPage = new CalculatorPage(driver);
-
-            // Act
-            calculatorPage.FinancialYear = "360";
-            calculatorPage.ValidCalculation(depositAmount, interestRate, investmentTerm);
+            calculatorPage.FillingMandatoryTextFields(depositAmount, interestRate, investmentTerm);
 
             // Assert
             Assert.IsTrue(calculatorPage.IsCalculateBtnDisabled, "Calculate button is clickable. This means that an invalid value may be entered in one of the text fields");
