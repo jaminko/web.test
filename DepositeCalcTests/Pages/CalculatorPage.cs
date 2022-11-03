@@ -1,6 +1,8 @@
-﻿using OpenQA.Selenium;
+﻿using DepositeCalcTests.Utilities;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace DepositeCalcTests.Pages
@@ -85,19 +87,19 @@ namespace DepositeCalcTests.Pages
 
         public string Income => IncomeFld.GetAttribute("value");
 
-        public string EndDateFldValue()
-        {
-            return EndDateFld.GetAttribute("value");
-        }
+        //public string EndDateFldValue()
+        //{
+        //    return EndDateFld.GetAttribute("value");
+        //}
 
-        public void ClickOnDayDropDown()
-        {
-            DayDropDown.Click();
-        }
-        public void SendKeysToDayDropDown(string kay)
-        {
-            DayDropDown.SendKeys(kay);
-        }
+        //public void ClickOnDayDropDown()
+        //{
+        //    DayDropDown.Click();
+        //}
+        //public void SendKeysToDayDropDown(string kay)
+        //{
+        //    DayDropDown.SendKeys(kay);
+        //}
 
         public string GetDayStartDate()
         {
@@ -145,6 +147,26 @@ namespace DepositeCalcTests.Pages
             var selectDayDropDown = DayDropDown;
             var selectDayDropDownElement = new SelectElement(selectDayDropDown);
             selectDayDropDownElement.SelectByText(day);
+        }
+
+        public List<string> GetStartDateMonthesList()
+        {
+            List<string> result = new List<string>();
+            foreach(IWebElement option in new SelectElement(MonthDropDown).Options)
+            {
+                result.Add(option.Text);
+            }
+            return result;
+        }
+
+        public List<string> GetStartDateYearsList()
+        {
+            List<string> result = new List<string>();
+            foreach (IWebElement option in new SelectElement(YearDropDown).Options)
+            {
+                result.Add(option.Text);
+            }
+            return result;
         }
 
         public void SelectMonth(string month)
@@ -196,15 +218,7 @@ namespace DepositeCalcTests.Pages
 
         public string monthNumberParseToText()
         {
-            string numberStr = GetMonthEndDateText();
-            int number;
-
-            bool isParsable = Int32.TryParse(numberStr, out number);
-
-            if (isParsable)
-                return CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(number);
-            else
-                return null;
+            return DateHelper.NumberMonthName(GetMonthEndDateText());
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DepositeCalcTests.Pages;
+using DepositeCalcTests.Utilities;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -94,7 +95,7 @@ namespace DepositeCalcTests.Tests
             Assert.AreEqual(expectedInterestEarned, calculatorPage.InterestEarned, "Incorrect value in the Income field");
         }
 
-        [TestCase(100001, 1, 1)]
+        [TestCase(1000001, 1, 1)]
         [TestCase(10, 101, 1)]
         [TestCase(10, 1, 366)]
         public void NegativeCalculation365Test(double depositAmount, double interestRate, double investmentTerm)
@@ -110,7 +111,7 @@ namespace DepositeCalcTests.Tests
             Assert.IsTrue(calculatorPage.IsCalculateBtnDisabled, "Calculate button is clickable. This means that an invalid value may be entered in one of the text fields");
         }
 
-        [TestCase(100001, 1, 1)]
+        [TestCase(1000001, 1, 1)]
         [TestCase(10, 101, 1)]
         [TestCase(10, 1, 361)]
         public void NegativeCalculation360Test(double depositAmount, double interestRate, double investmentTerm)
@@ -126,56 +127,79 @@ namespace DepositeCalcTests.Tests
             Assert.IsTrue(calculatorPage.IsCalculateBtnDisabled, "Calculate button is clickable. This means that an invalid value may be entered in one of the text fields");
         }
 
-        [TestCase("January")]
-        [TestCase("February")]
-        [TestCase("March")]
-        [TestCase("April")]
-        [TestCase("May")]
-        [TestCase("June")]
-        [TestCase("July")]
-        [TestCase("August")]
-        [TestCase("September")]
-        [TestCase("October")]
-        [TestCase("November")]
-        [TestCase("December")]
-        public void MonthFieldTests(string monthText)
+        [Test]
+        public void MonthFieldTests()
         {
             // Arrange
+            var expectedMonthes = new[]
+            {
+                "January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December"
+            };
             var calculatorPage = new CalculatorPage(driver);
 
-            // Act
-            calculatorPage.SelectMonth(monthText);
-            calculatorPage.monthNumberParseToText();
-
             // Assert
-            Assert.AreEqual(calculatorPage.StartDateMonth, calculatorPage.monthNumberParseToText(), "Start date month and end date month values do not match");
+            Assert.AreEqual(expectedMonthes, calculatorPage.GetStartDateMonthesList());
         }
 
-        [TestCase("January", "1")]
+        [Test]
+        public void YearsFieldTests()
+        {
+            // Arrange
+            var expectedYears = new[]
+            {
+                "2010",
+                "2011",
+                "2012",
+                "2013",
+                "2014",
+                "2015",
+                "2016",
+                "2017",
+                "2018",
+                "2019",
+                "2020",
+                "2021",
+                "2022",
+                "2023",
+                "2024",
+                "2025",
+                "2026",
+                "2027",
+                "2028",
+                "2029"
+            };
+            var calculatorPage = new CalculatorPage(driver);
+
+            // Assert
+            Assert.AreEqual(expectedYears, calculatorPage.GetStartDateYearsList());
+        }
+
         [TestCase("January", "31")]
-        [TestCase("February", "1")]
         [TestCase("February", "28")]
-        [TestCase("March", "1")]
-        [TestCase("March", "31")]
-        [TestCase("April", "1")]
+        //[TestCase("February", "29", "2024")]
+        //[TestCase("February", "29", "2028")]
+        [TestCase("March", "31", "2023")]
         [TestCase("April", "30")]
-        [TestCase("May", "1")]
-        [TestCase("May", "31")]
-        [TestCase("Jun", "1")]
-        [TestCase("Jun", "30")]
-        [TestCase("July", "1")]
-        [TestCase("July", "31")]
-        [TestCase("August", "1")]
+        [TestCase("May", "31", "2025")]
+        [TestCase("June", "30")]
+        [TestCase("July", "31", "2026")]
         [TestCase("August", "31")]
-        [TestCase("September", "1")]
-        [TestCase("September", "30")]
-        [TestCase("October", "1")]
+        [TestCase("September", "30", "2027")]
         [TestCase("October", "31")]
-        [TestCase("November", "1")]
-        [TestCase("November", "30")]
-        [TestCase("December", "1")]
+        [TestCase("November", "30", "2029")]
         [TestCase("December", "31")]
-        public void StartDate365DaysTest(string month, string day)
+        public void DaysField365Test(string month, string day, string year = "2022")
         {
             // Arrange
             var calculatorPage = new CalculatorPage(driver);
@@ -183,14 +207,20 @@ namespace DepositeCalcTests.Tests
             // Act
             calculatorPage.FinancialYear = "365";
             calculatorPage.ValidCalculation(100, 10, 365);
+            calculatorPage.SelectYear(year);
             calculatorPage.SelectMonth(month);
             calculatorPage.SelectDay(day);
-            calculatorPage.SelectYear("2022");
             calculatorPage.ClickOnCalculateBtn();
 
+
+
             // Asserts
-            Assert.AreEqual(calculatorPage.GetDayStartDate(), calculatorPage.GetDayEndDate(), "Day is incorrect");
-            Assert.AreEqual(calculatorPage.GetYearStartDate() + 1, calculatorPage.GetYearEndDate(), "Year is incorrect");
+            Assert.Multiple(() =>
+            {
+                Assert.AreEqual(calculatorPage.GetDayStartDate(), calculatorPage.GetDayEndDate(), "Day is incorrect");
+                Assert.AreEqual(calculatorPage.StartDateMonth, DateHelper.NumberMonthName(calculatorPage.GetMonthEndDateText()), "Start date month and end date month values do not match");
+                Assert.AreEqual(calculatorPage.GetYearStartDate() + 1, calculatorPage.GetYearEndDate(), "Year is incorrect");
+            });
         }
 
         [TestCase("February", "29")]
