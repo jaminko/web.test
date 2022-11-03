@@ -1,11 +1,8 @@
 ﻿using DepositeCalcTests.Pages;
-using DepositeCalcTests.Utilities;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
-using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace DepositeCalcTests.Tests
 {
@@ -128,9 +125,20 @@ namespace DepositeCalcTests.Tests
         }
 
         [Test]
+        public void DayFieldTests()
+        {
+            // Arrange
+            var calculatorPage = new CalculatorPage(driver);
+
+            // Assert
+            Assert.AreEqual(calculatorPage.DayField(), calculatorPage.GetStartDateDaysList(), "Incorrect value in the day field");
+        }
+
+        [Test]
         public void MonthFieldTests()
         {
             // Arrange
+            var calculatorPage = new CalculatorPage(driver);
             var expectedMonthes = new[]
             {
                 "January",
@@ -146,16 +154,16 @@ namespace DepositeCalcTests.Tests
                 "November",
                 "December"
             };
-            var calculatorPage = new CalculatorPage(driver);
 
             // Assert
-            Assert.AreEqual(expectedMonthes, calculatorPage.GetStartDateMonthesList());
+            Assert.AreEqual(expectedMonthes, calculatorPage.GetStartDateMonthesList(), "Incorrect value in the month field");
         }
 
         [Test]
         public void YearsFieldTests()
         {
             // Arrange
+            var calculatorPage = new CalculatorPage(driver);
             var expectedYears = new[]
             {
                 "2010",
@@ -179,82 +187,9 @@ namespace DepositeCalcTests.Tests
                 "2028",
                 "2029"
             };
-            var calculatorPage = new CalculatorPage(driver);
 
             // Assert
-            Assert.AreEqual(expectedYears, calculatorPage.GetStartDateYearsList());
-        }
-
-        [TestCase("January", "31")]
-        [TestCase("February", "28")]
-        //[TestCase("February", "29", "2024")]
-        //[TestCase("February", "29", "2028")]
-        [TestCase("March", "31", "2023")]
-        [TestCase("April", "30")]
-        [TestCase("May", "31", "2025")]
-        [TestCase("June", "30")]
-        [TestCase("July", "31", "2026")]
-        [TestCase("August", "31")]
-        [TestCase("September", "30", "2027")]
-        [TestCase("October", "31")]
-        [TestCase("November", "30", "2029")]
-        [TestCase("December", "31")]
-        public void DaysField365Test(string month, string day, string year = "2022")
-        {
-            // Arrange
-            var calculatorPage = new CalculatorPage(driver);
-
-            // Act
-            calculatorPage.FinancialYear = "365";
-            calculatorPage.ValidCalculation(100, 10, 365);
-            calculatorPage.SelectYear(year);
-            calculatorPage.SelectMonth(month);
-            calculatorPage.SelectDay(day);
-            calculatorPage.ClickOnCalculateBtn();
-
-
-
-            // Asserts
-            Assert.Multiple(() =>
-            {
-                Assert.AreEqual(calculatorPage.GetDayStartDate(), calculatorPage.GetDayEndDate(), "Day is incorrect");
-                Assert.AreEqual(calculatorPage.StartDateMonth, DateHelper.NumberMonthName(calculatorPage.GetMonthEndDateText()), "Start date month and end date month values do not match");
-                Assert.AreEqual(calculatorPage.GetYearStartDate() + 1, calculatorPage.GetYearEndDate(), "Year is incorrect");
-            });
-        }
-
-        [TestCase("February", "29")]
-        public void Leap2024YearTests(string month, string day)
-        {
-            // Arrange
-            var calculatorPage = new CalculatorPage(driver);
-
-            // Act
-            calculatorPage.ClickOnYearDropDown();
-            calculatorPage.ClickOnYear2024();
-            calculatorPage.SelectMonth(month);
-            calculatorPage.SelectDay(day);
-
-            // Assert
-            Assert.AreEqual(month, calculatorPage.monthNumberParseToText(), "Month is incorrect");
-            Assert.AreEqual(day, calculatorPage.GetDayEndDate(), "Day is incorrect");
-        }
-
-        [TestCase("February", "29")]
-        public void Leap2028YearTests(string month, string day)
-        {
-            // Arrange
-            var calculatorPage = new CalculatorPage(driver);
-
-            // Act
-            calculatorPage.ClickOnYearDropDown();
-            calculatorPage.ClickOnYear2028();
-            calculatorPage.SelectMonth(month);
-            calculatorPage.SelectDay(day);
-
-            // Assert
-            Assert.AreEqual(month, calculatorPage.monthNumberParseToText(), "Month is incorrect");
-            Assert.AreEqual(day, calculatorPage.GetDayEndDate(), "Day is incorrect");
+            Assert.AreEqual(expectedYears, calculatorPage.GetStartDateYearsList(), "Incorrect value in the year field");
         }
     }
 }

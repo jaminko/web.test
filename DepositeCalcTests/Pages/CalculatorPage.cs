@@ -3,7 +3,6 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 
 namespace DepositeCalcTests.Pages
 {
@@ -60,17 +59,14 @@ namespace DepositeCalcTests.Pages
                 if (value == "360")
                 {
                     FinancialYear360Days.Click();
-
-                    // $"{day}/{month}/{yeat}"
                     return;
                 }
 
-                if (value == "365")
+                else if (value == "365")
                 {
                     FinancialYear365Days.Click();
                     return;
                 }
-
                 throw new Exception("Invalid financial year value");
             }
         }
@@ -101,58 +97,68 @@ namespace DepositeCalcTests.Pages
         //    DayDropDown.SendKeys(kay);
         //}
 
-        public string GetDayStartDate()
-        {
-            string day = DayDropDown.GetAttribute("value");
-            return day;
-        }
+        //public string GetDayStartDate()
+        //{
+        //    string day = DayDropDown.GetAttribute("value");
+        //    return day;
+        //}
 
-        public string GetDayEndDate()
-        {
-            string day = EndDateFld.GetAttribute("value");
-            return day.Substring(0, 2);
-        }
+        //public string GetDayEndDate()
+        //{
+        //    string day = EndDateFld.GetAttribute("value");
+        //    return day.Substring(0, 2);
+        //}
 
-        public int GetYearStartDate()
-        {
-            string year = YearDropDown.GetAttribute("value");
-            int yearBeforeCalculate = Convert.ToInt32(year);
-            return yearBeforeCalculate;
-        }
+        //public int GetYearStartDate()
+        //{
+        //    string year = YearDropDown.GetAttribute("value");
+        //    int yearBeforeCalculate = Convert.ToInt32(year);
+        //    return yearBeforeCalculate;
+        //}
 
-        public int GetYearEndDate()
-        {
-            string year = EndDateFld.GetAttribute("value");
-            int yearAfterCalculate = Convert.ToInt32(year.Substring(6, 4));
-            return yearAfterCalculate;
-        }
+        //public int GetYearEndDate()
+        //{
+        //    string year = EndDateFld.GetAttribute("value");
+        //    int yearAfterCalculate = Convert.ToInt32(year.Substring(6, 4));
+        //    return yearAfterCalculate;
+        //}
 
-        public void ClickOnYearDropDown()
-        {
-            YearDropDown.Click();
-        }
+        //public void ClickOnYearDropDown()
+        //{
+        //    YearDropDown.Click();
+        //}
 
-        public void ClickOnYear2024()
-        {
-            Year2024.Click();
-        }
+        //public void ClickOnYear2024()
+        //{
+        //    Year2024.Click();
+        //}
 
-        public void ClickOnYear2028()
-        {
-            Year2028.Click();
-        }
+        //public void ClickOnYear2028()
+        //{
+        //    Year2028.Click();
+        //}
 
-        public void SelectDay(string day)
+        //public void SelectDay(string day)
+        //{
+        //    var selectDayDropDown = DayDropDown;
+        //    var selectDayDropDownElement = new SelectElement(selectDayDropDown);
+        //    selectDayDropDownElement.SelectByText(day);
+        //}
+
+        public List<string> GetStartDateDaysList()
         {
-            var selectDayDropDown = DayDropDown;
-            var selectDayDropDownElement = new SelectElement(selectDayDropDown);
-            selectDayDropDownElement.SelectByText(day);
+            List<string> result = new List<string>();
+            foreach (IWebElement option in new SelectElement(DayDropDown).Options)
+            {
+                result.Add(option.Text);
+            }
+            return result;
         }
 
         public List<string> GetStartDateMonthesList()
         {
             List<string> result = new List<string>();
-            foreach(IWebElement option in new SelectElement(MonthDropDown).Options)
+            foreach (IWebElement option in new SelectElement(MonthDropDown).Options)
             {
                 result.Add(option.Text);
             }
@@ -169,19 +175,19 @@ namespace DepositeCalcTests.Pages
             return result;
         }
 
-        public void SelectMonth(string month)
-        {
-            var selectMonthDropDown = MonthDropDown;
-            var selectMonthDropDownElement = new SelectElement(selectMonthDropDown);
-            selectMonthDropDownElement.SelectByText(month);
-        }
+        //public void SelectMonth(string month)
+        //{
+        //    var selectMonthDropDown = MonthDropDown;
+        //    var selectMonthDropDownElement = new SelectElement(selectMonthDropDown);
+        //    selectMonthDropDownElement.SelectByText(month);
+        //}
 
-        public void SelectYear(string year)
-        {
-            var selectYearDropDown = YearDropDown;
-            var selectYearhDropDownElement = new SelectElement(selectYearDropDown);
-            selectYearhDropDownElement.SelectByText(year);
-        }
+        //public void SelectYear(string year)
+        //{
+        //    var selectYearDropDown = YearDropDown;
+        //    var selectYearhDropDownElement = new SelectElement(selectYearDropDown);
+        //    selectYearhDropDownElement.SelectByText(year);
+        //}
 
         public string StartDateMonth
         {
@@ -205,9 +211,35 @@ namespace DepositeCalcTests.Pages
                     FinancialYear365Days.Click();
                     return;
                 }
-
                 throw new Exception("Invalid financial year value");
             }
+        }
+
+        public string StartDateYear
+        {
+            get
+            {
+                return YearDropDown.GetAttribute("value");
+            }
+
+            //set
+            //{
+            //    if (value == "360")
+            //    {
+            //        FinancialYear360Days.Click();
+
+            //        // $"{day}/{month}/{yeat}"
+            //        return;
+            //    }
+
+            //    if (value == "365")
+            //    {
+            //        FinancialYear365Days.Click();
+            //        return;
+            //    }
+
+            //    throw new Exception("Invalid financial year value");
+            //}
         }
 
         public string GetMonthEndDateText()
@@ -220,5 +252,176 @@ namespace DepositeCalcTests.Pages
         {
             return DateHelper.NumberMonthName(GetMonthEndDateText());
         }
+
+        public List<string> DayField()
+        {
+            List<string> result = new List<string>();
+            foreach (IWebElement option in new SelectElement(DayDropDown).Options)
+            {
+                if ((StartDateMonth == "January" ||
+                StartDateMonth == "March" ||
+                StartDateMonth == "May" ||
+                StartDateMonth == "July" ||
+                StartDateMonth == "August" ||
+                StartDateMonth == "October" ||
+                StartDateMonth == "December"))
+                {
+                    var expectedDays = new[]
+              {
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "10",
+                "11",
+                "12",
+                "13",
+                "14",
+                "15",
+                "16",
+                "17",
+                "18",
+                "19",
+                "20",
+                "21",
+                "22",
+                "23",
+                "24",
+                "25",
+                "26",
+                "27",
+                "28",
+                "29",
+                "30",
+                "31"
+            };
+                }
+                else if (StartDateMonth == "April" ||
+                 StartDateMonth == "September" ||
+                 StartDateMonth == "November")
+                {
+                    var expectedDays = new[]
+    {
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "10",
+                "11",
+                "12",
+                "13",
+                "14",
+                "15",
+                "16",
+                "17",
+                "18",
+                "19",
+                "20",
+                "21",
+                "22",
+                "23",
+                "24",
+                "25",
+                "26",
+                "27",
+                "28",
+                "29",
+                "30"
+            };
+                }
+                else if (StartDateMonth == "February")
+                {
+                    var expectedDays = new[]
+    {
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "10",
+                "11",
+                "12",
+                "13",
+                "14",
+                "15",
+                "16",
+                "17",
+                "18",
+                "19",
+                "20",
+                "21",
+                "22",
+                "23",
+                "24",
+                "25",
+                "26",
+                "27",
+                "28"
+            };
+                } 
+                else if ((StartDateMonth == "Frebruary" &&
+                        StartDateYear == "2024") ||
+                        (StartDateMonth == "Frebruary" &&
+                        StartDateYear == "2028"))
+                {
+                    var expectedDays = new[]
+                {
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "10",
+                "11",
+                "12",
+                "13",
+                "14",
+                "15",
+                "16",
+                "17",
+                "18",
+                "19",
+                "20",
+                "21",
+                "22",
+                "23",
+                "24",
+                "25",
+                "26",
+                "27",
+                "28",
+                "29"
+            };
+                }
+                else
+                {
+                    throw new Exception("Invalid day value");
+                }
+                result.Add(option.Text);
+            }
+            return result;
+
+        }
+
+
+
     }
 }
