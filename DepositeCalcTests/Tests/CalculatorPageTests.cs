@@ -3,6 +3,8 @@ using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace DepositeCalcTests.Tests
 {
@@ -26,146 +28,102 @@ namespace DepositeCalcTests.Tests
             driver.Quit();
         }
 
-        [TestCase("", "", "")]
-        [TestCase("", "", "1")]
-        [TestCase("", "1", "")]
         [TestCase("", "1", "1")]
-        [TestCase("1", "", "")]
         [TestCase("1", "", "1")]
         [TestCase("1", "1", "")]
         public void MandaroryTextFieldsWith365BtnTest(string depositAmount, string interestRate, string investmentTerm)
         {
             // Arrange
             var calculatorPage = new CalculatorPage(driver);
-            string calculateBtnStatusBeforeTest = "true";
 
             // Act
             calculatorPage.MandatoryTextFields(depositAmount, interestRate, investmentTerm);
-            calculatorPage.ClickOnFinancialYear365RadioBtn();
+            calculatorPage.FinancialYear = "365";
 
             // Assert
-            Assert.AreEqual(calculatorPage.GetCalculateBtnCurrentStatus(), calculateBtnStatusBeforeTest, "Calculate button is clickable. This means that one of the text fields or one of the Financial year radio buttons are not mandatory");
+            Assert.IsTrue(calculatorPage.IsCalculateBtnDisabled, "Calculate button is clickable. This means that one of the text fields or one of the Financial year radio buttons are not mandatory");
         }
 
-        [TestCase("", "", "")]
-        [TestCase("", "", "1")]
-        [TestCase("", "1", "")]
         [TestCase("", "1", "1")]
-        [TestCase("1", "", "")]
         [TestCase("1", "", "1")]
         [TestCase("1", "1", "")]
         public void MandaroryTextFieldsWith360BtnTest(string depositAmount, string interestRate, string investmentTerm)
         {
             // Arrange
             var calculatorPage = new CalculatorPage(driver);
-            string calculateBtnStatusBeforeTest = "true";
 
             // Act
             calculatorPage.MandatoryTextFields(depositAmount, interestRate, investmentTerm);
-            calculatorPage.ClickOnFinancialYear360RadioBtn();
+            calculatorPage.FinancialYear = "360";
 
             // Assert
-            Assert.AreEqual(calculatorPage.GetCalculateBtnCurrentStatus(), calculateBtnStatusBeforeTest, "Calculate button is clickable. This means that one of the text fields or one of the Financial year radio buttons are not mandatory");
+            Assert.IsTrue(calculatorPage.IsCalculateBtnDisabled, "Calculate button is clickable. This means that one of the text fields or one of the Financial year radio buttons are not mandatory");
         }
 
-        [TestCase(1, 1, 1)]
-        [TestCase(10, 10, 1)]
-        [TestCase(99000, 10, 1)]
-        [TestCase(100000, 10, 1)]
-        [TestCase(10, 99, 1)]
-        [TestCase(10, 100, 1)]
-        [TestCase(10, 50, 364)]
-        [TestCase(10, 50, 365)]
-        public void ValidCalculation365Test(double depositAmount, double interestRate, double investmentTerm)
+        [TestCase(1, 1, 1, "1.00", "0.00")]
+        [TestCase(10000, 100, 365, "20,000.00", "10,000.00")]
+        public void ValidCalculation365Test(double depositAmount, double interestRate, double investmentTerm, string expectedIncome, string expectedInterestEarned)
         {
             // Arrange
             var calculatorPage = new CalculatorPage(driver);
 
             // Act
+            calculatorPage.FinancialYear = "365";
             calculatorPage.ValidCalculation(depositAmount, interestRate, investmentTerm);
-            calculatorPage.ClickOnFinancialYear365RadioBtn();
             calculatorPage.ClickOnCalculateBtn();
 
-            double oneDayPercentageCalculation = (depositAmount * (interestRate * 0.01) / 365) * investmentTerm;
-            double incomeCalculation = depositAmount + oneDayPercentageCalculation;
-
-            string expectedInterestEarned = string.Format("{0:0.00}", oneDayPercentageCalculation);
-            string expectedIncome = string.Format("{0:0.00}", incomeCalculation);
-
             // Asserts
-            Assert.AreEqual(expectedInterestEarned, calculatorPage.GetInterestEarnedFldValue(), "Incorrect value in the Interest earned field");
-            Assert.AreEqual(expectedIncome, calculatorPage.GetIncomeFldValue(), "Incorrect value in the Income field");
+            Assert.AreEqual(expectedIncome, calculatorPage.Income, "Incorrect value in the Income field");
+            Assert.AreEqual(expectedInterestEarned, calculatorPage.InterestEarned, "Incorrect value in the Interest earned field");
         }
 
-        [TestCase(1, 1, 1)]
-        [TestCase(10, 10, 1)]
-        [TestCase(99000, 10, 1)]
-        [TestCase(100000, 10, 1)]
-        [TestCase(10, 99, 1)]
-        [TestCase(10, 100, 1)]
-        [TestCase(10, 50, 359)]
-        [TestCase(10, 50, 360)]
-        public void ValidCalculation360Test(double depositAmount, double interestRate, double investmentTerm)
+        [TestCase(1, 1, 1, "1.00", "0.00")]
+        [TestCase(10000, 100, 360, "20,000.00", "10,000.00")]
+        public void ValidCalculation360Test(double depositAmount, double interestRate, double investmentTerm, string expectedIncome, string expectedInterestEarned)
         {
             // Arrange
             var calculatorPage = new CalculatorPage(driver);
 
             // Act
+            calculatorPage.FinancialYear = "360";
             calculatorPage.ValidCalculation(depositAmount, interestRate, investmentTerm);
-            calculatorPage.ClickOnFinancialYear360RadioBtn();
             calculatorPage.ClickOnCalculateBtn();
 
-            double oneDayPercentageCalculation = (depositAmount * (interestRate * 0.01) / 360) * investmentTerm;
-            double incomeCalculation = depositAmount + oneDayPercentageCalculation;
-
-            string expectedInterestEarned = string.Format("{0:0.00}", oneDayPercentageCalculation);
-            string expectedIncome = string.Format("{0:0.00}", incomeCalculation);
-
-            // Asserts
-            Assert.AreEqual(expectedInterestEarned, calculatorPage.GetInterestEarnedFldValue(), "Incorrect value in the Interest earned field");
-            Assert.AreEqual(expectedIncome, calculatorPage.GetIncomeFldValue(), "Incorrect value in the Income field");
+            // Asserts 
+            Assert.AreEqual(expectedIncome, calculatorPage.Income, "Incorrect value in the Interest earned field");
+            Assert.AreEqual(expectedInterestEarned, calculatorPage.InterestEarned, "Incorrect value in the Income field");
         }
 
         [TestCase(100001, 1, 1)]
-        [TestCase(100002, 1, 1)]
         [TestCase(10, 101, 1)]
-        [TestCase(10, 102, 1)]
         [TestCase(10, 1, 366)]
-        [TestCase(10, 1, 367)]
         public void NegativeCalculation365Test(double depositAmount, double interestRate, double investmentTerm)
         {
             // Arrange
             var calculatorPage = new CalculatorPage(driver);
-            string calculateBtnStatusBeforeTest = "true";
 
             // Act
+            calculatorPage.FinancialYear = "365";
             calculatorPage.ValidCalculation(depositAmount, interestRate, investmentTerm);
-            calculatorPage.ClickOnFinancialYear365RadioBtn();
 
             // Assert
-            Assert.AreEqual(calculatorPage.GetCalculateBtnCurrentStatus(), calculateBtnStatusBeforeTest, "Calculate button is clickable. This means that an incorrect value may be entered in one of the text fields");
+            Assert.IsTrue(calculatorPage.IsCalculateBtnDisabled, "Calculate button is clickable. This means that an invalid value may be entered in one of the text fields");
         }
 
         [TestCase(100001, 1, 1)]
-        [TestCase(100002, 1, 1)]
         [TestCase(10, 101, 1)]
-        [TestCase(10, 102, 1)]
         [TestCase(10, 1, 361)]
-        [TestCase(10, 1, 365)]
-        [TestCase(10, 1, 366)]
-        [TestCase(10, 1, 367)]
         public void NegativeCalculation360Test(double depositAmount, double interestRate, double investmentTerm)
         {
             // Arrange
             var calculatorPage = new CalculatorPage(driver);
-            string calculateBtnStatusBeforeTest = "true";
 
             // Act
+            calculatorPage.FinancialYear = "360";
             calculatorPage.ValidCalculation(depositAmount, interestRate, investmentTerm);
-            calculatorPage.ClickOnFinancialYear360RadioBtn();
 
             // Assert
-            Assert.AreEqual(calculatorPage.GetCalculateBtnCurrentStatus(), calculateBtnStatusBeforeTest, "Calculate button is clickable. This means that an incorrect value may be entered in one of the text fields");
+            Assert.IsTrue(calculatorPage.IsCalculateBtnDisabled, "Calculate button is clickable. This means that an invalid value may be entered in one of the text fields");
         }
 
         [TestCase("January")]
@@ -173,49 +131,49 @@ namespace DepositeCalcTests.Tests
         [TestCase("March")]
         [TestCase("April")]
         [TestCase("May")]
-        [TestCase("Jun")]
+        [TestCase("June")]
         [TestCase("July")]
         [TestCase("August")]
         [TestCase("September")]
         [TestCase("October")]
         [TestCase("November")]
         [TestCase("December")]
-        public void StartDateMonthTest(string month)
+        public void MonthFieldTests(string monthText)
         {
             // Arrange
             var calculatorPage = new CalculatorPage(driver);
 
             // Act
-            calculatorPage.ClickMonthDropDown();
-            calculatorPage.ClickOnMonth(month);
+            calculatorPage.SelectMonth(monthText);
+            calculatorPage.monthNumberParseToText();
 
             // Assert
-            Assert.AreEqual(calculatorPage.GetMonthStartDate(), calculatorPage.GetMonthEndDate(), "Month is incorrect");
+            Assert.AreEqual(calculatorPage.StartDateMonth, calculatorPage.monthNumberParseToText(), "Start date month and end date month values do not match");
         }
 
-        [TestCase("January", "01")]
+        [TestCase("January", "1")]
         [TestCase("January", "31")]
-        [TestCase("February", "01")]
+        [TestCase("February", "1")]
         [TestCase("February", "28")]
-        [TestCase("March", "01")]
+        [TestCase("March", "1")]
         [TestCase("March", "31")]
-        [TestCase("April", "01")]
+        [TestCase("April", "1")]
         [TestCase("April", "30")]
-        [TestCase("May", "01")]
+        [TestCase("May", "1")]
         [TestCase("May", "31")]
-        [TestCase("Jun", "01")]
+        [TestCase("Jun", "1")]
         [TestCase("Jun", "30")]
-        [TestCase("July", "01")]
+        [TestCase("July", "1")]
         [TestCase("July", "31")]
-        [TestCase("August", "01")]
+        [TestCase("August", "1")]
         [TestCase("August", "31")]
-        [TestCase("September", "01")]
+        [TestCase("September", "1")]
         [TestCase("September", "30")]
-        [TestCase("October", "01")]
+        [TestCase("October", "1")]
         [TestCase("October", "31")]
-        [TestCase("November", "01")]
+        [TestCase("November", "1")]
         [TestCase("November", "30")]
-        [TestCase("December", "01")]
+        [TestCase("December", "1")]
         [TestCase("December", "31")]
         public void StartDate365DaysTest(string month, string day)
         {
@@ -223,11 +181,11 @@ namespace DepositeCalcTests.Tests
             var calculatorPage = new CalculatorPage(driver);
 
             // Act
-            calculatorPage.ValidCalculation(1, 10, 365);
-            calculatorPage.ClickOnFinancialYear365RadioBtn();
-            calculatorPage.ClickMonthDropDown();
-            calculatorPage.ClickOnMonth(month);
-            calculatorPage.SendKeysToDayDropDown(day);
+            calculatorPage.FinancialYear = "365";
+            calculatorPage.ValidCalculation(100, 10, 365);
+            calculatorPage.SelectMonth(month);
+            calculatorPage.SelectDay(day);
+            calculatorPage.SelectYear("2022");
             calculatorPage.ClickOnCalculateBtn();
 
             // Asserts
@@ -244,12 +202,12 @@ namespace DepositeCalcTests.Tests
             // Act
             calculatorPage.ClickOnYearDropDown();
             calculatorPage.ClickOnYear2024();
-            calculatorPage.ClickMonthDropDown();
-            calculatorPage.ClickOnMonth(month);
-            calculatorPage.SendKeysToDayDropDown(day);
+            calculatorPage.SelectMonth(month);
+            calculatorPage.SelectDay(day);
 
             // Assert
-            Assert.AreEqual(calculatorPage.GetMonthStartDate(), calculatorPage.GetMonthEndDate(), "Month is incorrect");
+            Assert.AreEqual(month, calculatorPage.monthNumberParseToText(), "Month is incorrect");
+            Assert.AreEqual(day, calculatorPage.GetDayEndDate(), "Day is incorrect");
         }
 
         [TestCase("February", "29")]
@@ -261,12 +219,12 @@ namespace DepositeCalcTests.Tests
             // Act
             calculatorPage.ClickOnYearDropDown();
             calculatorPage.ClickOnYear2028();
-            calculatorPage.ClickMonthDropDown();
-            calculatorPage.ClickOnMonth(month);
-            calculatorPage.SendKeysToDayDropDown(day);
+            calculatorPage.SelectMonth(month);
+            calculatorPage.SelectDay(day);
 
             // Assert
-            Assert.AreEqual(calculatorPage.GetMonthStartDate(), calculatorPage.GetMonthEndDate(), "Month is incorrect");
+            Assert.AreEqual(month, calculatorPage.monthNumberParseToText(), "Month is incorrect");
+            Assert.AreEqual(day, calculatorPage.GetDayEndDate(), "Day is incorrect");
         }
     }
 }
