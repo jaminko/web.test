@@ -22,8 +22,6 @@ namespace DepositeCalcTests.Pages
         private IWebElement DayDropDown => driver.FindElement(By.XPath("//select[@id='day']"));
         private IWebElement MonthDropDown => driver.FindElement(By.XPath("//select[@id='month']"));
         private IWebElement YearDropDown => driver.FindElement(By.XPath("//select[@id='year']"));
-        private IWebElement Year2024 => driver.FindElement(By.XPath("//option[@value='2024']"));
-        private IWebElement Year2028 => driver.FindElement(By.XPath("//option[@value='2028']"));
         private IWebElement CalculateBtn => driver.FindElement(By.XPath("//button[@id='calculateBtn']"));
         private IWebElement IncomeFld => driver.FindElement(By.XPath("//th[text()='Income: *']/..//input"));
         private IWebElement InterestEarnedFld => driver.FindElement(By.XPath("//th[text()='Intereset earned: *']/..//input"));
@@ -83,68 +81,6 @@ namespace DepositeCalcTests.Pages
 
         public string Income => IncomeFld.GetAttribute("value");
 
-        //public string EndDateFldValue()
-        //{
-        //    return EndDateFld.GetAttribute("value");
-        //}
-
-        //public void ClickOnDayDropDown()
-        //{
-        //    DayDropDown.Click();
-        //}
-        //public void SendKeysToDayDropDown(string kay)
-        //{
-        //    DayDropDown.SendKeys(kay);
-        //}
-
-        //public string GetDayStartDate()
-        //{
-        //    string day = DayDropDown.GetAttribute("value");
-        //    return day;
-        //}
-
-        //public string GetDayEndDate()
-        //{
-        //    string day = EndDateFld.GetAttribute("value");
-        //    return day.Substring(0, 2);
-        //}
-
-        //public int GetYearStartDate()
-        //{
-        //    string year = YearDropDown.GetAttribute("value");
-        //    int yearBeforeCalculate = Convert.ToInt32(year);
-        //    return yearBeforeCalculate;
-        //}
-
-        //public int GetYearEndDate()
-        //{
-        //    string year = EndDateFld.GetAttribute("value");
-        //    int yearAfterCalculate = Convert.ToInt32(year.Substring(6, 4));
-        //    return yearAfterCalculate;
-        //}
-
-        //public void ClickOnYearDropDown()
-        //{
-        //    YearDropDown.Click();
-        //}
-
-        //public void ClickOnYear2024()
-        //{
-        //    Year2024.Click();
-        //}
-
-        //public void ClickOnYear2028()
-        //{
-        //    Year2028.Click();
-        //}
-
-        //public void SelectDay(string day)
-        //{
-        //    var selectDayDropDown = DayDropDown;
-        //    var selectDayDropDownElement = new SelectElement(selectDayDropDown);
-        //    selectDayDropDownElement.SelectByText(day);
-        //}
-
         public List<string> GetStartDateDaysList()
         {
             List<string> result = new List<string>();
@@ -175,20 +111,6 @@ namespace DepositeCalcTests.Pages
             return result;
         }
 
-        //public void SelectMonth(string month)
-        //{
-        //    var selectMonthDropDown = MonthDropDown;
-        //    var selectMonthDropDownElement = new SelectElement(selectMonthDropDown);
-        //    selectMonthDropDownElement.SelectByText(month);
-        //}
-
-        //public void SelectYear(string year)
-        //{
-        //    var selectYearDropDown = YearDropDown;
-        //    var selectYearhDropDownElement = new SelectElement(selectYearDropDown);
-        //    selectYearhDropDownElement.SelectByText(year);
-        //}
-
         public string StartDateMonth
         {
             get
@@ -201,8 +123,6 @@ namespace DepositeCalcTests.Pages
                 if (value == "360")
                 {
                     FinancialYear360Days.Click();
-
-                    // $"{day}/{month}/{yeat}"
                     return;
                 }
 
@@ -211,7 +131,7 @@ namespace DepositeCalcTests.Pages
                     FinancialYear365Days.Click();
                     return;
                 }
-                throw new Exception("Invalid financial year value");
+                throw new Exception("Invalid month value");
             }
         }
 
@@ -222,35 +142,19 @@ namespace DepositeCalcTests.Pages
                 return YearDropDown.GetAttribute("value");
             }
 
-            //set
-            //{
-            //    if (value == "360")
-            //    {
-            //        FinancialYear360Days.Click();
-
-            //        // $"{day}/{month}/{yeat}"
-            //        return;
-            //    }
-
-            //    if (value == "365")
-            //    {
-            //        FinancialYear365Days.Click();
-            //        return;
-            //    }
-
-            //    throw new Exception("Invalid financial year value");
-            //}
-        }
-
-        public string GetMonthEndDateText()
-        {
-            string EndDate = EndDateFld.GetAttribute("value");
-            return EndDate.Substring(3, 2);
-        }
-
-        public string monthNumberParseToText()
-        {
-            return DateHelper.NumberMonthName(GetMonthEndDateText());
+            set
+            {
+                if (value == "2010" || value == "2011" || value == "2012" || value == "2013" ||
+                    value == "2014" || value == "2015" || value == "2016" || value == "2017" ||
+                    value == "2018" || value == "2019" || value == "2020" || value == "2021" ||
+                    value == "2022" || value == "2023" || value == "2024" || value == "2025" ||
+                    value == "2026" || value == "2027" || value == "2028" || value == "2029")
+                {
+                    YearDropDown.Click();
+                    return;
+                }
+                throw new Exception("Invalid year value");
+            }
         }
 
         public List<string> DayField()
@@ -372,7 +276,7 @@ namespace DepositeCalcTests.Pages
                 "27",
                 "28"
             };
-                } 
+                }
                 else if ((StartDateMonth == "Frebruary" &&
                         StartDateYear == "2024") ||
                         (StartDateMonth == "Frebruary" &&
@@ -418,10 +322,6 @@ namespace DepositeCalcTests.Pages
                 result.Add(option.Text);
             }
             return result;
-
         }
-
-
-
     }
 }
