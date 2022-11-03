@@ -69,7 +69,7 @@ namespace DepositeCalcTests.Pages
             }
         }
 
-        public void ClickOnCalculateBtn()
+        public void Calculate()
         {
             CalculateBtn.Click();
             new WebDriverWait(driver, TimeSpan.FromSeconds(2)).Until(_ => InterestEarnedFld.GetAttribute("value") != null);
@@ -113,215 +113,14 @@ namespace DepositeCalcTests.Pages
 
         public string StartDateMonth
         {
-            get
-            {
-                return MonthDropDown.GetAttribute("value");
-            }
-
-            set
-            {
-                if (value == "360")
-                {
-                    FinancialYear360Days.Click();
-                    return;
-                }
-
-                if (value == "365")
-                {
-                    FinancialYear365Days.Click();
-                    return;
-                }
-                throw new Exception("Invalid month value");
-            }
+            get => new SelectElement(MonthDropDown).SelectedOption.Text;
+            set => new SelectElement(MonthDropDown).SelectByText(value);
         }
 
         public string StartDateYear
         {
-            get
-            {
-                return YearDropDown.GetAttribute("value");
-            }
-
-            set
-            {
-                if (value == "2010" || value == "2011" || value == "2012" || value == "2013" ||
-                    value == "2014" || value == "2015" || value == "2016" || value == "2017" ||
-                    value == "2018" || value == "2019" || value == "2020" || value == "2021" ||
-                    value == "2022" || value == "2023" || value == "2024" || value == "2025" ||
-                    value == "2026" || value == "2027" || value == "2028" || value == "2029")
-                {
-                    YearDropDown.Click();
-                    return;
-                }
-                throw new Exception("Invalid year value");
-            }
-        }
-
-        public List<string> DayField()
-        {
-            List<string> result = new List<string>();
-            foreach (IWebElement option in new SelectElement(DayDropDown).Options)
-            {
-                if ((StartDateMonth == "January" ||
-                StartDateMonth == "March" ||
-                StartDateMonth == "May" ||
-                StartDateMonth == "July" ||
-                StartDateMonth == "August" ||
-                StartDateMonth == "October" ||
-                StartDateMonth == "December"))
-                {
-                    var expectedDays = new[]
-              {
-                "1",
-                "2",
-                "3",
-                "4",
-                "5",
-                "6",
-                "7",
-                "8",
-                "9",
-                "10",
-                "11",
-                "12",
-                "13",
-                "14",
-                "15",
-                "16",
-                "17",
-                "18",
-                "19",
-                "20",
-                "21",
-                "22",
-                "23",
-                "24",
-                "25",
-                "26",
-                "27",
-                "28",
-                "29",
-                "30",
-                "31"
-            };
-                }
-                else if (StartDateMonth == "April" ||
-                 StartDateMonth == "September" ||
-                 StartDateMonth == "November")
-                {
-                    var expectedDays = new[]
-    {
-                "1",
-                "2",
-                "3",
-                "4",
-                "5",
-                "6",
-                "7",
-                "8",
-                "9",
-                "10",
-                "11",
-                "12",
-                "13",
-                "14",
-                "15",
-                "16",
-                "17",
-                "18",
-                "19",
-                "20",
-                "21",
-                "22",
-                "23",
-                "24",
-                "25",
-                "26",
-                "27",
-                "28",
-                "29",
-                "30"
-            };
-                }
-                else if (StartDateMonth == "February")
-                {
-                    var expectedDays = new[]
-    {
-                "1",
-                "2",
-                "3",
-                "4",
-                "5",
-                "6",
-                "7",
-                "8",
-                "9",
-                "10",
-                "11",
-                "12",
-                "13",
-                "14",
-                "15",
-                "16",
-                "17",
-                "18",
-                "19",
-                "20",
-                "21",
-                "22",
-                "23",
-                "24",
-                "25",
-                "26",
-                "27",
-                "28"
-            };
-                }
-                else if ((StartDateMonth == "Frebruary" &&
-                        StartDateYear == "2024") ||
-                        (StartDateMonth == "Frebruary" &&
-                        StartDateYear == "2028"))
-                {
-                    var expectedDays = new[]
-                {
-                "1",
-                "2",
-                "3",
-                "4",
-                "5",
-                "6",
-                "7",
-                "8",
-                "9",
-                "10",
-                "11",
-                "12",
-                "13",
-                "14",
-                "15",
-                "16",
-                "17",
-                "18",
-                "19",
-                "20",
-                "21",
-                "22",
-                "23",
-                "24",
-                "25",
-                "26",
-                "27",
-                "28",
-                "29"
-            };
-                }
-                else
-                {
-                    throw new Exception("Invalid day value");
-                }
-                result.Add(option.Text);
-            }
-            return result;
+            get => new SelectElement(YearDropDown).SelectedOption.Text;
+            set => new SelectElement(YearDropDown).SelectByText(value);
         }
     }
 }

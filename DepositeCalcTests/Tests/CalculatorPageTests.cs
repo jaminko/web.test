@@ -1,4 +1,5 @@
 ﻿using DepositeCalcTests.Pages;
+using DepositeCalcTests.Utilities;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -26,33 +27,16 @@ namespace DepositeCalcTests.Tests
             driver.Quit();
         }
 
-        [TestCase("", "1", "1")]
-        [TestCase("1", "", "1")]
-        [TestCase("1", "1", "")]
-        public void MandaroryTextFieldsWith365BtnTest(string depositAmount, string interestRate, string investmentTerm)
+        [TestCase("360", "1", "1", "")]
+        [TestCase("365", "1", "1", "")]
+        public void MandaroryTextFieldsTest(string financialYear, string depositAmount, string interestRate, string investmentTerm)
         {
             // Arrange
             var calculatorPage = new CalculatorPage(driver);
 
             // Act
             calculatorPage.MandatoryTextFields(depositAmount, interestRate, investmentTerm);
-            calculatorPage.FinancialYear = "365";
-
-            // Assert
-            Assert.IsTrue(calculatorPage.IsCalculateBtnDisabled, "Calculate button is clickable. This means that one of the text fields or one of the Financial year radio buttons are not mandatory");
-        }
-
-        [TestCase("", "1", "1")]
-        [TestCase("1", "", "1")]
-        [TestCase("1", "1", "")]
-        public void MandaroryTextFieldsWith360BtnTest(string depositAmount, string interestRate, string investmentTerm)
-        {
-            // Arrange
-            var calculatorPage = new CalculatorPage(driver);
-
-            // Act
-            calculatorPage.MandatoryTextFields(depositAmount, interestRate, investmentTerm);
-            calculatorPage.FinancialYear = "360";
+            calculatorPage.FinancialYear = financialYear;
 
             // Assert
             Assert.IsTrue(calculatorPage.IsCalculateBtnDisabled, "Calculate button is clickable. This means that one of the text fields or one of the Financial year radio buttons are not mandatory");
@@ -68,7 +52,7 @@ namespace DepositeCalcTests.Tests
             // Act
             calculatorPage.FinancialYear = "365";
             calculatorPage.ValidCalculation(depositAmount, interestRate, investmentTerm);
-            calculatorPage.ClickOnCalculateBtn();
+            calculatorPage.Calculate();
 
             // Asserts
             Assert.AreEqual(expectedIncome, calculatorPage.Income, "Incorrect value in the Income field");
@@ -85,7 +69,7 @@ namespace DepositeCalcTests.Tests
             // Act
             calculatorPage.FinancialYear = "360";
             calculatorPage.ValidCalculation(depositAmount, interestRate, investmentTerm);
-            calculatorPage.ClickOnCalculateBtn();
+            calculatorPage.Calculate();
 
             // Asserts 
             Assert.AreEqual(expectedIncome, calculatorPage.Income, "Incorrect value in the Interest earned field");
@@ -124,14 +108,22 @@ namespace DepositeCalcTests.Tests
             Assert.IsTrue(calculatorPage.IsCalculateBtnDisabled, "Calculate button is clickable. This means that an invalid value may be entered in one of the text fields");
         }
 
-        [Test]
-        public void DayFieldTests()
+        [TestCase(2024, 2)]
+        [TestCase(2028, 2)]
+        [TestCase(2025, 9)]
+        [TestCase(2029, 12)]
+        public void DayFieldTests(int year, int month)
         {
             // Arrange
             var calculatorPage = new CalculatorPage(driver);
+            var expectedDays = DateHelper.GetMonthDays(year, month);
+
+            // Atc
+            calculatorPage.StartDateYear = year.ToString();
+            calculatorPage.StartDateMonth = DateHelper.NumberMonthName(month.ToString());
 
             // Assert
-            Assert.AreEqual(calculatorPage.DayField(), calculatorPage.GetStartDateDaysList(), "Incorrect value in the day field");
+            Assert.AreEqual(expectedDays, calculatorPage.GetStartDateDaysList(), "Incorrect value in the day field");
         }
 
         [Test]
