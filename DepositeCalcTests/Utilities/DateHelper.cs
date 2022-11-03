@@ -17,7 +17,7 @@ namespace DepositeCalcTests.Utilities
             if (isParsable)
                 return CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(number);
             else
-                throw new Exception($"Invalid month {number} value");
+                throw new Exception($"Invalid month number: {number}");
         }
 
         public static List<string> GetMonthDays(int year, int month)
