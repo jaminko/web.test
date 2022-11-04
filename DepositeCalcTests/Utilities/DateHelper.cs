@@ -10,7 +10,7 @@ namespace DepositeCalcTests.Utilities
 {
     internal static class DateHelper
     {
-        public static string NumberMonthName(string monthNumber)
+        public static string NumberOfMonthToNameOfMonth(string monthNumber)
         {
             bool isParsable = Int32.TryParse(monthNumber, out int number);
 
@@ -24,7 +24,7 @@ namespace DepositeCalcTests.Utilities
         {
             int daysCount = DateTime.DaysInMonth(year, month);
             List<string> days = new List<string>();
-            for(int i = 0; i < daysCount; i++)
+            for(int i = 1; i <= daysCount; i++)
             {
                 days.Add(i.ToString());
             }

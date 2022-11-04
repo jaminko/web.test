@@ -4,6 +4,7 @@ using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
+using System.Collections.Generic;
 
 namespace DepositeCalcTests.Tests
 {
@@ -69,7 +70,7 @@ namespace DepositeCalcTests.Tests
             var calculatorPage = new CalculatorPage(driver);
 
             // Act
-            calculatorPage.FinancialYear = "365";
+            calculatorPage.FinancialYear = financialYear;
             calculatorPage.FillingMandatoryTextFields(depositAmount, interestRate, investmentTerm);
 
             // Assert
@@ -88,10 +89,10 @@ namespace DepositeCalcTests.Tests
 
             // Atc
             calculatorPage.StartDateYear = year.ToString();
-            calculatorPage.StartDateMonth = DateHelper.NumberMonthName(month.ToString());
+            calculatorPage.StartDateMonth = DateHelper.NumberOfMonthToNameOfMonth(month.ToString());
 
             // Assert
-            Assert.AreEqual(expectedDays, calculatorPage.GetStartDateDaysList(), "Incorrect value in the day field");
+            Assert.AreEqual(expectedDays, calculatorPage.GetStartDateDayList(), "Incorrect value in the day field");
         }
 
         [Test]
@@ -116,40 +117,25 @@ namespace DepositeCalcTests.Tests
             };
 
             // Assert
-            Assert.AreEqual(expectedMonthes, calculatorPage.GetStartDateMonthesList(), "Incorrect value in the month field");
+            Assert.AreEqual(expectedMonthes, calculatorPage.GetStartDateMonthList(), "Incorrect value in the month field");
         }
 
-        [Test]
-        public void YearsFieldTests()
+        [TestCase(2010, 2029)]
+        public void YearsFieldTests(int minimalYear, int maximumYear)
         {
             // Arrange
             var calculatorPage = new CalculatorPage(driver);
-            var expectedYears = new[]
+
+            List<string> expectedYears = new List<string>();
+            int maxYear = maximumYear;
+            for (int minYear = minimalYear; minYear <= maxYear; minYear++)
             {
-                "2010",
-                "2011",
-                "2012",
-                "2013",
-                "2014",
-                "2015",
-                "2016",
-                "2017",
-                "2018",
-                "2019",
-                "2020",
-                "2021",
-                "2022",
-                "2023",
-                "2024",
-                "2025",
-                "2026",
-                "2027",
-                "2028",
-                "2029"
-            };
+                expectedYears.Add(Convert.ToString(minYear));
+            }
 
             // Assert
             Assert.AreEqual(expectedYears, calculatorPage.GetStartDateYearsList(), "Incorrect value in the year field");
         }
     }
 }
+

@@ -17,15 +17,15 @@ namespace DepositeCalcTests.Pages
         private IWebElement DepositAmountFld => driver.FindElement(By.XPath("//td[text()='Deposit amount: *']/..//input"));
         private IWebElement InterestRateFld => driver.FindElement(By.XPath("//td[text()='Rate of interest: *']/..//input"));
         private IWebElement InvestmentTermFld => driver.FindElement(By.XPath("//td[text()='Investment term: *']/..//input"));
-        private IWebElement FinancialYear365Days => driver.FindElement(By.XPath("//td[text()='Financial year: *']/..//input[@onchange='SetYear(360)']"));
-        private IWebElement FinancialYear360Days => driver.FindElement(By.XPath("//td[text()='Financial year: *']/..//input[@onchange='SetYear(365)']"));
+        private IWebElement FinancialYear365DaysBtn => driver.FindElement(By.XPath("//td[text()='Financial year: *']/..//input[@onchange='SetYear(360)']"));
+        private IWebElement FinancialYear360DaysBtn => driver.FindElement(By.XPath("//td[text()='Financial year: *']/..//input[@onchange='SetYear(365)']"));
         private IWebElement DayDropDown => driver.FindElement(By.XPath("//select[@id='day']"));
         private IWebElement MonthDropDown => driver.FindElement(By.XPath("//select[@id='month']"));
         private IWebElement YearDropDown => driver.FindElement(By.XPath("//select[@id='year']"));
         private IWebElement CalculateBtn => driver.FindElement(By.XPath("//button[@id='calculateBtn']"));
         private IWebElement IncomeFld => driver.FindElement(By.XPath("//th[text()='Income: *']/..//input"));
         private IWebElement InterestEarnedFld => driver.FindElement(By.XPath("//th[text()='Intereset earned: *']/..//input"));
-        private IWebElement EndDateFld => driver.FindElement(By.XPath("//th[text()='End date: *']/..//input"));
+        //private IWebElement EndDateFld => driver.FindElement(By.XPath("//th[text()='End date: *']/..//input"));
 
         public void FillingMandatoryTextFields(string depositAmount, string interestRate, string investmentTerm)
         {
@@ -39,8 +39,8 @@ namespace DepositeCalcTests.Pages
         {
             get
             {
-                if (FinancialYear365Days.Selected) return "365";
-                if (FinancialYear360Days.Selected) return "360";
+                if (FinancialYear365DaysBtn.Selected) return "365";
+                if (FinancialYear360DaysBtn.Selected) return "360";
                 return null;
             }
 
@@ -48,13 +48,13 @@ namespace DepositeCalcTests.Pages
             {
                 if (value == "360")
                 {
-                    FinancialYear360Days.Click();
+                    FinancialYear360DaysBtn.Click();
                     return;
                 }
 
                 else if (value == "365")
                 {
-                    FinancialYear365Days.Click();
+                    FinancialYear365DaysBtn.Click();
                     return;
                 }
                 throw new Exception("Invalid financial year value");
@@ -73,35 +73,11 @@ namespace DepositeCalcTests.Pages
 
         public string Income => IncomeFld.GetAttribute("value");
 
-        public List<string> GetStartDateDaysList()
-        {
-            List<string> result = new List<string>();
-            foreach (IWebElement option in new SelectElement(DayDropDown).Options)
-            {
-                result.Add(option.Text);
-            }
-            return result;
-        }
+        public List<string> GetStartDateMonthList() => MonthDropDown.GetDropDownOptions();
 
-        public List<string> GetStartDateMonthesList()
-        {
-            List<string> result = new List<string>();
-            foreach (IWebElement option in new SelectElement(MonthDropDown).Options)
-            {
-                result.Add(option.Text);
-            }
-            return result;
-        }
+        public List<string> GetStartDateYearsList() => YearDropDown.GetDropDownOptions();
 
-        public List<string> GetStartDateYearsList()
-        {
-            List<string> result = new List<string>();
-            foreach (IWebElement option in new SelectElement(YearDropDown).Options)
-            {
-                result.Add(option.Text);
-            }
-            return result;
-        }
+        public List<string> GetStartDateDayList() => DayDropDown.GetDropDownOptions();
 
         public string StartDateMonth
         {
