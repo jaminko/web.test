@@ -160,6 +160,20 @@ namespace DepositeCalcTests.Tests
             // Assert
             Assert.AreEqual(expactedEndDate, calculatorPage.EndDate, "Incorrect value in the end date field");
         }
+
+        [Test]
+        public void SettingLnkTest()
+        {
+            // Arrange
+            var calculatorPage = new CalculatorPage(driver);
+            string expectedUrl = "https://localhost:5001/Settings";
+
+            // Act
+            calculatorPage.ClickOnSettingsLnk();
+
+            // Assert
+            Assert.AreEqual(expectedUrl, driver.Url, "Incorrect page");
+        }
     }
 }
 

@@ -26,6 +26,7 @@ namespace DepositeCalcTests.Pages
         private IWebElement IncomeFld => driver.FindElement(By.XPath("//th[text()='Income: *']/..//input"));
         private IWebElement InterestEarnedFld => driver.FindElement(By.XPath("//th[text()='Intereset earned: *']/..//input"));
         private IWebElement EndDateFld => driver.FindElement(By.XPath("//th[text()='End date: *']/..//input"));
+        private IWebElement SettingsLnk => driver.FindElement(By.XPath("//div[@onclick='Settings()']"));
 
         public void FillingMandatoryTextFields(string depositAmount, string interestRate, string investmentTerm)
         {
@@ -96,6 +97,10 @@ namespace DepositeCalcTests.Pages
         {
             get => new SelectElement(DayDropDown).SelectedOption.Text;
             set => new SelectElement(DayDropDown).SelectByText(value);
+        }
+        public void ClickOnSettingsLnk()
+        {
+            SettingsLnk.Click();
         }
     }
 }
