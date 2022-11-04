@@ -138,6 +138,28 @@ namespace DepositeCalcTests.Tests
             // Assert
             Assert.AreEqual(expectedYears, calculatorPage.GetStartDateYearsList(), "Incorrect value in the year field");
         }
+
+        [TestCase("365", "100000", "100", "365", "2022", "January", "31", "31/01/2023")]
+        [TestCase("365", "100000", "100", "365", "2024", "February", "29", "28/02/2025")]
+        [TestCase("360", "100000", "100", "360", "2022", "June", "21", "16/06/2023")]
+        [TestCase("360", "100000", "100", "360", "2028", "February", "29", "23/02/2029")]
+        public void EndDateFieldTest(string financialYear, string depositAmount, string interestRate, string investmentTerm,
+                                     string year, string month, string day, string expactedEndDate)
+        {
+            // Arrange
+            var calculatorPage = new CalculatorPage(driver);
+
+            // Act
+            calculatorPage.FinancialYear = financialYear;
+            calculatorPage.FillingMandatoryTextFields(depositAmount, interestRate, investmentTerm);
+            calculatorPage.StartDateYear = year;
+            calculatorPage.StartDateMonth = month;
+            calculatorPage.StartDateDay = day;
+            calculatorPage.Calculate();
+
+            // Assert
+            Assert.AreEqual(expactedEndDate, calculatorPage.EndDate, "Incorrect value in the end date field");
+        }
     }
 }
 
