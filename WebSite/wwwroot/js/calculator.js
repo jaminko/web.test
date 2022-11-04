@@ -9,8 +9,7 @@
 }
 
 VerifyTerm = function (id, min) {
-    //var max = document.querySelector('#finYear input').checked ? 365 : 360;
-    var max = 366;
+    var max = document.querySelector('#finYear input').checked ? 365 : 360;
     var value = Number(document.getElementById(id).value);
 
     if (!Number.isInteger(value) || isNaN(value) || value < min || value > max) {
@@ -21,17 +20,13 @@ VerifyTerm = function (id, min) {
 }
 
 Date.prototype.yyyymmdd = function () {
-    // December 32
-    //var dd = this.getDate();
+    var dd = this.getDate();
     var mm = this.getMonth() + 1;
-    var dd = this.getDate() + 1;
     return [(dd > 9 ? '' : '0') + dd, (mm > 9 ? '' : '0') + mm, this.getFullYear()].join('/');
 };
 
 CalculateDate = function () {
-    // December 32
-    //var day = document.getElementById('day').selectedIndex + 1;
-    var day = document.getElementById('day').selectedIndex;
+    var day = document.getElementById('day').selectedIndex + 1;
     var month = document.getElementById('month').selectedIndex;
     var year = document.getElementById('year').value;
     var days = Number(document.getElementById('term').value);
@@ -88,9 +83,8 @@ async function ResetMonth() {
             SetDay(day < 31 ? day : 30);
             break;
         default:
-            //AddOptions('day', 1, leapYear ? 29 : 28);
+            AddOptions('day', 1, leapYear ? 29 : 28);
             //SetDay(day <= (leapYear ? 29 : 28) ? day : (leapYear ? 29 : 28));
-            AddOptions('day', 1, 28);
             SetDay(day < 29 ? day : 28);
             break;
     }
@@ -189,11 +183,12 @@ async function Save() {
 }
 
 function SetCalculateButtonState() {
+    var finYear = !document.querySelector('#finYear td:nth-child(2) input').checked && !document.querySelector('#finYear td:nth-child(3) input').checked;
     var amount = Number(document.getElementById('amount').value);
     var days = Number(document.getElementById('term').value);
     var percent = Number(document.getElementById('percent').value);
 
-    document.getElementById('calculateBtn').disabled = (amount == 0 || days == 0 || percent == 0);
+    document.getElementById('calculateBtn').disabled = (finYear || amount == 0 || days == 0 || percent == 0);
 }
 
 async function Calculate() {
@@ -220,6 +215,8 @@ SetYear = function (year) {
     } else {
         document.querySelector('#finYear td:nth-child(3) input').checked = false;
     }
+		
+		SetCalculateButtonState();
 }
 
 SetCurrency = function () {
@@ -240,8 +237,3 @@ SetCurrentDate();
 SetNumber('interest', 0);
 SetNumber('income', 0);
 SetEndDate(new Date());
-
-// disable all controls
-$("input").attr("disabled", true);
-$("select").attr("disabled", true);
-$("button").attr("disabled", true);
