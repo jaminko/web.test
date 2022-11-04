@@ -56,8 +56,11 @@ namespace DepositeCalcTests.Tests
             calculatorPage.Calculate();
 
             // Asserts
-            Assert.AreEqual(expectedIncome, calculatorPage.Income, "Incorrect value in the Income field");
-            Assert.AreEqual(expectedInterestEarned, calculatorPage.InterestEarned, "Incorrect value in the Interest earned field");
+            Assert.Multiple(() =>
+            {
+                Assert.AreEqual(expectedIncome, calculatorPage.Income, "Incorrect value in the Income field");
+                Assert.AreEqual(expectedInterestEarned, calculatorPage.InterestEarned, "Incorrect value in the Interest earned field");
+            });
         }
 
         [TestCase("360", "1000001", "10", "360")]
@@ -77,7 +80,7 @@ namespace DepositeCalcTests.Tests
             Assert.IsTrue(calculatorPage.IsCalculateBtnDisabled, "Calculate button is clickable. This means that an invalid value may be entered in one of the text fields");
         }
 
-        [TestCase(2024, 2)]
+        [TestCase(2020, 2)]
         [TestCase(2028, 2)]
         [TestCase(2025, 9)]
         [TestCase(2029, 12)]
@@ -120,17 +123,16 @@ namespace DepositeCalcTests.Tests
             Assert.AreEqual(expectedMonthes, calculatorPage.GetStartDateMonthList(), "Incorrect value in the month field");
         }
 
-        [TestCase(2010, 2029)]
-        public void YearsFieldTests(int minimalYear, int maximumYear)
+        [Test]
+        public void YearsFieldTests()
         {
             // Arrange
             var calculatorPage = new CalculatorPage(driver);
 
             List<string> expectedYears = new List<string>();
-            int maxYear = maximumYear;
-            for (int minYear = minimalYear; minYear <= maxYear; minYear++)
+            for (int year = 2010; year <= 2029; year++)
             {
-                expectedYears.Add(Convert.ToString(minYear));
+                expectedYears.Add(Convert.ToString(year));
             }
 
             // Assert

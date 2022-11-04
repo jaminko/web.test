@@ -25,7 +25,7 @@ namespace DepositeCalcTests.Pages
         private IWebElement CalculateBtn => driver.FindElement(By.XPath("//button[@id='calculateBtn']"));
         private IWebElement IncomeFld => driver.FindElement(By.XPath("//th[text()='Income: *']/..//input"));
         private IWebElement InterestEarnedFld => driver.FindElement(By.XPath("//th[text()='Intereset earned: *']/..//input"));
-        //private IWebElement EndDateFld => driver.FindElement(By.XPath("//th[text()='End date: *']/..//input"));
+        private IWebElement EndDateFld => driver.FindElement(By.XPath("//th[text()='End date: *']/..//input"));
 
         public void FillingMandatoryTextFields(string depositAmount, string interestRate, string investmentTerm)
         {
@@ -73,6 +73,8 @@ namespace DepositeCalcTests.Pages
 
         public string Income => IncomeFld.GetAttribute("value");
 
+        public string EndDate => EndDateFld.GetAttribute("value");
+
         public List<string> GetStartDateMonthList() => MonthDropDown.GetDropDownOptions();
 
         public List<string> GetStartDateYearsList() => YearDropDown.GetDropDownOptions();
@@ -89,6 +91,11 @@ namespace DepositeCalcTests.Pages
         {
             get => new SelectElement(YearDropDown).SelectedOption.Text;
             set => new SelectElement(YearDropDown).SelectByText(value);
+        }
+        public string StartDateDay
+        {
+            get => new SelectElement(DayDropDown).SelectedOption.Text;
+            set => new SelectElement(DayDropDown).SelectByText(value);
         }
     }
 }
