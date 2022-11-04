@@ -20,5 +20,10 @@ namespace DepositeCalcTests.Pages
         private IWebElement SaveBnt => driver.FindElement(By.XPath("//button[@id='save']"));
         private IWebElement CancelBtn => driver.FindElement(By.XPath("//button[@id='cancel']"));
         private IWebElement LogoutLnk => driver.FindElement(By.XPath("//div[@onclick='Logout()']"));
+
+        public void ClickOnLogoutLnk()
+        {
+            LogoutLnk.Click();
+        }
     }
 }
