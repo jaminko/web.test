@@ -16,7 +16,7 @@ namespace DepositeCalcTests.Pages
             this.driver = driver;
         }
         private IWebElement DateFormatFld => driver.FindElement(By.XPath("//select[@id='dateFormat']"));
-        private IWebElement NumberFormatFld => driver.FindElement(By.XPath("//th[text()='Number format:']/..//td"));
+        private IWebElement NumberFormatFld => driver.FindElement(By.XPath("//select[@id='numberFormat']"));
         private IWebElement DefaultCurrencyFld => driver.FindElement(By.XPath("//select[@id='currency']"));
         private IWebElement SaveBnt => driver.FindElement(By.XPath("//button[@id='save']"));
         private IWebElement CancelBtn => driver.FindElement(By.XPath("//button[@id='cancel']"));

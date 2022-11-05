@@ -63,8 +63,8 @@ namespace DepositeCalcTests.Tests
         }
 
         [TestCase("dd/MM/yyyy", "2024", "February", "29", "02")]
-        [TestCase("dd-MM-yyyy", "2026", "March", "1", "03")]
-        public void ChangeDateFormatStrartWithDayTest(string expectedDateFormat, string year, string month, string day, string expectedMonthNumber)
+        [TestCase("dd-MM-yyyy", "2026", "March", "01", "03")]
+        public void DateFormatStrartWithDayTest(string expectedDateFormat, string year, string month, string day, string expectedMonthNumber)
         {
             // Arrange
             var calculatorPage = new CalculatorPage(driver);
@@ -90,7 +90,7 @@ namespace DepositeCalcTests.Tests
 
         [TestCase("MM/dd/yyyy", "2024", "April", "10", "04")]
         [TestCase("MM dd yyyy", "2024", "September", "25", "09")]
-        public void ChangeDateFormatStrartWithMonthTest(string expectedDateFormat, string year, string month, string day, string expectedMonthNumber)
+        public void DateFormatStrartWithMonthTest(string expectedDateFormat, string year, string month, string day, string expectedMonthNumber)
         {
             // Arrange
             var calculatorPage = new CalculatorPage(driver);
@@ -118,7 +118,7 @@ namespace DepositeCalcTests.Tests
         [TestCase("€ - euro")]
         [TestCase("£ - Great Britain Pound")]
         [TestCase("₴ - Ukrainian hryvnia")]
-        public void ChangeDefaultCurrencyTest(string expectedCurrency)
+        public void DefaultCurrencyTest(string expectedCurrency)
         {
             // Arrange
             var calculatorPage = new CalculatorPage(driver);
@@ -132,6 +132,34 @@ namespace DepositeCalcTests.Tests
 
             // Assert
             Assert.AreEqual(expectedCarrencyEmblem, calculatorPage.CurrenrCurrencyFld, "Incorrect value in the current currency field");
+        }
+
+        [TestCase("123,456,789.00", "365", "100000", "100", "365")]
+        [TestCase("123.456.789,00", "365", "100000", "100", "365")]
+        [TestCase("123 456 789.00", "365", "100000", "100", "365")]
+        [TestCase("123 456 789,00", "365", "100000", "100", "365")]
+        public void NumberFormatTest(string expectedNumberFormat, string financialYear, string depositAmount, string interestRate, string investmentTerm)
+        {
+            // Arrange
+            var calculatorPage = new CalculatorPage(driver);
+            var settingsPage = new SettingsPage(driver);
+
+            // Act
+            settingsPage.NumberFormatDropDown = expectedNumberFormat;
+            settingsPage.ClickOnSaveBnt();
+            driver.SwitchTo().Alert().Accept();
+            calculatorPage.FinancialYear = financialYear;
+            calculatorPage.FillingMandatoryTextFields(depositAmount, interestRate, investmentTerm);
+            calculatorPage.Calculate();
+            string firstExpectedSeparator = expectedNumberFormat.Substring(3, 1);
+            string secondExpectedSeparator = expectedNumberFormat.Substring(11, 1);
+
+            // Assert
+            Assert.Multiple(() =>
+            {
+                Assert.AreEqual(firstExpectedSeparator, calculatorPage.Income.Substring(3, 1), "Incorrect first seperator in the income field");
+                Assert.AreEqual(secondExpectedSeparator, calculatorPage.Income.Substring(7, 1), "Incorrect last seperator in the income field");
+            });
         }
     }
 }
