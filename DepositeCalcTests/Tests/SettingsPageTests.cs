@@ -7,6 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DepositeCalcTests.Pages;
+using System.Threading;
+using SeleniumExtras.WaitHelpers;
+using DepositeCalcTests.Utilities;
+using System.Globalization;
 
 namespace DepositeCalcTests.Tests
 {
@@ -42,6 +46,68 @@ namespace DepositeCalcTests.Tests
 
             // Assert
             Assert.AreEqual(expectedUrl, driver.Url, "Incorrect page");
+        }
+
+        [Test]
+        public void CancelBtnTest()
+        {
+            // Arrange
+            var settingsPage = new SettingsPage(driver);
+            string expectedUrl = "https://localhost:5001/Calculator";
+
+            // Act
+            settingsPage.ClickOnCancelBtn();
+
+            // Assert
+            Assert.AreEqual(expectedUrl, driver.Url, "Incorrect page");
+        }
+
+        [TestCase("dd/MM/yyyy", "2024", "February", "29", "02")]
+        [TestCase("dd-MM-yyyy", "2026", "March", "1", "03")]
+        public void ChangeDateFormatStrartWithDayTest(string expectedDateFormat, string year, string month, string day, string expectedMonthNumber)
+        {
+            // Arrange
+            var calculatorPage = new CalculatorPage(driver);
+            var settingsPage = new SettingsPage(driver);
+
+            // Act
+            settingsPage.DateFormatDropDown = expectedDateFormat;
+            settingsPage.ClickOnSaveBnt();
+            driver.SwitchTo().Alert().Accept();
+            calculatorPage.StartDateYear = year;
+            calculatorPage.StartDateMonth = month;
+            calculatorPage.StartDateDay = day;
+            string expectedSeparator = expectedDateFormat.Substring(2, 1);
+            string expectedEndDayStartsWithDays = day + expectedSeparator + expectedMonthNumber + expectedSeparator + year;
+
+            // Assert
+            Assert.AreEqual(expectedSeparator, calculatorPage.EndDate.Substring(2, 1), "Incorrect value in the end date field");
+            Assert.AreEqual(expectedEndDayStartsWithDays, calculatorPage.EndDate, "Incorrect value in the end date field");
+        }
+
+        [TestCase("MM/dd/yyyy", "2024", "April", "10", "04")]
+        [TestCase("MM dd yyyy", "2024", "September", "25", "09")]
+
+
+        public void ChangeDateFormatStrartWithMonthTest(string expectedDateFormat, string year, string month, string day, string expectedMonthNumber)
+        {
+            // Arrange
+            var calculatorPage = new CalculatorPage(driver);
+            var settingsPage = new SettingsPage(driver);
+
+            // Act
+            settingsPage.DateFormatDropDown = expectedDateFormat;
+            settingsPage.ClickOnSaveBnt();
+            driver.SwitchTo().Alert().Accept();
+            calculatorPage.StartDateYear = year;
+            calculatorPage.StartDateMonth = month;
+            calculatorPage.StartDateDay = day;
+            string expectedSeparator = expectedDateFormat.Substring(2, 1);
+            string expectedEndDayStartsWitMonth = expectedMonthNumber + expectedSeparator + day + expectedSeparator + year;
+
+            // Assert
+            Assert.AreEqual(expectedSeparator, calculatorPage.EndDate.Substring(2, 1), "Incorrect value in the end date field");
+            Assert.AreEqual(expectedEndDayStartsWitMonth, calculatorPage.EndDate, "Incorrect value in the end date field");
         }
     }
 }
