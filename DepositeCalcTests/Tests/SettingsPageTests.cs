@@ -81,14 +81,15 @@ namespace DepositeCalcTests.Tests
             string expectedEndDayStartsWithDays = day + expectedSeparator + expectedMonthNumber + expectedSeparator + year;
 
             // Assert
-            Assert.AreEqual(expectedSeparator, calculatorPage.EndDate.Substring(2, 1), "Incorrect value in the end date field");
-            Assert.AreEqual(expectedEndDayStartsWithDays, calculatorPage.EndDate, "Incorrect value in the end date field");
+            Assert.Multiple(() =>
+            {
+                Assert.AreEqual(expectedSeparator, calculatorPage.EndDate.Substring(2, 1), "Incorrect separator in the end date field");
+                Assert.AreEqual(expectedEndDayStartsWithDays, calculatorPage.EndDate, "Incorrect date format in the end date field");
+            });
         }
 
         [TestCase("MM/dd/yyyy", "2024", "April", "10", "04")]
         [TestCase("MM dd yyyy", "2024", "September", "25", "09")]
-
-
         public void ChangeDateFormatStrartWithMonthTest(string expectedDateFormat, string year, string month, string day, string expectedMonthNumber)
         {
             // Arrange
@@ -106,8 +107,31 @@ namespace DepositeCalcTests.Tests
             string expectedEndDayStartsWitMonth = expectedMonthNumber + expectedSeparator + day + expectedSeparator + year;
 
             // Assert
-            Assert.AreEqual(expectedSeparator, calculatorPage.EndDate.Substring(2, 1), "Incorrect value in the end date field");
-            Assert.AreEqual(expectedEndDayStartsWitMonth, calculatorPage.EndDate, "Incorrect value in the end date field");
+            Assert.Multiple(() =>
+            {
+                Assert.AreEqual(expectedSeparator, calculatorPage.EndDate.Substring(2, 1), "Incorrect separator in the end date field");
+                Assert.AreEqual(expectedEndDayStartsWitMonth, calculatorPage.EndDate, "Incorrect date format in the end date field");
+            });
+        }
+
+        [TestCase("$ - US dollar")]
+        [TestCase("€ - euro")]
+        [TestCase("£ - Great Britain Pound")]
+        [TestCase("₴ - Ukrainian hryvnia")]
+        public void ChangeDefaultCurrencyTest(string expectedCurrency)
+        {
+            // Arrange
+            var calculatorPage = new CalculatorPage(driver);
+            var settingsPage = new SettingsPage(driver);
+
+            // Act
+            settingsPage.DefaultCurrencyDropDown = expectedCurrency;
+            settingsPage.ClickOnSaveBnt();
+            driver.SwitchTo().Alert().Accept();
+            string expectedCarrencyEmblem = expectedCurrency.Substring(0, 1);
+
+            // Assert
+            Assert.AreEqual(expectedCarrencyEmblem, calculatorPage.CurrenrCurrencyFld, "Incorrect value in the current currency field");
         }
     }
 }
