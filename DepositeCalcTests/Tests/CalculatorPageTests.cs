@@ -162,17 +162,17 @@ namespace DepositeCalcTests.Tests
         }
 
         [Test]
-        public void SettingLnkTest()
+        public void SettingLinkTest()
         {
             // Arrange
             var calculatorPage = new CalculatorPage(driver);
-            string expectedUrl = "https://localhost:5001/Settings";
+            var settingsPage = new SettingsPage(driver);
 
             // Act
-            calculatorPage.ClickOnSettingsLnk();
+            calculatorPage.OpenSettings();
 
             // Assert
-            Assert.AreEqual(expectedUrl, driver.Url, "Incorrect page");
+            Assert.IsTrue(settingsPage.IsOpened(), "Incorrect page");
         }
     }
 }

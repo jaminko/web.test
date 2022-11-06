@@ -102,12 +102,12 @@ namespace DepositeCalcTests.Pages
             set => new SelectElement(DayDropDown).SelectByText(value);
         }
 
-        public void ClickOnSettingsLnk()
+        public SettingsPage OpenSettings()
         {
             SettingsLnk.Click();
+            return new SettingsPage(driver);
         }
 
-        public string CurrenrCurrencyFld => CurrentCurrency.GetAttribute("textContent");
-
+        public string CurrenrCurrencyFld => CurrentCurrency.Text;
     }
 }

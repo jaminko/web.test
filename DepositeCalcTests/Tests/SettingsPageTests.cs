@@ -2,15 +2,7 @@
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DepositeCalcTests.Pages;
-using System.Threading;
-using SeleniumExtras.WaitHelpers;
-using DepositeCalcTests.Utilities;
-using System.Globalization;
 
 namespace DepositeCalcTests.Tests
 {
@@ -35,50 +27,50 @@ namespace DepositeCalcTests.Tests
         }
 
         [Test]
-        public void LogoutLnkTest()
+        public void LogoutLinkTest()
         {
             // Arrange
             var settingsPage = new SettingsPage(driver);
-            string expectedUrl = "https://localhost:5001/";
+            var loginPage = new LoginPage(driver);
 
             // Act
-            settingsPage.ClickOnLogoutLnk();
+            settingsPage.Logout();
 
             // Assert
-            Assert.AreEqual(expectedUrl, driver.Url, "Incorrect page");
+            Assert.IsTrue(loginPage.IsOpened(), "Incorrect page");
         }
 
         [Test]
-        public void CancelBtnTest()
+        public void CancelButtonTest()
         {
             // Arrange
             var settingsPage = new SettingsPage(driver);
             string expectedUrl = "https://localhost:5001/Calculator";
 
             // Act
-            settingsPage.ClickOnCancelBtn();
+            settingsPage.Cancel();
 
             // Assert
             Assert.AreEqual(expectedUrl, driver.Url, "Incorrect page");
         }
 
-        [TestCase("dd/MM/yyyy", "2024", "February", "29", "02")]
-        [TestCase("dd-MM-yyyy", "2026", "March", "01", "03")]
-        public void DateFormatStrartWithDayTest(string expectedDateFormat, string year, string month, string day, string expectedMonthNumber)
+        [TestCase("dd/MM/yyyy", "2024", "February", "29", "02", "29")]
+        [TestCase("dd-MM-yyyy", "2026", "March", "1", "03", "01")]
+        public void DateFormatStrartWithDayTest(string expectedDateFormat, string year, string month, string day, 
+                                                string expectedMonthNumber, string expectedDayNumber)
         {
             // Arrange
             var calculatorPage = new CalculatorPage(driver);
             var settingsPage = new SettingsPage(driver);
 
             // Act
-            settingsPage.DateFormatDropDown = expectedDateFormat;
-            settingsPage.ClickOnSaveBnt();
-            driver.SwitchTo().Alert().Accept();
+            settingsPage.DateFormat = expectedDateFormat;
+            settingsPage.Save();
             calculatorPage.StartDateYear = year;
             calculatorPage.StartDateMonth = month;
             calculatorPage.StartDateDay = day;
             string expectedSeparator = expectedDateFormat.Substring(2, 1);
-            string expectedEndDayStartsWithDays = day + expectedSeparator + expectedMonthNumber + expectedSeparator + year;
+            string expectedEndDayStartsWithDays = expectedDayNumber + expectedSeparator + expectedMonthNumber + expectedSeparator + year;
 
             // Assert
             Assert.Multiple(() =>
@@ -88,29 +80,28 @@ namespace DepositeCalcTests.Tests
             });
         }
 
-        [TestCase("MM/dd/yyyy", "2024", "April", "10", "04")]
-        [TestCase("MM dd yyyy", "2024", "September", "25", "09")]
-        public void DateFormatStrartWithMonthTest(string expectedDateFormat, string year, string month, string day, string expectedMonthNumber)
+        [TestCase("MM/dd/yyyy", "2024", "April", "10", "04/10/2024")]
+        [TestCase("MM dd yyyy", "2024", "April", "10", "04 10 2024")]
+        public void DateFormatStrartWithMonthTest(string expectedDateFormat, string year, string month, string day, 
+                                                  string expectedEndDate)
         {
             // Arrange
             var calculatorPage = new CalculatorPage(driver);
             var settingsPage = new SettingsPage(driver);
 
             // Act
-            settingsPage.DateFormatDropDown = expectedDateFormat;
-            settingsPage.ClickOnSaveBnt();
-            driver.SwitchTo().Alert().Accept();
+            settingsPage.DateFormat = expectedDateFormat;
+            settingsPage.Save();
             calculatorPage.StartDateYear = year;
             calculatorPage.StartDateMonth = month;
             calculatorPage.StartDateDay = day;
             string expectedSeparator = expectedDateFormat.Substring(2, 1);
-            string expectedEndDayStartsWitMonth = expectedMonthNumber + expectedSeparator + day + expectedSeparator + year;
 
             // Assert
             Assert.Multiple(() =>
             {
                 Assert.AreEqual(expectedSeparator, calculatorPage.EndDate.Substring(2, 1), "Incorrect separator in the end date field");
-                Assert.AreEqual(expectedEndDayStartsWitMonth, calculatorPage.EndDate, "Incorrect date format in the end date field");
+                Assert.AreEqual(expectedEndDate, calculatorPage.EndDate, "Incorrect date format in the end date field");
             });
         }
 
@@ -125,40 +116,35 @@ namespace DepositeCalcTests.Tests
             var settingsPage = new SettingsPage(driver);
 
             // Act
-            settingsPage.DefaultCurrencyDropDown = expectedCurrency;
-            settingsPage.ClickOnSaveBnt();
-            driver.SwitchTo().Alert().Accept();
+            settingsPage.Set(expectedCurrency);
             string expectedCarrencyEmblem = expectedCurrency.Substring(0, 1);
 
             // Assert
             Assert.AreEqual(expectedCarrencyEmblem, calculatorPage.CurrenrCurrencyFld, "Incorrect value in the current currency field");
         }
 
-        [TestCase("123,456,789.00", "365", "100000", "100", "365")]
-        [TestCase("123.456.789,00", "365", "100000", "100", "365")]
-        [TestCase("123 456 789.00", "365", "100000", "100", "365")]
-        [TestCase("123 456 789,00", "365", "100000", "100", "365")]
-        public void NumberFormatTest(string expectedNumberFormat, string financialYear, string depositAmount, string interestRate, string investmentTerm)
+        [TestCase("123,456,789.00", "365", "100000", "100", "365", "200,000.00", "100,000.00")]
+        [TestCase("123.456.789,00", "365", "100000", "100", "365", "200.000,00", "100.000,00")]
+        [TestCase("123 456 789.00", "365", "100000", "100", "365", "200 000.00", "100 000.00")]
+        [TestCase("123 456 789,00", "365", "100000", "100", "365", "200 000,00", "100 000,00")]
+        public void NumberFormatTest(string expectedNumberFormat, string financialYear, string depositAmount, 
+                                     string interestRate, string investmentTerm, string expectedIncome, string interesetEarned)
         {
             // Arrange
             var calculatorPage = new CalculatorPage(driver);
             var settingsPage = new SettingsPage(driver);
 
             // Act
-            settingsPage.NumberFormatDropDown = expectedNumberFormat;
-            settingsPage.ClickOnSaveBnt();
-            driver.SwitchTo().Alert().Accept();
+            settingsPage.Set(numberFormat: expectedNumberFormat);
             calculatorPage.FinancialYear = financialYear;
             calculatorPage.FillingMandatoryTextFields(depositAmount, interestRate, investmentTerm);
             calculatorPage.Calculate();
-            string firstExpectedSeparator = expectedNumberFormat.Substring(3, 1);
-            string secondExpectedSeparator = expectedNumberFormat.Substring(11, 1);
 
             // Assert
             Assert.Multiple(() =>
             {
-                Assert.AreEqual(firstExpectedSeparator, calculatorPage.Income.Substring(3, 1), "Incorrect first seperator in the income field");
-                Assert.AreEqual(secondExpectedSeparator, calculatorPage.Income.Substring(7, 1), "Incorrect last seperator in the income field");
+                Assert.AreEqual(expectedIncome, calculatorPage.Income, "Incorrect first seperator in the income field");
+                Assert.AreEqual(interesetEarned, calculatorPage.InterestEarned, "Incorrect last seperator in the income field");
             });
         }
     }
