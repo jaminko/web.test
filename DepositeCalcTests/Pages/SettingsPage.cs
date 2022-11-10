@@ -71,19 +71,6 @@ namespace DepositeCalcTests.Pages
             Save();
         }
 
-        bool IsAlertShown(WebDriver driver)
-        {
-            try
-            {
-                driver.SwitchTo().Alert();
-            }
-            catch (NoAlertPresentException e)
-            {
-                return false;
-            }
-            return true;
-        }
-
         public void ResetToDefaults()
         {
             Set("$ - US dollar", "dd/MM/yyyy", "123,456,789.00");

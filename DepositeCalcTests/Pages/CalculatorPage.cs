@@ -26,7 +26,7 @@ namespace DepositeCalcTests.Pages
         private IWebElement EndDateFld => driver.FindElement(By.XPath("//th[text()='End date: *']/..//input"));
         private IWebElement SettingsLnk => driver.FindElement(By.XPath("//div[text() = 'Settings']"));
         private IWebElement CurrentCurrency => driver.FindElement(By.XPath("//td[@id='currency']"));
-
+        private IWebElement HistoryLnk => driver.FindElement(By.XPath("//div[text() = 'History']"));
 
         public void FillingMandatoryTextFields(string depositAmount, string interestRate, string investmentTerm)
         {
@@ -111,6 +111,12 @@ namespace DepositeCalcTests.Pages
         public bool IsOpened()
         {
             return driver.Url.Contains("Calculator");
+        }
+
+        public HistoryPage OpenHistory()
+        {
+            HistoryLnk.Click();
+            return new HistoryPage(driver);
         }
     }
 }

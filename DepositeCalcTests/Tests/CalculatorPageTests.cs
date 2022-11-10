@@ -183,6 +183,19 @@ namespace DepositeCalcTests.Tests
             // Assert
             Assert.IsTrue(settingsPage.IsOpened(), "Incorrect page");
         }
+
+        [Test]
+        public void HistoryLinkTest()
+        {
+            // Arrange
+            var calculatorPage = new CalculatorPage(driver);
+
+            // Act
+            var historyPage = calculatorPage.OpenHistory();
+
+            // Assert
+            Assert.IsTrue(historyPage.IsOpened(), "Incorrect page");
+        }
     }
 }
 
