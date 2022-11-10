@@ -34,8 +34,8 @@ namespace DepositeCalcTests.Pages
 
         public bool IsOpened()
         {
-            //return LoginFld.Displayed;
-            return driver.Url.Contains("https://localhost:5001/");
+            bool isLoginFldPresent = driver.FindElements(By.XPath("//th[text()='User:']/..//input")).Count > 0;
+            return isLoginFldPresent;
         }
     }
 }

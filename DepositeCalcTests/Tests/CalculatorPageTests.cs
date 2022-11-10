@@ -17,9 +17,8 @@ namespace DepositeCalcTests.Tests
         {
             ChromeOptions options = new ChromeOptions { AcceptInsecureCertificates = true };
             driver = new ChromeDriver(options);
-            driver.Url = "https://localhost:5001/Calculator";
-            var settingsPage = new SettingsPage(driver);
-            settingsPage.DefaultSettings();
+            driver.Url = "https://localhost:5001/Settings";
+            new SettingsPage(driver).ResetToDefaults();
             driver.Quit();
         }
 
@@ -32,7 +31,6 @@ namespace DepositeCalcTests.Tests
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
             driver.Url = "https://localhost:5001/Calculator";
         }
-
 
         [TearDown]
         public void TearDown()

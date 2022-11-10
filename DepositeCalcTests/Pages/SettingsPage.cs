@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium;
+﻿using NUnit.Framework;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using System;
@@ -34,8 +35,7 @@ namespace DepositeCalcTests.Pages
         {
             SaveBnt.Click();
             var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-            wait.Until(drv => IsAlertShown((WebDriver)drv));
-            //wait.Until(ExpectedConditions.AlertIsPresent);
+            wait.Until(ExpectedConditions.AlertIsPresent());
             IAlert alert = driver.SwitchTo().Alert();
             alert.Accept();
         }
@@ -84,10 +84,8 @@ namespace DepositeCalcTests.Pages
             return true;
         }
 
-        public void DefaultSettings()
+        public void ResetToDefaults()
         {
-            var calculatorPage = new CalculatorPage(driver);
-            calculatorPage.OpenSettings();
             Set("$ - US dollar", "dd/MM/yyyy", "123,456,789.00");
         }
     }

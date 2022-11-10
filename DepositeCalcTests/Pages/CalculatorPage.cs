@@ -24,7 +24,7 @@ namespace DepositeCalcTests.Pages
         private IWebElement IncomeFld => driver.FindElement(By.XPath("//th[text()='Income: *']/..//input"));
         private IWebElement InterestEarnedFld => driver.FindElement(By.XPath("//th[text()='Intereset earned: *']/..//input"));
         private IWebElement EndDateFld => driver.FindElement(By.XPath("//th[text()='End date: *']/..//input"));
-        private IWebElement SettingsLnk => driver.FindElement(By.XPath("//div[@onclick='Settings()']"));
+        private IWebElement SettingsLnk => driver.FindElement(By.XPath("//div[text() = 'Settings']"));
         private IWebElement CurrentCurrency => driver.FindElement(By.XPath("//td[@id='currency']"));
 
 
@@ -65,8 +65,7 @@ namespace DepositeCalcTests.Pages
         public void Calculate()
         {
             CalculateBtn.Click();
-            new WebDriverWait(driver, TimeSpan.FromSeconds(2)).Until(_ => IncomeFld.GetAttribute("value") != "0,00" &&
-                                                                          InterestEarnedFld.GetAttribute("value") != "0,00");
+            new WebDriverWait(driver, TimeSpan.FromSeconds(2)).Until(_ => CalculateBtn.GetAttribute("disable") != string.Empty);
         }
 
         public bool IsCalculateBtnDisabled => !CalculateBtn.Enabled;
