@@ -4,12 +4,10 @@ using System;
 
 namespace DepositeCalcTests.Pages
 {
-    internal class LoginPage
+    internal class LoginPage : BasePage, IPage
     {
-        private readonly IWebDriver driver;
-        public LoginPage(IWebDriver driver)
+        public LoginPage(IWebDriver driver) : base(driver)
         {
-            this.driver = driver;
         }
 
         private IWebElement LoginFld => driver.FindElement(By.XPath("//th[text()='User:']/..//input"));
@@ -36,7 +34,8 @@ namespace DepositeCalcTests.Pages
 
         public bool IsOpened()
         {
-            return LoginFld.Displayed;
+            //return LoginFld.Displayed;
+            return driver.Url.Contains("https://localhost:5001/");
         }
     }
 }

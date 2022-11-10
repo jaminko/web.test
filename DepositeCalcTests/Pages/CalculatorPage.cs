@@ -6,14 +6,12 @@ using System.Collections.Generic;
 
 namespace DepositeCalcTests.Pages
 {
-    internal class CalculatorPage
+    internal class CalculatorPage : BasePage, IPage
     {
-
-        private readonly IWebDriver driver;
-        public CalculatorPage(IWebDriver driver)
+        public CalculatorPage(IWebDriver driver) : base(driver)
         {
-            this.driver = driver;
         }
+
         private IWebElement DepositAmountFld => driver.FindElement(By.XPath("//td[text()='Deposit amount: *']/..//input"));
         private IWebElement InterestRateFld => driver.FindElement(By.XPath("//td[text()='Rate of interest: *']/..//input"));
         private IWebElement InvestmentTermFld => driver.FindElement(By.XPath("//td[text()='Investment term: *']/..//input"));
@@ -67,7 +65,8 @@ namespace DepositeCalcTests.Pages
         public void Calculate()
         {
             CalculateBtn.Click();
-            new WebDriverWait(driver, TimeSpan.FromSeconds(2)).Until(_ => InterestEarnedFld.GetAttribute("value") != null);
+            new WebDriverWait(driver, TimeSpan.FromSeconds(2)).Until(_ => IncomeFld.GetAttribute("value") != "0,00" &&
+                                                                          InterestEarnedFld.GetAttribute("value") != "0,00");
         }
 
         public bool IsCalculateBtnDisabled => !CalculateBtn.Enabled;
@@ -108,6 +107,11 @@ namespace DepositeCalcTests.Pages
             return new SettingsPage(driver);
         }
 
-        public string CurrenrCurrencyFld => CurrentCurrency.Text;
+        public string Currency  => CurrentCurrency.Text;
+
+        public bool IsOpened()
+        {
+            return driver.Url.Contains("Calculator");
+        }
     }
 }

@@ -1,15 +1,14 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
 using System;
 
 namespace DepositeCalcTests.Pages
 {
-    internal class SettingsPage
+    internal class SettingsPage : BasePage, IPage
     {
-        private readonly IWebDriver driver;
-        public SettingsPage(IWebDriver driver)
+        public SettingsPage(IWebDriver driver) : base(driver)
         {
-            this.driver = driver;
         }
 
         private IWebElement DateFormatFld => driver.FindElement(By.XPath("//select[@id='dateFormat']"));
@@ -36,10 +35,9 @@ namespace DepositeCalcTests.Pages
             SaveBnt.Click();
             var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
             wait.Until(drv => IsAlertShown((WebDriver)drv));
+            //wait.Until(ExpectedConditions.AlertIsPresent);
             IAlert alert = driver.SwitchTo().Alert();
             alert.Accept();
-            //Thread.Sleep(100); // This is a temporary solution, needs to be refined
-            //driver.SwitchTo().Alert().Accept();
         }
 
         public string DateFormat
@@ -84,6 +82,13 @@ namespace DepositeCalcTests.Pages
                 return false;
             }
             return true;
+        }
+
+        public void DefaultSettings()
+        {
+            var calculatorPage = new CalculatorPage(driver);
+            calculatorPage.OpenSettings();
+            Set("$ - US dollar", "dd/MM/yyyy", "123,456,789.00");
         }
     }
 }
