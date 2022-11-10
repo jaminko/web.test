@@ -1,22 +1,19 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
-using SeleniumExtras.WaitHelpers;
 using System;
 
 namespace DepositeCalcTests.Pages
 {
-    internal class LoginPage
+    internal class LoginPage : BasePage, IPage
     {
-        private readonly IWebDriver driver;
-        public LoginPage(IWebDriver driver)
+        public LoginPage(IWebDriver driver) : base(driver)
         {
-            this.driver = driver;
         }
 
         private IWebElement LoginFld => driver.FindElement(By.XPath("//th[text()='User:']/..//input"));
         private IWebElement LoginBtn => driver.FindElement(By.XPath("//button[@id='loginBtn']"));
-        //private string errMessage => driver.FindElement(By.Id("errorMessage")).Text;
         private IWebElement PassworldFld => driver.FindElement(By.XPath("//th[text()='Password:']/..//input"));
+
         public string ErrMessage
         {
             get
@@ -33,6 +30,12 @@ namespace DepositeCalcTests.Pages
             LoginFld.SendKeys(login);
             PassworldFld.SendKeys(password);
             LoginBtn.Click();
+        }
+
+        public bool IsOpened()
+        {
+            bool isLoginFldPresent = driver.FindElements(By.XPath("//th[text()='User:']/..//input")).Count > 0;
+            return isLoginFldPresent;
         }
     }
 }

@@ -6,14 +6,12 @@ using System.Collections.Generic;
 
 namespace DepositeCalcTests.Pages
 {
-    internal class CalculatorPage
+    internal class CalculatorPage : BasePage, IPage
     {
-
-        private readonly IWebDriver driver;
-        public CalculatorPage(IWebDriver driver)
+        public CalculatorPage(IWebDriver driver) : base(driver)
         {
-            this.driver = driver;
         }
+
         private IWebElement DepositAmountFld => driver.FindElement(By.XPath("//td[text()='Deposit amount: *']/..//input"));
         private IWebElement InterestRateFld => driver.FindElement(By.XPath("//td[text()='Rate of interest: *']/..//input"));
         private IWebElement InvestmentTermFld => driver.FindElement(By.XPath("//td[text()='Investment term: *']/..//input"));
@@ -26,6 +24,9 @@ namespace DepositeCalcTests.Pages
         private IWebElement IncomeFld => driver.FindElement(By.XPath("//th[text()='Income: *']/..//input"));
         private IWebElement InterestEarnedFld => driver.FindElement(By.XPath("//th[text()='Intereset earned: *']/..//input"));
         private IWebElement EndDateFld => driver.FindElement(By.XPath("//th[text()='End date: *']/..//input"));
+        private IWebElement SettingsLnk => driver.FindElement(By.XPath("//div[text() = 'Settings']"));
+        private IWebElement CurrentCurrency => driver.FindElement(By.XPath("//td[@id='currency']"));
+
 
         public void FillingMandatoryTextFields(string depositAmount, string interestRate, string investmentTerm)
         {
@@ -64,7 +65,7 @@ namespace DepositeCalcTests.Pages
         public void Calculate()
         {
             CalculateBtn.Click();
-            new WebDriverWait(driver, TimeSpan.FromSeconds(2)).Until(_ => InterestEarnedFld.GetAttribute("value") != null);
+            new WebDriverWait(driver, TimeSpan.FromSeconds(2)).Until(_ => CalculateBtn.GetAttribute("disable") != string.Empty);
         }
 
         public bool IsCalculateBtnDisabled => !CalculateBtn.Enabled;
@@ -92,10 +93,24 @@ namespace DepositeCalcTests.Pages
             get => new SelectElement(YearDropDown).SelectedOption.Text;
             set => new SelectElement(YearDropDown).SelectByText(value);
         }
+
         public string StartDateDay
         {
             get => new SelectElement(DayDropDown).SelectedOption.Text;
             set => new SelectElement(DayDropDown).SelectByText(value);
+        }
+
+        public SettingsPage OpenSettings()
+        {
+            SettingsLnk.Click();
+            return new SettingsPage(driver);
+        }
+
+        public string Currency  => CurrentCurrency.Text;
+
+        public bool IsOpened()
+        {
+            return driver.Url.Contains("Calculator");
         }
     }
 }

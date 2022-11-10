@@ -12,6 +12,16 @@ namespace DepositeCalcTests.Tests
     {
         private IWebDriver driver;
 
+        [OneTimeSetUp]
+        public void OneTimeSetup()
+        {
+            ChromeOptions options = new ChromeOptions { AcceptInsecureCertificates = true };
+            driver = new ChromeDriver(options);
+            driver.Url = "https://localhost:5001/Settings";
+            new SettingsPage(driver).ResetToDefaults();
+            driver.Quit();
+        }
+
         [SetUp]
         public void Setup()
         {
@@ -59,7 +69,7 @@ namespace DepositeCalcTests.Tests
             Assert.Multiple(() =>
             {
                 Assert.AreEqual(expectedIncome, calculatorPage.Income, "Incorrect value in the Income field");
-                Assert.AreEqual(expectedInterestEarned, calculatorPage.InterestEarned, "Incorrect value in the Interest earned field");
+                Assert.AreEqual(expectedInterestEarned, calculatorPage.InterestEarned, "Incorrect value in the Interest Earned field");
             });
         }
 
@@ -95,7 +105,7 @@ namespace DepositeCalcTests.Tests
             calculatorPage.StartDateMonth = DateHelper.NumberOfMonthToNameOfMonth(month.ToString());
 
             // Assert
-            Assert.AreEqual(expectedDays, calculatorPage.GetStartDateDayList(), "Incorrect value in the day field");
+            Assert.AreEqual(expectedDays, calculatorPage.GetStartDateDayList(), "Incorrect value in the Day field");
         }
 
         [Test]
@@ -120,7 +130,7 @@ namespace DepositeCalcTests.Tests
             };
 
             // Assert
-            Assert.AreEqual(expectedMonthes, calculatorPage.GetStartDateMonthList(), "Incorrect value in the month field");
+            Assert.AreEqual(expectedMonthes, calculatorPage.GetStartDateMonthList(), "Incorrect value in the Month field");
         }
 
         [Test]
@@ -136,7 +146,7 @@ namespace DepositeCalcTests.Tests
             }
 
             // Assert
-            Assert.AreEqual(expectedYears, calculatorPage.GetStartDateYearsList(), "Incorrect value in the year field");
+            Assert.AreEqual(expectedYears, calculatorPage.GetStartDateYearsList(), "Incorrect value in the Year field");
         }
 
         [TestCase("365", "100000", "100", "365", "2022", "January", "31", "31/01/2023")]
@@ -158,7 +168,20 @@ namespace DepositeCalcTests.Tests
             calculatorPage.Calculate();
 
             // Assert
-            Assert.AreEqual(expactedEndDate, calculatorPage.EndDate, "Incorrect value in the end date field");
+            Assert.AreEqual(expactedEndDate, calculatorPage.EndDate, "Incorrect value in the End Date field");
+        }
+
+        [Test]
+        public void SettingLinkTest()
+        {
+            // Arrange
+            var calculatorPage = new CalculatorPage(driver);
+
+            // Act
+            var settingsPage = calculatorPage.OpenSettings();
+
+            // Assert
+            Assert.IsTrue(settingsPage.IsOpened(), "Incorrect page");
         }
     }
 }
