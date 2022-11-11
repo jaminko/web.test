@@ -20,7 +20,7 @@ namespace WebSite.Controllers
                     new[]
                     {
                         x.Amount.ToDecimal().FormatNumber(x.Login),
-                        x.Percent + "%",
+                        x.Percent,
                         x.Days.ToString(),
                         x.Year,
                         x.StartDate.FormatDate(login),
