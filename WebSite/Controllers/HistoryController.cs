@@ -16,7 +16,7 @@ namespace WebSite.Controllers
             history.Reverse();
 
             var result = history
-                .Take(9)
+                .Take(10)
                 .Select(x =>
                 new[]
                 {
