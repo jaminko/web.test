@@ -2,13 +2,8 @@
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DepositeCalcTests.Pages;
 using System.Threading;
-using System.ComponentModel;
 
 namespace DepositeCalcTests.Tests
 {
@@ -49,10 +44,10 @@ namespace DepositeCalcTests.Tests
         public void TitleTest()
         {
             // Arrange
-            string titleForHistoryPage = "History";
+            string historyPageTitle = "History";
 
             // Assert
-            Assert.AreEqual(titleForHistoryPage, driver.Title, "Incorrect title");
+            Assert.AreEqual(historyPageTitle, driver.Title, "Incorrect title");
         }
 
         [TestCase("177", "64", "25")]
@@ -69,14 +64,17 @@ namespace DepositeCalcTests.Tests
             calculatorPage.Calculate();
             string expectedInterestEarned = calculatorPage.InterestEarned;
             string expectedIncome = calculatorPage.Income;
-            Thread.Sleep(300); // doesn't work without that delay
+            Thread.Sleep(500); // doesn't work without that delay, 
             calculatorPage.OpenHistory();
 
             // Assert
             Assert.Multiple(() =>
             {
-                Assert.AreEqual(expectedInterestEarned, historyPage.Row2Colomn7, "Incorect Interest value in the history table");
-                Assert.AreEqual(expectedIncome, historyPage.Row2Colomn8, "Incorect Income value in the history table");
+                Assert.AreEqual(depositAmount, historyPage.HistoryTableRow2Column1, "Incorect deposit amount value for last calculation in the history table");
+                Assert.AreEqual(interestRate, historyPage.HistoryTableRow2Column2, "Incorect rate of interest value for last calculation in the history table");
+                Assert.AreEqual(investmentTerm, historyPage.HistoryTableRow2Column3, "Incorect investment term value for last calculation in the history table");
+                Assert.AreEqual(expectedInterestEarned, historyPage.HistoryTableRow2Column7, "Incorect Interest value for last calculation in the history table");
+                Assert.AreEqual(expectedIncome, historyPage.HistoryTableRow2Column8, "Incorect Income value for last calculation in the history table");
             });
         }
 
@@ -87,7 +85,7 @@ namespace DepositeCalcTests.Tests
             var historyPage = new HistoryPage(driver);
 
             // Assert
-            Assert.AreEqual(10, historyPage.NumberOfRows, "The History table doesn't contain the last ten calculations");
+            Assert.AreEqual(10, historyPage.HistoryTableNumberOfRows, "The History table doesn't contain the last ten calculations");
         }
 
         [Test]
@@ -97,10 +95,29 @@ namespace DepositeCalcTests.Tests
             var historyPage = new HistoryPage(driver);
 
             // Act
-            historyPage.Clear();
+            var clearedHistoryPage = historyPage.Clear();
 
             // Assert
-            Assert.AreEqual(0, historyPage.NumberOfRows, "Clear CTA button works incorrectly - the Ршіещкн table is not cleared");
+            Assert.AreEqual(0, historyPage.HistoryTableNumberOfRows, "Clear CTA button works incorrectly - the History table was not cleared");
+        }
+
+        [TestCase("Deposit amount", "Rate of interest", "Investment term", "Financial year", "Income", "Intereset earned")]
+        public void ColumnSignaturesTest(string DepositAmountSignature, string RateOfInterestSignature, string InvestmentTermSignature,
+                                       string FinYearSignature, string IncomeSignature, string InterestEarnedSignature)
+        {
+            // Arrange
+            var historyPage = new HistoryPage(driver);
+
+            // Assert
+            Assert.Multiple(() =>
+            {
+                Assert.AreEqual(DepositAmountSignature, historyPage.HistoryTableRow1Column1, "Incorect signature for deposit amount column in the history table");
+                Assert.AreEqual(RateOfInterestSignature, historyPage.HistoryTableRow1Column2, "Incorect signature for rate of interest column in the history table");
+                Assert.AreEqual(InvestmentTermSignature, historyPage.HistoryTableRow1Column3, "Incorect signature for investment term column in the history table");
+                Assert.AreEqual(FinYearSignature, historyPage.HistoryTableRow1Column4, "Incorect signature for financial year column in the history table");
+                Assert.AreEqual(IncomeSignature, historyPage.HistoryTableRow1Column7, "Incorect signature interest column in the history table");
+                Assert.AreEqual(InterestEarnedSignature, historyPage.HistoryTableRow1Column8, "Incorect signature for intereset earned column in the history table");
+            });
         }
     }
 }

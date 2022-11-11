@@ -13,8 +13,9 @@ namespace DepositeCalcTests.Pages
         }
 
         private IWebElement DepositAmountFld => driver.FindElement(By.XPath("//td[text()='Deposit amount: *']/..//input"));
-        private IWebElement InterestRateFld => driver.FindElement(By.XPath("//td[text()='Rate of interest: *']/..//input"));
+        private IWebElement RateOfInterestFld => driver.FindElement(By.XPath("//td[text()='Rate of interest: *']/..//input"));
         private IWebElement InvestmentTermFld => driver.FindElement(By.XPath("//td[text()='Investment term: *']/..//input"));
+        private IWebElement FinancialYearFld => driver.FindElement(By.XPath("//td[text()='Financial year: *']"));
         private IWebElement FinancialYear365DaysBtn => driver.FindElement(By.XPath("//td[text()='Financial year: *']/..//input[@onchange='SetYear(360)']"));
         private IWebElement FinancialYear360DaysBtn => driver.FindElement(By.XPath("//td[text()='Financial year: *']/..//input[@onchange='SetYear(365)']"));
         private IWebElement DayDropDown => driver.FindElement(By.XPath("//select[@id='day']"));
@@ -31,7 +32,7 @@ namespace DepositeCalcTests.Pages
         public void FillingMandatoryTextFields(string depositAmount, string interestRate, string investmentTerm)
         {
             DepositAmountFld.SendKeys(depositAmount);
-            InterestRateFld.SendKeys(interestRate);
+            RateOfInterestFld.SendKeys(interestRate);
             InvestmentTermFld.SendKeys(investmentTerm);
             new WebDriverWait(driver, TimeSpan.FromSeconds(2)).Until(_ => CalculateBtn.GetAttribute("disable") != string.Empty);
         }
