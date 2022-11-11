@@ -1,6 +1,5 @@
 ﻿using NUnit.Framework;
 using DepositeCalcTests.Pages;
-using System.Threading;
 
 namespace DepositeCalcTests.Tests
 {
@@ -49,8 +48,8 @@ namespace DepositeCalcTests.Tests
             calculatorPage.Calculate();
             string expectedInterestEarned = calculatorPage.InterestEarned;
             string expectedIncome = calculatorPage.Income;
-            Thread.Sleep(500); // doesn't work without that delay, 
             calculatorPage.OpenHistory();
+            historyPage.WeitForReady();
 
             // Assert
             Assert.Multiple(() =>
@@ -58,8 +57,8 @@ namespace DepositeCalcTests.Tests
                 Assert.AreEqual(depositAmount, historyPage.HistoryTableRow2Column1, "Incorect deposit amount value for last calculation in the history table");
                 Assert.AreEqual(interestRate, historyPage.HistoryTableRow2Column2, "Incorect rate of interest value for last calculation in the history table");
                 Assert.AreEqual(investmentTerm, historyPage.HistoryTableRow2Column3, "Incorect investment term value for last calculation in the history table");
-                Assert.AreEqual(expectedInterestEarned, historyPage.HistoryTableRow2Column7, "Incorect Interest value for last calculation in the history table");
-                Assert.AreEqual(expectedIncome, historyPage.HistoryTableRow2Column8, "Incorect Income value for last calculation in the history table");
+                Assert.AreEqual(expectedIncome, historyPage.HistoryTableRow2Column7, "Incorect Interest value for last calculation in the history table");
+                Assert.AreEqual(expectedInterestEarned, historyPage.HistoryTableRow2Column8, "Incorect Income value for last calculation in the history table");
             });
         }
 
@@ -74,8 +73,8 @@ namespace DepositeCalcTests.Tests
         public void ClearButtonTest()
         {
             // Act
+            var unclearedHistoryPage = historyPage.WeitForReady();
             var clearedHistoryPage = historyPage.Clear();
-            Thread.Sleep(1000);
 
             // Assert
             Assert.AreEqual(0, historyPage.HistoryTableNumberOfRows, "Clear CTA button works incorrectly - the History table was not cleared");

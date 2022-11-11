@@ -40,7 +40,7 @@ namespace DepositeCalcTests.Pages
         public HistoryPage Clear()
         {
             ClearBtn.Click();
-            new WebDriverWait(driver, TimeSpan.FromSeconds(2)).Until(_ => ClearBtn.Enabled);
+            new WebDriverWait(driver, TimeSpan.FromMilliseconds(500)).Until(_ => ClearBtn.Enabled);
             return new HistoryPage(driver);
         }
 
@@ -80,6 +80,12 @@ namespace DepositeCalcTests.Pages
                 }
                 return result;
             }
+        }
+
+        public HistoryPage WeitForReady()
+        {
+            new WebDriverWait(driver, TimeSpan.FromMilliseconds(500)).Until(_ => FirstRowValues.Count != 0);
+            return new HistoryPage(driver);
         }
     }
 }
