@@ -1,38 +1,23 @@
 ﻿using NUnit.Framework;
-using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium;
-using System;
 using DepositeCalcTests.Pages;
 using System.Threading;
 
 namespace DepositeCalcTests.Tests
 {
-    internal class HistoryPageTests
+    internal class HistoryPageTests : BaseTest
     {
-        private IWebDriver driver;
+        private HistoryPage historyPage;
 
         [SetUp]
         public void Setup()
         {
-            ChromeOptions options = new ChromeOptions { AcceptInsecureCertificates = true };
-            driver = new ChromeDriver(options);
-            driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(30);
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
-            driver.Url = "https://localhost:5001/History";
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            driver.Quit();
+            InitDriver("https://localhost:5001/History");
+            historyPage = new HistoryPage(driver);
         }
 
         [Test]
         public void CalculatorLinkTest()
         {
-            // Arrange
-            var historyPage = new HistoryPage(driver);
-
             // Act
             var calculatorPage = historyPage.Calculator();
 
@@ -54,8 +39,8 @@ namespace DepositeCalcTests.Tests
         public void LastCalculationHistoryTest(string depositAmount, string interestRate, string investmentTerm)
         {
             // Arrange
-            var historyPage = new HistoryPage(driver);
             var calculatorPage = new CalculatorPage(driver);
+            var x = historyPage.FirstRowValues;
 
             // Act
             driver.Url = "https://localhost:5001/Calculator";
@@ -81,9 +66,6 @@ namespace DepositeCalcTests.Tests
         [Test]
         public void TotalNumberOfClculationsTest()
         {
-            // Arrange
-            var historyPage = new HistoryPage(driver);
-
             // Assert
             Assert.AreEqual(10, historyPage.HistoryTableNumberOfRows, "The History table doesn't contain the last ten calculations");
         }
@@ -91,11 +73,9 @@ namespace DepositeCalcTests.Tests
         [Test]
         public void ClearButtonTest()
         {
-            // Arrange
-            var historyPage = new HistoryPage(driver);
-
             // Act
             var clearedHistoryPage = historyPage.Clear();
+            Thread.Sleep(1000);
 
             // Assert
             Assert.AreEqual(0, historyPage.HistoryTableNumberOfRows, "Clear CTA button works incorrectly - the History table was not cleared");
@@ -105,9 +85,6 @@ namespace DepositeCalcTests.Tests
         public void ColumnSignaturesTest(string DepositAmountSignature, string RateOfInterestSignature, string InvestmentTermSignature,
                                        string FinYearSignature, string IncomeSignature, string InterestEarnedSignature)
         {
-            // Arrange
-            var historyPage = new HistoryPage(driver);
-
             // Assert
             Assert.Multiple(() =>
             {

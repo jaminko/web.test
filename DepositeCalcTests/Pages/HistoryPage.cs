@@ -67,5 +67,19 @@ namespace DepositeCalcTests.Pages
         public string HistoryTableRow2Column8 => HistoryTableRow2Coloumn8Field.Text;
 
         public int HistoryTableNumberOfRows => HistoryTableRowsList.Count;
+
+        public List<string> FirstRowValues
+        {
+            get
+            {
+                var result = new List<string>();
+                var firstRowCels = HistoryTableRowsList[0].FindElements(By.XPath("./td"));
+                foreach(var cel in firstRowCels)
+                {
+                    result.Add(cel.Text);
+                }
+                return result;
+            }
+        }
     }
 }

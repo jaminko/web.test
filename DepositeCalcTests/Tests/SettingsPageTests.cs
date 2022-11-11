@@ -6,32 +6,20 @@ using DepositeCalcTests.Pages;
 
 namespace DepositeCalcTests.Tests
 {
-    internal class SettingsPageTests
+    internal class SettingsPageTests : BaseTest
     {
-        private IWebDriver driver;
+        private SettingsPage settingsPage;
 
         [SetUp]
         public void Setup()
         {
-            ChromeOptions options = new ChromeOptions { AcceptInsecureCertificates = true };
-            driver = new ChromeDriver(options);
-            driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(30);
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
-            driver.Url = "https://localhost:5001/Settings";
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            driver.Quit();
+            InitDriver("https://localhost:5001/Settings");
+            settingsPage = new SettingsPage(driver);
         }
 
         [Test]
         public void LogoutLinkTest()
         {
-            // Arrange
-            var settingsPage = new SettingsPage(driver);
-
             // Act
             var loginPage = settingsPage.Logout();
 
@@ -42,9 +30,6 @@ namespace DepositeCalcTests.Tests
         [Test]
         public void CancelButtonTest()
         {
-            // Arrange
-            var settingsPage = new SettingsPage(driver);
-
             // Act
             var calculatorPage = settingsPage.Cancel();
 
@@ -60,7 +45,6 @@ namespace DepositeCalcTests.Tests
         {
             // Arrange
             var calculatorPage = new CalculatorPage(driver);
-            var settingsPage = new SettingsPage(driver);
 
             // Act
             settingsPage.DateFormat = expectedDateFormat;
@@ -86,7 +70,6 @@ namespace DepositeCalcTests.Tests
         {
             // Arrange
             var calculatorPage = new CalculatorPage(driver);
-            var settingsPage = new SettingsPage(driver);
 
             // Act
             settingsPage.Set(expectedCurrency);
@@ -104,7 +87,6 @@ namespace DepositeCalcTests.Tests
         {
             // Arrange
             var calculatorPage = new CalculatorPage(driver);
-            var settingsPage = new SettingsPage(driver);
 
             // Act
             settingsPage.Set(numberFormat: expectedNumberFormat);
