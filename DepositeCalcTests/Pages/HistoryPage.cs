@@ -41,10 +41,13 @@ namespace DepositeCalcTests.Pages
             {
                 var result = new List<string>();
                 var firstRowCels = HistoryTableRowsList[0].FindElements(By.XPath("./td"));
-                foreach(var cel in firstRowCels)
+                foreach (var cel in firstRowCels)
                 {
                     result.Add(cel.Text);
                 }
+                //result.RemoveRange(4, 5); // using range doesn't work as expected
+                result.RemoveAt(4);
+                result.RemoveAt(4);
                 return result;
             }
         }
@@ -65,7 +68,7 @@ namespace DepositeCalcTests.Pages
 
         public HistoryPage WeitForReady()
         {
-            new WebDriverWait(driver, TimeSpan.FromSeconds(2)).Until(_ => LastCalculationsInFirstRow.Count != 0);
+            new WebDriverWait(driver, TimeSpan.FromSeconds(5)).Until(_ => LastCalculationsInFirstRow.Count != 0);
             return new HistoryPage(driver);
         }
     }

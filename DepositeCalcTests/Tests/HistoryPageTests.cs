@@ -1,5 +1,7 @@
 ﻿using NUnit.Framework;
 using DepositeCalcTests.Pages;
+using System;
+using System.Threading;
 
 namespace DepositeCalcTests.Tests
 {
@@ -45,17 +47,17 @@ namespace DepositeCalcTests.Tests
                 "100",
                 "321",
                 "365",
-                "11/11/2022",
-                "28/09/2023",
                 "231.17",
                 "108.17",
             };
 
             // Act
             driver.Url = "https://localhost:5001/Calculator";
+            calculatorPage.ClearingMandatoryTextFields();
             calculatorPage.FinancialYear = "365";
             calculatorPage.FillingMandatoryTextFields(depositAmount, interestRate, investmentTerm);
             calculatorPage.Calculate();
+            Thread.Sleep(1000); // doesn't work without this delay
             calculatorPage.OpenHistory();
             historyPage.WeitForReady();
 

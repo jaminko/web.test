@@ -15,6 +15,7 @@ namespace DepositeCalcTests.Tests
         {
             InitDriver("https://localhost:5001/Settings");
             new SettingsPage(driver).ResetToDefaults();
+            new CalculatorPage(driver).CreateTenRandomCalculations();
             driver.Quit();
         }
 

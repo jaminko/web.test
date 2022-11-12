@@ -15,7 +15,6 @@ namespace DepositeCalcTests.Pages
         private IWebElement DepositAmountFld => driver.FindElement(By.XPath("//td[text()='Deposit amount: *']/..//input"));
         private IWebElement RateOfInterestFld => driver.FindElement(By.XPath("//td[text()='Rate of interest: *']/..//input"));
         private IWebElement InvestmentTermFld => driver.FindElement(By.XPath("//td[text()='Investment term: *']/..//input"));
-        private IWebElement FinancialYearFld => driver.FindElement(By.XPath("//td[text()='Financial year: *']"));
         private IWebElement FinancialYear365DaysBtn => driver.FindElement(By.XPath("//td[text()='Financial year: *']/..//input[@onchange='SetYear(360)']"));
         private IWebElement FinancialYear360DaysBtn => driver.FindElement(By.XPath("//td[text()='Financial year: *']/..//input[@onchange='SetYear(365)']"));
         private IWebElement DayDropDown => driver.FindElement(By.XPath("//select[@id='day']"));
@@ -118,6 +117,29 @@ namespace DepositeCalcTests.Pages
         {
             HistoryLnk.Click();
             return new HistoryPage(driver);
+        }
+
+        public void ClearingMandatoryTextFields()
+        {
+            DepositAmountFld.Clear();
+            RateOfInterestFld.Clear();
+            InvestmentTermFld.Clear();
+            new WebDriverWait(driver, TimeSpan.FromSeconds(2)).Until(_ => InvestmentTermFld.GetAttribute("value") == "");
+        }
+
+        public void CreateTenRandomCalculations()
+        {
+            Random random = new Random();
+            for (int i = 0; i < 10; i++)
+            {
+                int depositAmount = random.Next(1, 10000);
+                int interestRate = random.Next(1, 100);
+                int investmentTerm = random.Next(1, 365);
+                FillingMandatoryTextFields(depositAmount.ToString(), interestRate.ToString(), investmentTerm.ToString());
+                FinancialYear = "365";
+                Calculate();
+                ClearingMandatoryTextFields();
+            }
         }
     }
 }
