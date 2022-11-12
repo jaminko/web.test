@@ -11,7 +11,11 @@ namespace DepositeCalcTests.Tests
 
         public void InitDriver(string url)
         {
-            ChromeOptions options = new ChromeOptions { AcceptInsecureCertificates = true };
+            ChromeOptions options = new ChromeOptions
+            {
+                UnhandledPromptBehavior = UnhandledPromptBehavior.Ignore,
+                AcceptInsecureCertificates = true
+            };
             options.AddArgument("--silent");
             options.AddArgument("log-level=3");
             driver = new ChromeDriver(options);
