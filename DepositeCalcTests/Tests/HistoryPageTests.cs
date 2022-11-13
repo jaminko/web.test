@@ -2,6 +2,7 @@
 using DepositeCalcTests.Pages;
 using System;
 using System.Threading;
+using System.Linq;
 
 namespace DepositeCalcTests.Tests
 {
@@ -41,23 +42,16 @@ namespace DepositeCalcTests.Tests
             var depositAmount = "123";
             var interestRate = "100";
             var investmentTerm = "321";
-            var expectedLastCalculationValues = new[]
-            {
-                "123.00",
-                "100",
-                "321",
-                "365",
-                "231.17",
-                "108.17",
-            };
+            var expectedLastCalculationValues = new[] { "123.00", "100", "321", "365", "21/11/2022", "08/10/2023", "231.17", "108.17" };
 
             // Act
-            driver.Url = "https://localhost:5001/Calculator";
-            calculatorPage.ClearingMandatoryTextFields();
+            calculatorPage.Open();
             calculatorPage.FinancialYear = "365";
             calculatorPage.FillingMandatoryTextFields(depositAmount, interestRate, investmentTerm);
+            calculatorPage.StartDateYear = "2022";
+            calculatorPage.StartDateMonth = "November";
+            calculatorPage.StartDateDay = "21";
             calculatorPage.Calculate();
-            Thread.Sleep(1000); // doesn't work without this delay
             calculatorPage.OpenHistory();
             historyPage.WeitForReady();
 
@@ -87,17 +81,7 @@ namespace DepositeCalcTests.Tests
         public void ColumnSignaturesTest()
         {
             // Arrange
-            var expectedHeaders = new[]
-            {
-                "Amount",
-                "%",
-                "Term",
-                "Year",
-                "From",
-                "To",
-                "Income",
-                "Interest",
-            };
+            var expectedHeaders = new[] { "Amount", "%", "Term", "Year", "From", "To", "Income", "Interest" };
 
             // Assert
             Assert.AreEqual(expectedHeaders, historyPage.HeadersForHistoryTable, "Incorect column signature velue in history table");

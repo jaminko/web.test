@@ -33,22 +33,47 @@ namespace DepositeCalcTests.Pages
             new WebDriverWait(driver, TimeSpan.FromMilliseconds(500)).Until(_ => ClearBtn.Enabled);
         }
 
-        public int HistoryTableNumberOfRows => HistoryTableRowsList.Count;
+        public int HistoryTableNumberOfRows 
+        {
+            get
+            {
+                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1);
+                int result = HistoryTableRowsList.Count;
+                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
+                return result;
+            }
+        }
 
         public List<string> LastCalculationsInFirstRow
         {
             get
             {
                 var result = new List<string>();
-                var firstRowCels = HistoryTableRowsList[0].FindElements(By.XPath("./td"));
-                foreach (var cel in firstRowCels)
+                var firstRowCells = HistoryTableRowsList[0].FindElements(By.XPath("./td"));
+                foreach (var cell in firstRowCells)
                 {
-                    result.Add(cel.Text);
+                    result.Add(cell.Text);
                 }
-                //result.RemoveRange(4, 5); // using range doesn't work as expected
-                result.RemoveAt(4);
-                result.RemoveAt(4);
                 return result;
+            }
+        }
+
+        public List<List<string>> HistoryTable
+        {
+            get
+            {
+                List<List<string>> historyTable = new List<List<string>>();
+                for(int i = 0; i < HistoryTableRowsList.Count; i++)
+                {
+                    var rows = HistoryTableRowsList[i].FindElements(By.XPath("./td"));
+                    var rowsList = new List<string>();
+                    foreach (var cell in rows)
+                    {
+                        rowsList.Add(cell.Text);
+                    }
+                    historyTable.Add(rowsList);
+                }
+                return historyTable;
             }
         }
 

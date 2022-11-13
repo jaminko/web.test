@@ -1,7 +1,6 @@
 using DepositeCalcTests.Pages;
 using NUnit.Framework;
 using System;
-using System.Threading;
 
 namespace DepositeCalcTests.Tests
 {
@@ -36,7 +35,6 @@ namespace DepositeCalcTests.Tests
 
             // Act
             loginPage.Login();
-            Thread.Sleep(500);
 
             // Assert
             Assert.AreEqual(expectedUrl, driver.Url);

@@ -30,8 +30,11 @@ namespace DepositeCalcTests.Pages
 
         public void FillingMandatoryTextFields(string depositAmount, string interestRate, string investmentTerm)
         {
+            DepositAmountFld.Clear();
             DepositAmountFld.SendKeys(depositAmount);
+            RateOfInterestFld.Clear();
             RateOfInterestFld.SendKeys(interestRate);
+            InvestmentTermFld.Clear();
             InvestmentTermFld.SendKeys(investmentTerm);
             new WebDriverWait(driver, TimeSpan.FromSeconds(2)).Until(_ => CalculateBtn.GetAttribute("disable") != string.Empty);
         }
@@ -65,7 +68,7 @@ namespace DepositeCalcTests.Pages
         public void Calculate()
         {
             CalculateBtn.Click();
-            new WebDriverWait(driver, TimeSpan.FromSeconds(2)).Until(_ => CalculateBtn.GetAttribute("disable") != string.Empty);
+            new WebDriverWait(driver, TimeSpan.FromSeconds(2)).Until(_ => !IsCalculateBtnDisabled);
         }
 
         public bool IsCalculateBtnDisabled => !CalculateBtn.Enabled;
@@ -119,26 +122,24 @@ namespace DepositeCalcTests.Pages
             return new HistoryPage(driver);
         }
 
-        public void ClearingMandatoryTextFields()
+        public void Open()
         {
-            DepositAmountFld.Clear();
-            RateOfInterestFld.Clear();
-            InvestmentTermFld.Clear();
-            new WebDriverWait(driver, TimeSpan.FromSeconds(2)).Until(_ => InvestmentTermFld.GetAttribute("value") == "");
+            driver.Url = "https://localhost:5001/Calculator";
         }
 
         public void CreateTenRandomCalculations()
         {
-            Random random = new Random();
             for (int i = 0; i < 10; i++)
             {
-                int depositAmount = random.Next(1, 10000);
-                int interestRate = random.Next(1, 100);
-                int investmentTerm = random.Next(1, 365);
+                int depositAmount = 1000+i;
+                int interestRate = 10+i;
+                int investmentTerm = 50+i;
                 FillingMandatoryTextFields(depositAmount.ToString(), interestRate.ToString(), investmentTerm.ToString());
                 FinancialYear = "365";
+                StartDateYear = "2022";
+                StartDateMonth = "November";
+                StartDateDay = $"{(1 + i)}";
                 Calculate();
-                ClearingMandatoryTextFields();
             }
         }
     }
