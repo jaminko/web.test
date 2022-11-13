@@ -126,11 +126,5 @@ namespace DepositeCalcTests.Pages
         {
             driver.Url = "https://localhost:5001/Calculator";
         }
-
-        public CalculatorPage WeitCurrencyFieldReady()
-        {
-            new WebDriverWait(driver, TimeSpan.FromSeconds(5)).Until(_ => CurrentCurrency.Displayed);
-            return new CalculatorPage(driver);
-        }
     }
 }

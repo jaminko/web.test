@@ -71,7 +71,6 @@ namespace DepositeCalcTests.Tests
             // Act
             settingsPage.Set(expectedCurrency);
             string expectedCarrencyEmblem = expectedCurrency.Substring(0, 1);
-            calculatorPage.WeitUpdateForCurrencyField();
 
             // Assert
             Assert.AreEqual(expectedCarrencyEmblem, calculatorPage.Currency, "Incorrect value in the Currency field");
