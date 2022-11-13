@@ -1,7 +1,4 @@
 ﻿using NUnit.Framework;
-using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium;
-using System;
 using DepositeCalcTests.Pages;
 
 namespace DepositeCalcTests.Tests
@@ -74,6 +71,7 @@ namespace DepositeCalcTests.Tests
             // Act
             settingsPage.Set(expectedCurrency);
             string expectedCarrencyEmblem = expectedCurrency.Substring(0, 1);
+            calculatorPage.WeitUpdateForCurrencyField();
 
             // Assert
             Assert.AreEqual(expectedCarrencyEmblem, calculatorPage.Currency, "Incorrect value in the Currency field");

@@ -33,7 +33,7 @@ namespace DepositeCalcTests.Pages
             new WebDriverWait(driver, TimeSpan.FromMilliseconds(500)).Until(_ => ClearBtn.Enabled);
         }
 
-        public int HistoryTableNumberOfRows 
+        public int HistoryTableNumberOfRows
         {
             get
             {
@@ -63,7 +63,7 @@ namespace DepositeCalcTests.Pages
             get
             {
                 List<List<string>> historyTable = new List<List<string>>();
-                for(int i = 0; i < HistoryTableRowsList.Count; i++)
+                for (int i = 0; i < HistoryTableRowsList.Count; i++)
                 {
                     var rows = HistoryTableRowsList[i].FindElements(By.XPath("./td"));
                     var rowsList = new List<string>();

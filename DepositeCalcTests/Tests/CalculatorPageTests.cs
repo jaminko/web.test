@@ -15,7 +15,6 @@ namespace DepositeCalcTests.Tests
         {
             InitDriver("https://localhost:5001/Settings");
             new SettingsPage(driver).ResetToDefaults();
-            new CalculatorPage(driver).CreateTenRandomCalculations();
             driver.Quit();
         }
 
@@ -90,21 +89,7 @@ namespace DepositeCalcTests.Tests
         public void MonthFieldTests()
         {
             // Arrange
-            var expectedMonthes = new[]
-            {
-                "January",
-                "February",
-                "March",
-                "April",
-                "May",
-                "June",
-                "July",
-                "August",
-                "September",
-                "October",
-                "November",
-                "December"
-            };
+            var expectedMonthes = new[] { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
 
             // Assert
             Assert.AreEqual(expectedMonthes, calculatorPage.GetStartDateMonthList(), "Incorrect value in the Month field");

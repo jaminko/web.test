@@ -127,20 +127,10 @@ namespace DepositeCalcTests.Pages
             driver.Url = "https://localhost:5001/Calculator";
         }
 
-        public void CreateTenRandomCalculations()
+        public CalculatorPage WeitCurrencyFieldReady()
         {
-            for (int i = 0; i < 10; i++)
-            {
-                int depositAmount = 1000+i;
-                int interestRate = 10+i;
-                int investmentTerm = 50+i;
-                FillingMandatoryTextFields(depositAmount.ToString(), interestRate.ToString(), investmentTerm.ToString());
-                FinancialYear = "365";
-                StartDateYear = "2022";
-                StartDateMonth = "November";
-                StartDateDay = $"{(1 + i)}";
-                Calculate();
-            }
+            new WebDriverWait(driver, TimeSpan.FromSeconds(5)).Until(_ => CurrentCurrency.Displayed);
+            return new CalculatorPage(driver);
         }
     }
 }
