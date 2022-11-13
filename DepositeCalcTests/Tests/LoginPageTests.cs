@@ -1,5 +1,6 @@
 using DepositeCalcTests.Pages;
 using NUnit.Framework;
+using OpenQA.Selenium.Support.UI;
 using System;
 
 namespace DepositeCalcTests.Tests
@@ -31,10 +32,12 @@ namespace DepositeCalcTests.Tests
         public void ValidLoginTest()
         {
             // Arrange
+            CalculatorPage calculatorPage = new CalculatorPage(driver);
             String expectedUrl = "https://localhost:5001/Calculator";
 
             // Act
             loginPage.Login();
+            new WebDriverWait(driver, TimeSpan.FromSeconds(5)).Until(_ => calculatorPage.IsOpened());
 
             // Assert
             Assert.AreEqual(expectedUrl, driver.Url);
