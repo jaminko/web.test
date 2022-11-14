@@ -25,7 +25,7 @@ namespace DepositeCalcTests.Tests
             loginPage.Login(login, password);
 
             // Assert
-            Assert.AreEqual("Incorrect credentials", loginPage.ErrMessage);
+            Assert.AreEqual("Incorrect credentials", loginPage.MainErrMessage);
         }
 
         [Test]

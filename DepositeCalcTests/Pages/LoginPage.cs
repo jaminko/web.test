@@ -13,15 +13,19 @@ namespace DepositeCalcTests.Pages
         private IWebElement LoginFld => driver.FindElement(By.XPath("//th[text()='User:']/..//input"));
         private IWebElement LoginBtn => driver.FindElement(By.XPath("//button[@id='loginBtn']"));
         private IWebElement PassworldFld => driver.FindElement(By.XPath("//th[text()='Password:']/..//input"));
+        private IWebElement RemindPasswordBtn => driver.FindElement(By.XPath("//button[@id='remindBtn']"));
+        private IWebElement EmailFld => driver.FindElement(By.XPath("//button[text()='x']/..//input"));
+        private IWebElement CloseBtn => driver.FindElement(By.XPath("//button[text()='x']"));
+        private IWebElement SendBtn => driver.FindElement(By.XPath("//button[text()='Send']"));
 
-        public string ErrMessage
+        public string MainErrMessage
         {
             get
             {
                 var locator = By.Id("errorMessage");
-                IWebElement errMessage = driver.FindElement(locator);
-                new WebDriverWait(driver, TimeSpan.FromSeconds(2)).Until(_ => errMessage.Text.Length > 0);
-                return errMessage.Text;
+                IWebElement mainErrMessage = driver.FindElement(locator);
+                new WebDriverWait(driver, TimeSpan.FromSeconds(2)).Until(_ => mainErrMessage.Text.Length > 0);
+                return mainErrMessage.Text;
             }
         }
 
@@ -37,6 +41,37 @@ namespace DepositeCalcTests.Pages
         {
             bool isLoginFldPresent = driver.FindElements(By.XPath("//th[text()='User:']/..//input")).Count > 0;
             return isLoginFldPresent;
+        }
+
+        public void RemindPassword()
+        {
+            RemindPasswordBtn.Click();
+        }
+
+        public void Send()
+        {
+            SendBtn.Click();
+        }
+        public void Close()
+        {
+            CloseBtn.Click();
+        }
+
+        public string SecondaryErrMessage
+        {
+            get
+            {
+                var locator = By.Id("message");
+                IWebElement secondaryErrMessage = driver.FindElement(locator);
+                new WebDriverWait(driver, TimeSpan.FromSeconds(2)).Until(_ => secondaryErrMessage.Text.Length > 0);
+                return secondaryErrMessage.Text;
+            }
+        }
+
+        public void RestorePassword(string email)
+        {
+            EmailFld.SendKeys(email);
+            Send();
         }
     }
 }
