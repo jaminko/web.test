@@ -44,6 +44,7 @@ namespace DepositeCalcTests.Tests
         {
             // Arrange
             var calculatorPage = new CalculatorPage(driver);
+            string expectedSeparator = expectedDateFormat.Substring(2, 1);
 
             // Act
             settingsPage.DateFormat = expectedDateFormat;
@@ -51,7 +52,6 @@ namespace DepositeCalcTests.Tests
             calculatorPage.StartDateYear = "2024";
             calculatorPage.StartDateMonth = "April";
             calculatorPage.StartDateDay = "29";
-            string expectedSeparator = expectedDateFormat.Substring(2, 1);
 
             // Assert
             Assert.Multiple(() =>
@@ -69,11 +69,11 @@ namespace DepositeCalcTests.Tests
         {
             // Arrange
             var calculatorPage = new CalculatorPage(driver);
+            string expectedCarrencyEmblem = expectedCurrency.Substring(0, 1);
 
             // Act
             settingsPage.Set(expectedCurrency);
-            string expectedCarrencyEmblem = expectedCurrency.Substring(0, 1);
-            new WebDriverWait(driver, TimeSpan.FromSeconds(5)).Until(_ => calculatorPage.IsOpened());
+            calculatorPage.WeitForReady();
 
             // Assert
             Assert.AreEqual(expectedCarrencyEmblem, calculatorPage.Currency, "Incorrect value in the Currency field");

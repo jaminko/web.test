@@ -31,11 +31,8 @@ namespace DepositeCalcTests.Tests
         [Test]
         public void ValidLoginTest()
         {
-            // Arrange
-            CalculatorPage calculatorPage = new CalculatorPage(driver);
-
             // Act
-            loginPage.Login();
+            CalculatorPage calculatorPage = loginPage.Login();
             calculatorPage.WeitForReady();
 
             // Assert

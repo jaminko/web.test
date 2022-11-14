@@ -63,12 +63,13 @@ namespace DepositeCalcTests.Pages
             return driver.Url.Contains("Settings");
         }
 
-        public void Set(string currency = null, string dateFormat = null, string numberFormat = null)
+        public CalculatorPage Set(string currency = null, string dateFormat = null, string numberFormat = null)
         {
             if (currency != null) DefaultCurrency = currency;
             if (dateFormat != null) DateFormat = dateFormat;
             if (numberFormat != null) NumberFormat = numberFormat;
             Save();
+            return new CalculatorPage(driver);
         }
 
         public void ResetToDefaults()

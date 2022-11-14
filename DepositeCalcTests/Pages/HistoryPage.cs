@@ -91,10 +91,9 @@ namespace DepositeCalcTests.Pages
             }
         }
 
-        public HistoryPage WeitForReady()
+        public void WeitForReady()
         {
             new WebDriverWait(driver, TimeSpan.FromSeconds(5)).Until(_ => LastCalculationsInFirstRow.Count != 0);
-            return new HistoryPage(driver);
         }
     }
 }

@@ -44,8 +44,8 @@ namespace DepositeCalcTests.Tests
             calculatorPage.FinancialYear = "360";
             calculatorPage.FillingMandatoryTextFields("9999", "99", "99");
             calculatorPage.Calculate();
-            calculatorPage.OpenHistory();
-            var unclearedHistoryPage = historyPage.WeitForReady();
+            historyPage = calculatorPage.OpenHistory();
+            historyPage.WeitForReady();
             historyPage.Clear();
 
             // Assert
@@ -94,7 +94,7 @@ namespace DepositeCalcTests.Tests
                 calculatorPage.StartDateDay = $"{(1 + i)}";
                 calculatorPage.Calculate();
             }
-            calculatorPage.OpenHistory();
+            historyPage = calculatorPage.OpenHistory();
             historyPage.WeitForReady();
 
             // Assert
