@@ -1,5 +1,7 @@
 ﻿using NUnit.Framework;
 using DepositeCalcTests.Pages;
+using OpenQA.Selenium.Support.UI;
+using System;
 
 namespace DepositeCalcTests.Tests
 {
@@ -71,6 +73,7 @@ namespace DepositeCalcTests.Tests
             // Act
             settingsPage.Set(expectedCurrency);
             string expectedCarrencyEmblem = expectedCurrency.Substring(0, 1);
+            new WebDriverWait(driver, TimeSpan.FromSeconds(5)).Until(_ => calculatorPage.IsOpened());
 
             // Assert
             Assert.AreEqual(expectedCarrencyEmblem, calculatorPage.Currency, "Incorrect value in the Currency field");

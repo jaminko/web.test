@@ -20,7 +20,7 @@ namespace DepositeCalcTests.Tests
         public void CalculatorLinkTest()
         {
             // Act
-            var calculatorPage = historyPage.Calculator();
+            var calculatorPage = historyPage.OpenCaluculator();
 
             // Assert
             Assert.IsTrue(calculatorPage.IsOpened(), "Incorrect page");
@@ -34,16 +34,17 @@ namespace DepositeCalcTests.Tests
         }
 
         [Test]
-        public void TotalNumberOfClculationsTest()
-        {
-            // Assert
-            Assert.AreEqual(10, historyPage.HistoryTableNumberOfRows, "The History table doesn't contain the last ten calculations");
-        }
-
-        [Test]
         public void ClearButtonTest()
         {
+            // Arrange
+            CalculatorPage calculatorPage = new CalculatorPage(driver);
+
             // Act
+            calculatorPage.Open();
+            calculatorPage.FinancialYear = "360";
+            calculatorPage.FillingMandatoryTextFields("9999", "99", "99");
+            calculatorPage.Calculate();
+            calculatorPage.OpenHistory();
             var unclearedHistoryPage = historyPage.WeitForReady();
             historyPage.Clear();
 

@@ -126,5 +126,11 @@ namespace DepositeCalcTests.Pages
         {
             driver.Url = "https://localhost:5001/Calculator";
         }
+
+        public CalculatorPage WeitForReady()
+        {
+            new WebDriverWait(driver, TimeSpan.FromSeconds(5)).Until(_ => IsOpened());
+            return new CalculatorPage(driver);
+        }
     }
 }

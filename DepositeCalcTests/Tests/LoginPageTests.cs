@@ -33,14 +33,13 @@ namespace DepositeCalcTests.Tests
         {
             // Arrange
             CalculatorPage calculatorPage = new CalculatorPage(driver);
-            String expectedUrl = "https://localhost:5001/Calculator";
 
             // Act
             loginPage.Login();
-            new WebDriverWait(driver, TimeSpan.FromSeconds(5)).Until(_ => calculatorPage.IsOpened());
+            calculatorPage.WeitForReady();
 
             // Assert
-            Assert.AreEqual(expectedUrl, driver.Url);
+            Assert.True(calculatorPage.IsOpened());
         }
     }
 }

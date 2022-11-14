@@ -21,7 +21,7 @@ namespace DepositeCalcTests.Pages
             return driver.Url.Contains("History");
         }
 
-        public CalculatorPage Calculator()
+        public CalculatorPage OpenCaluculator()
         {
             CalculatorLnk.Click();
             return new CalculatorPage(driver);
