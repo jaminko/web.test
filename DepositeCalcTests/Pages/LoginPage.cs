@@ -1,6 +1,7 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System;
+using System.Xml.Linq;
 
 namespace DepositeCalcTests.Pages
 {
@@ -17,6 +18,8 @@ namespace DepositeCalcTests.Pages
         private IWebElement EmailFld => driver.FindElement(By.XPath("//button[text()='x']/..//input"));
         private IWebElement CloseBtn => driver.FindElement(By.XPath("//button[text()='x']"));
         private IWebElement SendBtn => driver.FindElement(By.XPath("//button[text()='Send']"));
+        private IWebElement RemindPasswordForm => driver.FindElement(By.XPath("//iframe[@id='remindPasswordView']"));
+
 
         public string MainErrMessage
         {
@@ -46,15 +49,15 @@ namespace DepositeCalcTests.Pages
         public void RemindPassword()
         {
             RemindPasswordBtn.Click();
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(300);
+            driver.SwitchTo().Frame("remindPasswordView");
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
         }
 
-        public void Send()
-        {
-            SendBtn.Click();
-        }
         public void Close()
         {
             CloseBtn.Click();
+            driver.SwitchTo().DefaultContent();
         }
 
         public string SecondaryErrMessage
@@ -71,7 +74,18 @@ namespace DepositeCalcTests.Pages
         public void RestorePassword(string email)
         {
             EmailFld.SendKeys(email);
-            Send();
+            SendBtn.Click();
+        }
+
+        public bool IsRemindPasswordIFrameClosed()
+        {
+            bool result = false;
+            string attributValue = RemindPasswordForm.GetAttribute("hidden");
+                if (attributValue != null)
+                {
+                    result = true;
+                }
+            return result;
         }
     }
 }
