@@ -11,24 +11,23 @@ namespace WebSite.Controllers
         [HttpGet]
         public IActionResult Get(string login)
         {
-            var headers = new[] { "Amount", "%", "Term", "Year", "From", "To", "Interest", "Income"};
+            var headers = new[] { "Amount", "%", "Term", "Year", "From", "To", "Income", "Interest" };
             var history = History.Get(login);
             history.Reverse();
-
             var result = history
-                .Take(9)
+                .Take(10)
                 .Select(x =>
-                new[]
-                {
-                    x.Amount.ToDecimal().FormatNumber(x.Login),
-                    x.Percent + "%",
-                    x.Days.ToString(),
-                    x.Year,
-                    x.StartDate.FormatDate(login),
-                    x.EndDate.FormatDate(login),
-                    x.Interest.ToDecimal().FormatNumber(x.Login),
-                    x.Income.ToDecimal().FormatNumber(x.Login)
-                }).ToList();
+                    new[]
+                    {
+                        x.Amount.ToDecimal().FormatNumber(x.Login),
+                        x.Percent,
+                        x.Days.ToString(),
+                        x.Year,
+                        x.StartDate.FormatDate(login),
+                        x.EndDate.FormatDate(login),
+                        x.Income.ToDecimal().FormatNumber(x.Login),
+                        x.Interest.ToDecimal().FormatNumber(x.Login),
+                    }).ToList();
 
             result.Insert(0, headers);
 

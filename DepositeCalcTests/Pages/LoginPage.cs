@@ -25,11 +25,12 @@ namespace DepositeCalcTests.Pages
             }
         }
 
-        public void Login(string login = "test", string password = "newyork1")
+        public CalculatorPage Login(string login = "test", string password = "newyork1")
         {
             LoginFld.SendKeys(login);
             PassworldFld.SendKeys(password);
             LoginBtn.Click();
+            return new CalculatorPage(driver);
         }
 
         public bool IsOpened()

@@ -1,23 +1,19 @@
 ﻿using DepositeCalcTests.Pages;
 using DepositeCalcTests.Utilities;
 using NUnit.Framework;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
 using System;
 using System.Collections.Generic;
 
 namespace DepositeCalcTests.Tests
 {
-    internal class CalculatorPageTests
+    internal class CalculatorPageTests : BaseTest
     {
-        private IWebDriver driver;
+        private CalculatorPage calculatorPage;
 
         [OneTimeSetUp]
         public void OneTimeSetup()
         {
-            ChromeOptions options = new ChromeOptions { AcceptInsecureCertificates = true };
-            driver = new ChromeDriver(options);
-            driver.Url = "https://localhost:5001/Settings";
+            InitDriver("https://localhost:5001/Settings");
             new SettingsPage(driver).ResetToDefaults();
             driver.Quit();
         }
@@ -25,26 +21,14 @@ namespace DepositeCalcTests.Tests
         [SetUp]
         public void Setup()
         {
-            ChromeOptions options = new ChromeOptions { AcceptInsecureCertificates = true };
-            driver = new ChromeDriver(options);
-            driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(30);
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
-            driver.Url = "https://localhost:5001/Calculator";
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            driver.Quit();
+            InitDriver("https://localhost:5001/Calculator");
+            calculatorPage = new CalculatorPage(driver);
         }
 
         [TestCase("360", "1", "1", "")]
         [TestCase("365", "1", "1", "")]
         public void MandaroryTextFieldsTest(string financialYear, string depositAmount, string interestRate, string investmentTerm)
         {
-            // Arrange
-            var calculatorPage = new CalculatorPage(driver);
-
             // Act
             calculatorPage.FillingMandatoryTextFields(depositAmount, interestRate, investmentTerm);
             calculatorPage.FinancialYear = financialYear;
@@ -57,9 +41,6 @@ namespace DepositeCalcTests.Tests
         [TestCase("365", "100000", "100", "365", "200,000.00", "100,000.00")]
         public void ValidCalculationTest(string financialYear, string depositAmount, string interestRate, string investmentTerm, string expectedIncome, string expectedInterestEarned)
         {
-            // Arrange
-            var calculatorPage = new CalculatorPage(driver);
-
             // Act
             calculatorPage.FinancialYear = financialYear;
             calculatorPage.FillingMandatoryTextFields(depositAmount, interestRate, investmentTerm);
@@ -79,9 +60,6 @@ namespace DepositeCalcTests.Tests
         [TestCase("365", "1000000", "100", "366")]
         public void NegativeCalculationTest(string financialYear, string depositAmount, string interestRate, string investmentTerm)
         {
-            // Arrange
-            var calculatorPage = new CalculatorPage(driver);
-
             // Act
             calculatorPage.FinancialYear = financialYear;
             calculatorPage.FillingMandatoryTextFields(depositAmount, interestRate, investmentTerm);
@@ -97,7 +75,6 @@ namespace DepositeCalcTests.Tests
         public void DayFieldTests(int year, int month)
         {
             // Arrange
-            var calculatorPage = new CalculatorPage(driver);
             var expectedDays = DateHelper.GetMonthDays(year, month);
 
             // Atc
@@ -112,22 +89,7 @@ namespace DepositeCalcTests.Tests
         public void MonthFieldTests()
         {
             // Arrange
-            var calculatorPage = new CalculatorPage(driver);
-            var expectedMonthes = new[]
-            {
-                "January",
-                "February",
-                "March",
-                "April",
-                "May",
-                "June",
-                "July",
-                "August",
-                "September",
-                "October",
-                "November",
-                "December"
-            };
+            var expectedMonthes = new[] { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
 
             // Assert
             Assert.AreEqual(expectedMonthes, calculatorPage.GetStartDateMonthList(), "Incorrect value in the Month field");
@@ -136,9 +98,6 @@ namespace DepositeCalcTests.Tests
         [Test]
         public void YearsFieldTests()
         {
-            // Arrange
-            var calculatorPage = new CalculatorPage(driver);
-
             List<string> expectedYears = new List<string>();
             for (int year = 2010; year <= 2029; year++)
             {
@@ -156,9 +115,6 @@ namespace DepositeCalcTests.Tests
         public void EndDateFieldTest(string financialYear, string depositAmount, string interestRate, string investmentTerm,
                                      string year, string month, string day, string expactedEndDate)
         {
-            // Arrange
-            var calculatorPage = new CalculatorPage(driver);
-
             // Act
             calculatorPage.FinancialYear = financialYear;
             calculatorPage.FillingMandatoryTextFields(depositAmount, interestRate, investmentTerm);
@@ -174,14 +130,21 @@ namespace DepositeCalcTests.Tests
         [Test]
         public void SettingLinkTest()
         {
-            // Arrange
-            var calculatorPage = new CalculatorPage(driver);
-
             // Act
             var settingsPage = calculatorPage.OpenSettings();
 
             // Assert
             Assert.IsTrue(settingsPage.IsOpened(), "Incorrect page");
+        }
+
+        [Test]
+        public void HistoryLinkTest()
+        {
+            // Act
+            var historyPage = calculatorPage.OpenHistory();
+
+            // Assert
+            Assert.IsTrue(historyPage.IsOpened(), "Incorrect page");
         }
     }
 }

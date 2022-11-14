@@ -13,7 +13,7 @@ namespace DepositeCalcTests.Pages
         }
 
         private IWebElement DepositAmountFld => driver.FindElement(By.XPath("//td[text()='Deposit amount: *']/..//input"));
-        private IWebElement InterestRateFld => driver.FindElement(By.XPath("//td[text()='Rate of interest: *']/..//input"));
+        private IWebElement RateOfInterestFld => driver.FindElement(By.XPath("//td[text()='Rate of interest: *']/..//input"));
         private IWebElement InvestmentTermFld => driver.FindElement(By.XPath("//td[text()='Investment term: *']/..//input"));
         private IWebElement FinancialYear365DaysBtn => driver.FindElement(By.XPath("//td[text()='Financial year: *']/..//input[@onchange='SetYear(360)']"));
         private IWebElement FinancialYear360DaysBtn => driver.FindElement(By.XPath("//td[text()='Financial year: *']/..//input[@onchange='SetYear(365)']"));
@@ -26,12 +26,15 @@ namespace DepositeCalcTests.Pages
         private IWebElement EndDateFld => driver.FindElement(By.XPath("//th[text()='End date: *']/..//input"));
         private IWebElement SettingsLnk => driver.FindElement(By.XPath("//div[text() = 'Settings']"));
         private IWebElement CurrentCurrency => driver.FindElement(By.XPath("//td[@id='currency']"));
-
+        private IWebElement HistoryLnk => driver.FindElement(By.XPath("//div[text() = 'History']"));
 
         public void FillingMandatoryTextFields(string depositAmount, string interestRate, string investmentTerm)
         {
+            DepositAmountFld.Clear();
             DepositAmountFld.SendKeys(depositAmount);
-            InterestRateFld.SendKeys(interestRate);
+            RateOfInterestFld.Clear();
+            RateOfInterestFld.SendKeys(interestRate);
+            InvestmentTermFld.Clear();
             InvestmentTermFld.SendKeys(investmentTerm);
             new WebDriverWait(driver, TimeSpan.FromSeconds(2)).Until(_ => CalculateBtn.GetAttribute("disable") != string.Empty);
         }
@@ -65,7 +68,7 @@ namespace DepositeCalcTests.Pages
         public void Calculate()
         {
             CalculateBtn.Click();
-            new WebDriverWait(driver, TimeSpan.FromSeconds(2)).Until(_ => CalculateBtn.GetAttribute("disable") != string.Empty);
+            new WebDriverWait(driver, TimeSpan.FromSeconds(2)).Until(_ => !IsCalculateBtnDisabled);
         }
 
         public bool IsCalculateBtnDisabled => !CalculateBtn.Enabled;
@@ -111,6 +114,22 @@ namespace DepositeCalcTests.Pages
         public bool IsOpened()
         {
             return driver.Url.Contains("Calculator");
+        }
+
+        public HistoryPage OpenHistory()
+        {
+            HistoryLnk.Click();
+            return new HistoryPage(driver);
+        }
+
+        public void Open()
+        {
+            driver.Url = "https://localhost:5001/Calculator";
+        }
+
+        public void WeitForReady()
+        {
+            new WebDriverWait(driver, TimeSpan.FromSeconds(5)).Until(_ => IsOpened());
         }
     }
 }
