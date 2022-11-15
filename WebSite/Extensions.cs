@@ -11,8 +11,13 @@ namespace WebSite
         {
             try
             {
+                var name = email.Split('@').First().Trim();
                 var domain = email.Split('@').Last().Trim();
-                return domain.Contains(".") && !domain.EndsWith(".") && new System.Net.Mail.MailAddress(email).Address == email;
+                return name.Length < 260
+                       && !name.EndsWith(".")
+                       && domain.Contains(".")
+                       && !domain.EndsWith(".")
+                       && new System.Net.Mail.MailAddress(email).Address == email;
             }
             catch
             {
