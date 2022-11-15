@@ -39,7 +39,7 @@ namespace DepositeCalcTests.Pages
             {
                 driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1);
                 int result = HistoryTableRowsList.Count;
-                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
+                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
                 return result;
             }
         }

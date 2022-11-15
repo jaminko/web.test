@@ -1,8 +1,10 @@
 using DepositeCalcTests.Pages;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
 using System;
-using System.Threading;
 
 namespace DepositeCalcTests.Tests
 {
@@ -15,6 +17,7 @@ namespace DepositeCalcTests.Tests
         {
             InitDriver("https://localhost:5001/");
             loginPage = new LoginPage(driver);
+            TitleTest("Login");
         }
 
         [TestCase("test", "")]
@@ -26,7 +29,7 @@ namespace DepositeCalcTests.Tests
             loginPage.Login(login, password);
 
             // Assert
-            Assert.AreEqual("Incorrect credentials", loginPage.MainErrMessage, "Incorrect error message");
+            Assert.AreEqual("Incorrect credentials", loginPage.ErrMessageForLoginForm, "Incorrect error message");
         }
 
         [Test]
@@ -40,40 +43,62 @@ namespace DepositeCalcTests.Tests
             Assert.True(calculatorPage.IsOpened(), "Incorrect credentials");
         }
 
-        [TestCase("tomcruise@gmail.")]
-        [TestCase("@")]
+        [TestCase("test.@test.com")]
+        [TestCase(".test@test.com")]
+        [TestCase("@test.com")]
+        [TestCase("(),:;<>[]@test.com")]
         [TestCase(" ")]
         [TestCase("")]
-        public void InvalidEmailTest(string userEmail)
+        [TestCase("@test.com")]
+        [TestCase("test@test@test.com")]
+        [TestCase("TestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTest@test.com")]
+
+        public void InvalidEmailRemindPasswordTests(string userEmail)
         {
             // Act
-            loginPage.RemindPassword();
-            loginPage.RestorePassword(userEmail);
+            loginPage.RemindPasswordForm.Open();
+            loginPage.RemindPasswordForm.RemindPassword(userEmail);
 
             // Assert
-            Assert.AreEqual("Invalid email", loginPage.SecondaryErrMessage, "Incorrect error message");
+            Assert.AreEqual("Invalid email", loginPage.ErrMessageForRemindPasswordForm, "Incorrect error message");
         }
 
         [Test]
-        public void InvalidUserTest()
+        public void InvalidUserRemindPasswordTest()
         {
             // Act
-            loginPage.RemindPassword();
-            loginPage.RestorePassword("serg.d.mitre@company.com");
+            loginPage.RemindPasswordForm.Open();
+            loginPage.RemindPasswordForm.RemindPassword("tes@test.com");
 
             // Assert
-            Assert.AreEqual("No user was found", loginPage.SecondaryErrMessage, "Incorrect error message");
+            Assert.AreEqual("No user was found", loginPage.ErrMessageForRemindPasswordForm, "Incorrect error message");
         }
 
         [Test]
         public void ClosedRemindPasswordFormTest()
         {
             // Act
-            loginPage.RemindPassword();
-            loginPage.Close();
+            loginPage.RemindPasswordForm.Open();
+            loginPage.RemindPasswordForm.Close();
 
             // Assert
-            Assert.IsTrue(loginPage.IsRemindPasswordIFrameClosed(), "The password reminder form was not closed");
+            Assert.IsFalse(loginPage.RemindPasswordForm.IsShown, "The password reminder form was not closed");
+        }
+
+        [Test]
+        public void ValidUserRemindPasswordTest()
+        {
+            // Act
+            loginPage.RemindPasswordForm.Open();
+            loginPage.RemindPasswordForm.RemindPassword("test@test.com");
+            var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(3));
+            wait.Until(ExpectedConditions.AlertIsPresent());
+            IAlert alert = driver.SwitchTo().Alert();
+            alert.Accept();
+            driver.SwitchTo().DefaultContent();
+
+            // Assert
+            Assert.IsFalse(loginPage.RemindPasswordForm.IsShown, "The email with instruvtions was not sent to test@test.com");
         }
     }
 }

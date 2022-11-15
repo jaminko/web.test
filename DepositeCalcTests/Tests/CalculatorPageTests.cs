@@ -23,6 +23,7 @@ namespace DepositeCalcTests.Tests
         {
             InitDriver("https://localhost:5001/Calculator");
             calculatorPage = new CalculatorPage(driver);
+            TitleTest("Deposite calculator");
         }
 
         [TestCase("360", "1", "1", "")]

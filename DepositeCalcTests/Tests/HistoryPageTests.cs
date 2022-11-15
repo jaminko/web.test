@@ -14,6 +14,7 @@ namespace DepositeCalcTests.Tests
         {
             InitDriver("https://localhost:5001/History");
             historyPage = new HistoryPage(driver);
+            TitleTest("History");
         }
 
         [Test]
@@ -24,13 +25,6 @@ namespace DepositeCalcTests.Tests
 
             // Assert
             Assert.IsTrue(calculatorPage.IsOpened(), "Incorrect page");
-        }
-
-        [Test]
-        public void TitleTest()
-        {
-            // Assert
-            Assert.AreEqual("History", driver.Title, "Incorrect title");
         }
 
         [Test]

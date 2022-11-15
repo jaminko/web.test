@@ -1,7 +1,6 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System;
-using System.Xml.Linq;
 
 namespace DepositeCalcTests.Pages
 {
@@ -15,13 +14,9 @@ namespace DepositeCalcTests.Pages
         private IWebElement LoginBtn => driver.FindElement(By.XPath("//button[@id='loginBtn']"));
         private IWebElement PassworldFld => driver.FindElement(By.XPath("//th[text()='Password:']/..//input"));
         private IWebElement RemindPasswordBtn => driver.FindElement(By.XPath("//button[@id='remindBtn']"));
-        private IWebElement EmailFld => driver.FindElement(By.XPath("//button[text()='x']/..//input"));
-        private IWebElement CloseBtn => driver.FindElement(By.XPath("//button[text()='x']"));
-        private IWebElement SendBtn => driver.FindElement(By.XPath("//button[text()='Send']"));
-        private IWebElement RemindPasswordForm => driver.FindElement(By.XPath("//iframe[@id='remindPasswordView']"));
+        public RemindPasswordView RemindPasswordForm => new RemindPasswordView(driver, RemindPasswordBtn);
 
-
-        public string MainErrMessage
+        public string ErrMessageForLoginForm
         {
             get
             {
@@ -46,46 +41,51 @@ namespace DepositeCalcTests.Pages
             return isLoginFldPresent;
         }
 
-        public void RemindPassword()
-        {
-            RemindPasswordBtn.Click();
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(300);
-            driver.SwitchTo().Frame("remindPasswordView");
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
-        }
-
-        public void Close()
-        {
-            CloseBtn.Click();
-            driver.SwitchTo().DefaultContent();
-        }
-
-        public string SecondaryErrMessage
+        public string ErrMessageForRemindPasswordForm
         {
             get
             {
                 var locator = By.Id("message");
-                IWebElement secondaryErrMessage = driver.FindElement(locator);
-                new WebDriverWait(driver, TimeSpan.FromSeconds(2)).Until(_ => secondaryErrMessage.Text.Length > 0);
-                return secondaryErrMessage.Text;
+                IWebElement errMessageForRemindPasswordForm = driver.FindElement(locator);
+                new WebDriverWait(driver, TimeSpan.FromSeconds(2)).Until(_ => errMessageForRemindPasswordForm.Text.Length > 0);
+                return errMessageForRemindPasswordForm.Text;
             }
         }
+    }
 
-        public void RestorePassword(string email)
+    public class RemindPasswordView
+    {
+        private IWebDriver driver;
+        private IWebElement openButton;
+        public RemindPasswordView(IWebDriver driver, IWebElement openButton)
         {
-            EmailFld.SendKeys(email);
-            SendBtn.Click();
+            this.driver = driver;
+            this.openButton = openButton;
         }
 
-        public bool IsRemindPasswordIFrameClosed()
+        private IWebElement RemindPasswordForm => driver.FindElement(By.XPath("//iframe[@id='remindPasswordView']"));
+        private IWebElement CloseBtn => driver.FindElement(By.XPath("//button[text()='x']"));
+        public bool IsShown => RemindPasswordForm.Displayed;
+        private IWebElement EmailFld => driver.FindElement(By.XPath("//input[@placeholder='Email address']"));
+        private IWebElement SendBtn => driver.FindElement(By.XPath("//button[text()='Send']"));
+
+        public void Open()
         {
-            bool result = false;
-            string attributValue = RemindPasswordForm.GetAttribute("hidden");
-                if (attributValue != null)
-                {
-                    result = true;
-                }
-            return result;
+            openButton.Click();
+        }
+
+        public void Close()
+        {
+            driver.SwitchTo().Frame("remindPasswordView");
+            CloseBtn.Click();
+            driver.SwitchTo().DefaultContent();
+        }
+
+        public void RemindPassword(string email)
+        {
+            driver.SwitchTo().Frame("remindPasswordView");
+            EmailFld.SendKeys(email);
+            SendBtn.Click();
         }
     }
 }
