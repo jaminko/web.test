@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using WebSite.DB;
 using WebSite.Models;
 
@@ -15,12 +14,12 @@ namespace WebSite.Controllers
 
             if (!email.IsValidEmail())
             {
-                return Conflict("Invalid email.");
+                return Conflict("Invalid email");
             }
 
             if (!Users.Emails.Contains(email))
             {
-                return Conflict("No user was found.");
+                return Conflict("No user was found");
             }
 
             return Json($"Email with instructions was sent to {email}");
