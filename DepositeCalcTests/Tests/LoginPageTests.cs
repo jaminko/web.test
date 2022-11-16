@@ -25,7 +25,7 @@ namespace DepositeCalcTests.Tests
             loginPage.Login(login, password);
 
             // Assert
-            Assert.AreEqual("Incorrect credentials", loginPage.ErrMessageForLoginForm, "Incorrect error message");
+            Assert.AreEqual("Incorrect credentials", loginPage.ErrorMessage, "Incorrect error message");
         }
 
         [Test]
@@ -39,17 +39,17 @@ namespace DepositeCalcTests.Tests
             Assert.True(calculatorPage.IsOpened(), "Incorrect credentials");
         }
 
-        [TestCase("test.@test.com")]
-        [TestCase(".test@test.com")]
-        [TestCase("@test.com")]
-        [TestCase("(),:;<>[]@test.com")]
-        [TestCase(" ")]
-        [TestCase("")]
-        [TestCase("@test.com")]
-        [TestCase("test@test@test.com")]
-        [TestCase("TestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTest@test.com")]
-
-        public void InvalidEmailRemindPasswordTests(string userEmail)
+        [TestCase("test.@test.com", "Invalid email")]
+        [TestCase(".test@test.com", "Invalid email")]
+        [TestCase("@test.com", "Invalid email")]
+        [TestCase("(),:;<>[]@test.com", "Invalid email")]
+        [TestCase(" ", "Invalid email")]
+        [TestCase("", "Invalid email")]
+        [TestCase("@test.com", "Invalid email")]
+        [TestCase("test@test@test.com", "Invalid email")]
+        [TestCase("TestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTest@test.com", "Invalid email")]
+        [TestCase("tes@test.com", "No user was found")]
+        public void InvalidEmailOrUserRemindPasswordTests(string userEmail, string errorMessage)
         {
             // Act
             loginPage.RemindPasswordForm.Open();
@@ -57,18 +57,7 @@ namespace DepositeCalcTests.Tests
 
             // Assert
             Assert.IsFalse(sendRemindResult.IsSuccessful, "Operation was not successful");
-        }
-
-        [Test]
-        public void InvalidUserRemindPasswordTest()
-        {
-            // Act
-            loginPage.RemindPasswordForm.Open();
-            var sendRemindResult = loginPage.RemindPasswordForm.RemindPassword("tes@test.com");
-
-
-            // Assert
-            Assert.IsFalse(sendRemindResult.IsSuccessful, "Operation was not successful");
+            Assert.AreEqual(sendRemindResult.Message, errorMessage);
         }
 
         [Test]
@@ -90,8 +79,11 @@ namespace DepositeCalcTests.Tests
             var sendRemindResult = loginPage.RemindPasswordForm.RemindPassword("test@test.com");
 
             // Assert
-            Assert.IsTrue(sendRemindResult.IsSuccessful, "Operation was not successful");
-            Assert.AreEqual(sendRemindResult.Message, "Email with instructions was sent to test@test.com");
+            Assert.Multiple(() =>
+            {
+                Assert.IsTrue(sendRemindResult.IsSuccessful, "Operation was not successful");
+                Assert.AreEqual(sendRemindResult.Message, "Email with instructions was sent to test@test.com");
+            });
         }
     }
 }

@@ -16,7 +16,7 @@ namespace DepositeCalcTests.Pages
         private IWebElement RemindPasswordBtn => driver.FindElement(By.XPath("//button[@id='remindBtn']"));
         public RemindPasswordView RemindPasswordForm => new RemindPasswordView(driver, RemindPasswordBtn);
 
-        public string ErrMessageForLoginForm
+        public string ErrorMessage
         {
             get
             {
@@ -52,7 +52,8 @@ namespace DepositeCalcTests.Pages
             this.openButton = openButton;
         }
 
-        private IWebElement RemindPasswordForm => driver.FindElement(By.XPath("//iframe[@id='remindPasswordView']"));
+        private string _frameId = "remindPasswordView";
+        private IWebElement RemindPasswordForm => driver.FindElement(By.Id(_frameId));
         private IWebElement CloseBtn => driver.FindElement(By.XPath("//button[text()='x']"));
         public bool IsShown => RemindPasswordForm.Displayed;
         private IWebElement EmailFld => driver.FindElement(By.XPath("//input[@placeholder='Email address']"));
@@ -76,14 +77,14 @@ namespace DepositeCalcTests.Pages
 
         public void Close()
         {
-            driver.SwitchTo().Frame("remindPasswordView");
+            driver.SwitchTo().Frame(_frameId);
             CloseBtn.Click();
             driver.SwitchTo().DefaultContent();
         }
 
         public (bool IsSuccessful, string Message) RemindPassword(string email)
         {
-            driver.SwitchTo().Frame("remindPasswordView");
+            driver.SwitchTo().Frame(_frameId);
             EmailFld.SendKeys(email);
             SendBtn.Click();
             if (IsAlertPresent())
@@ -95,8 +96,7 @@ namespace DepositeCalcTests.Pages
             }
             else
             {
-                var result = (false, ErrMessageForRemindPasswordForm);
-                return result;
+                return (false, ErrMessageForRemindPasswordForm);
             }
         }
 
