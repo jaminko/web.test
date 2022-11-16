@@ -29,7 +29,7 @@ namespace DepositeCalcTests.Tests
             driver.Url = url;
         }
 
-        public void TitleTest(string title)
+        public void AssertPageTitle(string title)
         {
             Assert.AreEqual(title, driver.Title, "Incorrect title");
         }

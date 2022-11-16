@@ -12,7 +12,7 @@ namespace DepositeCalcTests.Tests
         {
             InitDriver("https://localhost:5001/Settings");
             settingsPage = new SettingsPage(driver);
-            TitleTest("Settings");
+            AssertPageTitle("Settings");
         }
 
         [Test]

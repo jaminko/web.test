@@ -40,17 +40,6 @@ namespace DepositeCalcTests.Pages
             bool isLoginFldPresent = driver.FindElements(By.XPath("//th[text()='User:']/..//input")).Count > 0;
             return isLoginFldPresent;
         }
-
-        public string ErrMessageForRemindPasswordForm
-        {
-            get
-            {
-                var locator = By.Id("message");
-                IWebElement errMessageForRemindPasswordForm = driver.FindElement(locator);
-                new WebDriverWait(driver, TimeSpan.FromSeconds(2)).Until(_ => errMessageForRemindPasswordForm.Text.Length > 0);
-                return errMessageForRemindPasswordForm.Text;
-            }
-        }
     }
 
     public class RemindPasswordView
@@ -69,6 +58,17 @@ namespace DepositeCalcTests.Pages
         private IWebElement EmailFld => driver.FindElement(By.XPath("//input[@placeholder='Email address']"));
         private IWebElement SendBtn => driver.FindElement(By.XPath("//button[text()='Send']"));
 
+        public string ErrMessageForRemindPasswordForm
+        {
+            get
+            {
+                var locator = By.Id("message");
+                IWebElement errMessageForRemindPasswordForm = driver.FindElement(locator);
+                new WebDriverWait(driver, TimeSpan.FromSeconds(2)).Until(_ => errMessageForRemindPasswordForm.Text.Length > 0);
+                return errMessageForRemindPasswordForm.Text;
+            }
+        }
+
         public void Open()
         {
             openButton.Click();
@@ -81,11 +81,35 @@ namespace DepositeCalcTests.Pages
             driver.SwitchTo().DefaultContent();
         }
 
-        public void RemindPassword(string email)
+        public (bool IsSuccessful, string Message) RemindPassword(string email)
         {
             driver.SwitchTo().Frame("remindPasswordView");
             EmailFld.SendKeys(email);
             SendBtn.Click();
+            if (IsAlertPresent())
+            {
+                IAlert alert = driver.SwitchTo().Alert();
+                var result = (true, alert.Text);
+                alert.Accept();
+                return result;
+            }
+            else
+            {
+                var result = (false, ErrMessageForRemindPasswordForm);
+                return result;
+            }
         }
+
+        public bool IsAlertPresent()
+        {
+            try
+            {
+                IAlert alert = driver.SwitchTo().Alert(); return true;
+            }
+            catch (NoAlertPresentException Ex)
+            {
+                return false;
+            }
+        }   
     }
 }

@@ -1,10 +1,6 @@
 using DepositeCalcTests.Pages;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
-using SeleniumExtras.WaitHelpers;
-using System;
 
 namespace DepositeCalcTests.Tests
 {
@@ -17,7 +13,7 @@ namespace DepositeCalcTests.Tests
         {
             InitDriver("https://localhost:5001/");
             loginPage = new LoginPage(driver);
-            TitleTest("Login");
+            AssertPageTitle("Login");
         }
 
         [TestCase("test", "")]
@@ -57,10 +53,10 @@ namespace DepositeCalcTests.Tests
         {
             // Act
             loginPage.RemindPasswordForm.Open();
-            loginPage.RemindPasswordForm.RemindPassword(userEmail);
+            var sendRemindResult = loginPage.RemindPasswordForm.RemindPassword(userEmail);
 
             // Assert
-            Assert.AreEqual("Invalid email", loginPage.ErrMessageForRemindPasswordForm, "Incorrect error message");
+            Assert.IsFalse(sendRemindResult.IsSuccessful, "Operation was not successful");
         }
 
         [Test]
@@ -68,10 +64,11 @@ namespace DepositeCalcTests.Tests
         {
             // Act
             loginPage.RemindPasswordForm.Open();
-            loginPage.RemindPasswordForm.RemindPassword("tes@test.com");
+            var sendRemindResult = loginPage.RemindPasswordForm.RemindPassword("tes@test.com");
+
 
             // Assert
-            Assert.AreEqual("No user was found", loginPage.ErrMessageForRemindPasswordForm, "Incorrect error message");
+            Assert.IsFalse(sendRemindResult.IsSuccessful, "Operation was not successful");
         }
 
         [Test]
@@ -90,15 +87,11 @@ namespace DepositeCalcTests.Tests
         {
             // Act
             loginPage.RemindPasswordForm.Open();
-            loginPage.RemindPasswordForm.RemindPassword("test@test.com");
-            var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(3));
-            wait.Until(ExpectedConditions.AlertIsPresent());
-            IAlert alert = driver.SwitchTo().Alert();
-            alert.Accept();
-            driver.SwitchTo().DefaultContent();
+            var sendRemindResult = loginPage.RemindPasswordForm.RemindPassword("test@test.com");
 
             // Assert
-            Assert.IsFalse(loginPage.RemindPasswordForm.IsShown, "The email with instruvtions was not sent to test@test.com");
+            Assert.IsTrue(sendRemindResult.IsSuccessful, "Operation was not successful");
+            Assert.AreEqual(sendRemindResult.Message, "Email with instructions was sent to test@test.com");
         }
     }
 }

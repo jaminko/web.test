@@ -14,7 +14,7 @@ namespace DepositeCalcTests.Tests
         {
             InitDriver("https://localhost:5001/History");
             historyPage = new HistoryPage(driver);
-            TitleTest("History");
+            AssertPageTitle("History");
         }
 
         [Test]
