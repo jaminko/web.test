@@ -24,9 +24,14 @@ namespace DepositeCalcTests.Tests
             options.AddArgument("log-level=3");
             
             driver = new ChromeDriver(chromeDriverService, options);
-            driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(30);
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
+            driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(3);
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(300);
             driver.Url = url;
+        }
+
+        public void AssertPageTitle(string title)
+        {
+            Assert.AreEqual(title, driver.Title, "Incorrect title");
         }
 
         [TearDown]

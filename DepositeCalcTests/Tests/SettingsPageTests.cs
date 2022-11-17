@@ -1,7 +1,5 @@
 ﻿using NUnit.Framework;
 using DepositeCalcTests.Pages;
-using OpenQA.Selenium.Support.UI;
-using System;
 
 namespace DepositeCalcTests.Tests
 {
@@ -14,6 +12,7 @@ namespace DepositeCalcTests.Tests
         {
             InitDriver("https://localhost:5001/Settings");
             settingsPage = new SettingsPage(driver);
+            AssertPageTitle("Settings");
         }
 
         [Test]
