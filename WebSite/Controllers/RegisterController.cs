@@ -12,27 +12,27 @@ namespace WebSite.Controllers
         {
             if (dto.Password != dto.Password2)
             {
-                return Conflict("Passwords are different.");
+                return Conflict("Passwords are different");
             }
 
             if (!dto.Email.IsValidEmail())
             {
-                return Conflict("Invalid email.");
+                return Conflict("Invalid email");
             }
 
             if (Users.Emails.Contains(dto.Email.Trim()))
             {
-                return Conflict("User with this email is already registered.");
+                return Conflict("User with this email is already registered");
             }
 
             if (Users.Names.Contains(dto.Login.ToLower().Trim()))
             {
-                return Conflict("User with this login is already registered.");
+                return Conflict("User with this login is already registered");
             }
 
             if (dto.Password.Trim().Length < 5)
             {
-                return Conflict("Password is too short.");
+                return Conflict("Password is too short");
             }
 
             Users.Add(dto);
