@@ -2,6 +2,7 @@
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using System;
+using System.Threading;
 
 namespace DepositeCalcTests.Pages
 {
@@ -48,9 +49,10 @@ namespace DepositeCalcTests.Pages
             PassworldFld.SendKeys(password);
             ConfirmPasswordFld.SendKeys(confirmPassword);
             RegisterBtn.Click();
+            Thread.Sleep(500);
             if (IsAlertPresent())
             {
-                var wait = new WebDriverWait(driver, TimeSpan.FromMilliseconds(300));
+                var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(1));
                 wait.Until(ExpectedConditions.AlertIsPresent());
                 IAlert alert = driver.SwitchTo().Alert();
                 var result = (true, alert.Text);

@@ -8,8 +8,10 @@ namespace DepositeCalcTests.Utilities
     {
         public void Delete(string name)
         {
-            HttpClient client = new HttpClient();
-            HttpRequestMessage request = new HttpRequestMessage
+            var clientHandler = new HttpClientHandler();
+            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true;
+            var client = new HttpClient(clientHandler);
+            var request = new HttpRequestMessage
             {
                 Content = new StringContent($"{{ \"login\": \"{name}\" }}", Encoding.UTF8, "application/json"),
                 Method = HttpMethod.Delete,
