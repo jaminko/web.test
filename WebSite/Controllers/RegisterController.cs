@@ -10,6 +10,11 @@ namespace WebSite.Controllers
         [HttpPost]
         public IActionResult Register([FromBody] UserDto dto)
         {
+            if (dto.Login.Trim() == "" || dto.Email.Trim() == "" || dto.Password.Trim() == "" || dto.Password2.Trim() == "")
+            {
+                return Conflict("Fill in the remaining mandatory fields");
+            }
+
             if (dto.Password != dto.Password2)
             {
                 return Conflict("Passwords are different");
