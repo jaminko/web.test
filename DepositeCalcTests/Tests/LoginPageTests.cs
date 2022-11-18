@@ -7,12 +7,14 @@ namespace DepositeCalcTests.Tests
     public class LoginPageTests : BaseTest
     {
         private LoginPage loginPage;
+        private RemindPasswordView remindPasswordView;
 
         [SetUp]
         public void Setup()
         {
             InitDriver("https://localhost:5001/");
             loginPage = new LoginPage(driver);
+            remindPasswordView = new RemindPasswordView(driver);
             AssertPageTitle("Login");
         }
 
@@ -52,37 +54,40 @@ namespace DepositeCalcTests.Tests
         public void InvalidEmailOrUserRemindPasswordTests(string userEmail, string errorMessage)
         {
             // Act
-            loginPage.RemindPasswordForm.Open();
-            var sendRemindResult = loginPage.RemindPasswordForm.RemindPassword(userEmail);
+            remindPasswordView.Open();
+            var sendRemindResult = remindPasswordView.RemindPassword(userEmail);
 
             // Assert
-            Assert.IsFalse(sendRemindResult.IsSuccessful, "Operation was not successful");
-            Assert.AreEqual(sendRemindResult.Message, errorMessage);
+            Assert.Multiple(() =>
+            {
+                Assert.IsFalse(sendRemindResult.IsSuccessful, "Operation was not successful");
+                Assert.AreEqual(errorMessage, sendRemindResult.Message);
+            });
         }
 
         [Test]
         public void ClosedRemindPasswordFormTest()
         {
             // Act
-            loginPage.RemindPasswordForm.Open();
-            loginPage.RemindPasswordForm.Close();
+            remindPasswordView.Open();
+            remindPasswordView.Close();
 
             // Assert
-            Assert.IsFalse(loginPage.RemindPasswordForm.IsShown, "The password reminder form was not closed");
+            Assert.IsFalse(remindPasswordView.IsShown, "The password reminder form was not closed");
         }
 
         [Test]
         public void ValidUserRemindPasswordTest()
         {
             // Act
-            loginPage.RemindPasswordForm.Open();
-            var sendRemindResult = loginPage.RemindPasswordForm.RemindPassword("test@test.com");
+            remindPasswordView.Open();
+            var sendRemindResult = remindPasswordView.RemindPassword("test@test.com");
 
             // Assert
             Assert.Multiple(() =>
             {
                 Assert.IsTrue(sendRemindResult.IsSuccessful, "Operation was not successful");
-                Assert.AreEqual(sendRemindResult.Message, "Email with instructions was sent to test@test.com");
+                Assert.AreEqual("Email with instructions was sent to test@test.com", sendRemindResult.Message);
             });
         }
     }
