@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace DepositeCalcTests.Tests
 {
-    internal class HistoryPageTests : BaseTest
+    public class HistoryPageTests : BaseTest
     {
         private HistoryPage historyPage;
 

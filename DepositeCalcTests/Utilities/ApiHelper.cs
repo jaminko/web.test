@@ -4,9 +4,9 @@ using System.Text;
 
 namespace DepositeCalcTests.Utilities
 {
-    internal class ApiHelper
+    public static class ApiHelper
     {
-        public void Delete(string name)
+        public static void Delete(string name)
         {
             var clientHandler = new HttpClientHandler();
             clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true;

@@ -2,59 +2,60 @@
 using OpenQA.Selenium;
 using System;
 using SeleniumExtras.WaitHelpers;
-using System.Linq;
+using DepositeCalcTests.Utilities;
 
 namespace DepositeCalcTests.Pages
 {
-    internal class RemindPasswordView
+    public class RemindPasswordView
     {
-        protected readonly IWebDriver driver;
-        public RemindPasswordView(IWebDriver driver)
+        private readonly IWebDriver _driver;
+        private readonly IWebElement _remindPasswordBtn;
+        public RemindPasswordView(IWebDriver driver, IWebElement RemindPasswordBtn)
         {
-            this.driver = driver;
+            _remindPasswordBtn = RemindPasswordBtn;
+            _driver = driver;
         }
 
         private string _frameId = "remindPasswordView";
-        private IWebElement RemindPasswordForm => driver.FindElement(By.Id(_frameId));
-        private IWebElement CloseBtn => driver.FindElement(By.XPath("//button[text()='x']"));
+        private IWebElement RemindPasswordForm => _driver.FindElement(By.Id(_frameId));
+        private IWebElement CloseBtn => _driver.FindElement(By.XPath("//button[text()='x']"));
         public bool IsShown => RemindPasswordForm.Displayed;
-        private IWebElement EmailFld => driver.FindElement(By.XPath("//input[@placeholder='Email address']"));
-        private IWebElement SendBtn => driver.FindElement(By.XPath("//button[text()='Send']"));
-        private IWebElement RemindPasswordBtn => driver.FindElement(By.XPath("//button[@id='remindBtn']"));
+        private IWebElement EmailFld => _driver.FindElement(By.XPath("//input[@placeholder='Email address']"));
+        private IWebElement SendBtn => _driver.FindElement(By.XPath("//button[text()='Send']"));
 
         private string ErrMessage
         {
             get
             {
                 var locator = By.Id("message");
-                IWebElement errMessageForRemindPasswordForm = driver.FindElement(locator);
-                new WebDriverWait(driver, TimeSpan.FromSeconds(2)).Until(_ => errMessageForRemindPasswordForm.Text.Length > 0);
+                IWebElement errMessageForRemindPasswordForm = _driver.FindElement(locator);
+                new WebDriverWait(_driver, TimeSpan.FromSeconds(2)).Until(_ => errMessageForRemindPasswordForm.Text.Length > 0);
                 return errMessageForRemindPasswordForm.Text;
             }
         }
 
         public void Open()
         {
-            RemindPasswordBtn.Click();
+            _remindPasswordBtn.Click();
         }
 
         public void Close()
         {
-            driver.SwitchTo().Frame(_frameId);
+            _driver.SwitchTo().Frame(_frameId);
             CloseBtn.Click();
-            driver.SwitchTo().DefaultContent();
+            _driver.SwitchTo().DefaultContent();
         }
 
         public (bool IsSuccessful, string Message) RemindPassword(string email)
         {
-            driver.SwitchTo().Frame(_frameId);
+            _driver.SwitchTo().Frame(_frameId);
             EmailFld.SendKeys(email);
             SendBtn.Click();
-            if (IsAlertPresent())
+            if (AlertHelper.IsAlertPresent(_driver))
             {
-                var wait = new WebDriverWait(driver, TimeSpan.FromMilliseconds(300));
+                var wait = new WebDriverWait(_driver, TimeSpan.FromMilliseconds(300));
                 wait.Until(ExpectedConditions.AlertIsPresent());
-                IAlert alert = driver.SwitchTo().Alert();
+                IAlert alert = _driver.SwitchTo().Alert();
                 var result = (true, alert.Text);
                 alert.Accept();
                 return result;
@@ -62,19 +63,6 @@ namespace DepositeCalcTests.Pages
             else
             {
                 return (false, ErrMessage);
-            }
-        }
-
-        public bool IsAlertPresent()
-        {
-            try
-            {
-                IAlert alert = driver.SwitchTo().Alert();
-                return true;
-            }
-            catch (NoAlertPresentException Ex)
-            {
-                return false;
             }
         }
     }

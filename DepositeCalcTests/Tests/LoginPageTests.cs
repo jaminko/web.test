@@ -7,14 +7,12 @@ namespace DepositeCalcTests.Tests
     public class LoginPageTests : BaseTest
     {
         private LoginPage loginPage;
-        private RemindPasswordView remindPasswordView;
 
         [SetUp]
         public void Setup()
         {
             InitDriver("https://localhost:5001/");
             loginPage = new LoginPage(driver);
-            remindPasswordView = new RemindPasswordView(driver);
             AssertPageTitle("Login");
         }
 
@@ -54,8 +52,8 @@ namespace DepositeCalcTests.Tests
         public void InvalidEmailOrUserRemindPasswordTests(string userEmail, string errorMessage)
         {
             // Act
-            remindPasswordView.Open();
-            var sendRemindResult = remindPasswordView.RemindPassword(userEmail);
+            loginPage.RemindPasswordForm.Open();
+            var sendRemindResult = loginPage.RemindPasswordForm.RemindPassword(userEmail);
 
             // Assert
             Assert.Multiple(() =>
@@ -69,19 +67,19 @@ namespace DepositeCalcTests.Tests
         public void ClosedRemindPasswordFormTest()
         {
             // Act
-            remindPasswordView.Open();
-            remindPasswordView.Close();
+            loginPage.RemindPasswordForm.Open();
+            loginPage.RemindPasswordForm.Close();
 
             // Assert
-            Assert.IsFalse(remindPasswordView.IsShown, "The password reminder form was not closed");
+            Assert.IsFalse(loginPage.RemindPasswordForm.IsShown, "The password reminder form was not closed");
         }
 
         [Test]
         public void ValidUserRemindPasswordTest()
         {
             // Act
-            remindPasswordView.Open();
-            var sendRemindResult = remindPasswordView.RemindPassword("test@test.com");
+            loginPage.RemindPasswordForm.Open();
+            var sendRemindResult = loginPage.RemindPasswordForm.RemindPassword("test@test.com");
 
             // Assert
             Assert.Multiple(() =>

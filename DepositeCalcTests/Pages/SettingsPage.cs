@@ -1,12 +1,11 @@
-﻿using NUnit.Framework;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using System;
 
 namespace DepositeCalcTests.Pages
 {
-    internal class SettingsPage : BasePage, IPage
+    public class SettingsPage : BasePage, IPage
     {
         public SettingsPage(IWebDriver driver) : base(driver)
         {

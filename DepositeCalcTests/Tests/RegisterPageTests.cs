@@ -4,10 +4,9 @@ using NUnit.Framework;
 
 namespace DepositeCalcTests.Tests
 {
-    internal class RegisterPageTests : BaseTest
+    public class RegisterPageTests : BaseTest
     {
         private RegisterPage registerPage;
-        private ApiHelper apiHelper;
 
         [SetUp]
         public void Setup()
@@ -15,19 +14,20 @@ namespace DepositeCalcTests.Tests
             InitDriver("https://localhost:5001/Register");
             registerPage = new RegisterPage(driver);
             AssertPageTitle("Register");
-            apiHelper = new ApiHelper();
-            apiHelper.Delete("tomcruise");
+            ApiHelper.Delete("tomcruise");
         }
 
-        [TestCase("", "", "", "", "Invalid email")]
-        [TestCase("", "tomcruise", "esiurcmot", "esiurcmot", "Invalid email")]
-        [TestCase("", "", "esiurcmot", "esiurcmot", "Invalid email")]
-        [TestCase("tomcruise", "tomcruise", "esiurcmot", "esiurcmot", "Invalid email")]
-        [TestCase("tomcruise", "tomcruise@", "esiurcmot", "esiurcmot", "Invalid email")]
-        [TestCase("", "tomcruisefail@test.com", "", "", "Fill in the remaining mandatory fields")]
-        [TestCase("tom", "tom@test.com", "", "", "Password is too short")]
-        [TestCase("", "", "", "esiurcmot", "Passwords are different")]
-        [TestCase("", "", "esiurcmot", "", "Passwords are different")]
+        [TestCase("", "", "", "", "Fill in the remaining mandatory fields")]
+        [TestCase("", "", "", "esiurcmot", "Fill in the remaining mandatory fields")]
+        [TestCase("", "", "esiurcmot", "esiurcmot", "Fill in the remaining mandatory fields")]
+        [TestCase("", "tomcruise", "esiurcmot", "esiurcmot", "Fill in the remaining mandatory fields")]
+        [TestCase("tomcruise", "tomcruise.@test.com", "esiurcmot", "esiurcmot", "Invalid email")]
+        [TestCase("tomcruise", ".tomcruise@test.com", "esiurcmot", "esiurcmot", "Invalid email")]
+        [TestCase("tomcruise", "@tomcruise.com", "esiurcmot", "esiurcmot", "Invalid email")]
+        [TestCase("tomcruise", "(),:;<>[]@test.com", "esiurcmot", "esiurcmot", "Invalid email")]
+        [TestCase("tomcruise", "@test.com", "esiurcmot", "esiurcmot", "Invalid email")]
+        [TestCase("tomcruise", "tomcruise@tomcruise@test.com", "esiurcmot", "esiurcmot", "Invalid email")]
+        [TestCase("tomcruise", "TestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTest@test.com", "esiurcmot", "esiurcmot", "Invalid email")]
         [TestCase("tomcruise", "tomcruise@test.com", "esiurcmot", "tomcruise", "Passwords are different")]
         [TestCase("tomcruise", "tomcruise@test.com", "tomcruise", "esiurcmot", "Passwords are different")]
         [TestCase("test", "test@test.com", "newyork1", "newyork1", "User with this email is already registered")]

@@ -4,7 +4,7 @@ using System;
 
 namespace DepositeCalcTests.Pages
 {
-    internal class LoginPage : BasePage, IPage
+    public class LoginPage : BasePage, IPage
     {
         public LoginPage(IWebDriver driver) : base(driver)
         {
@@ -14,7 +14,8 @@ namespace DepositeCalcTests.Pages
         private IWebElement LoginBtn => driver.FindElement(By.XPath("//button[@id='loginBtn']"));
         private IWebElement PassworldFld => driver.FindElement(By.XPath("//th[text()='Password:']/..//input"));
         private IWebElement RegisterLnk => driver.FindElement(By.XPath("//div[@onclick='Register()']"));
-
+        private IWebElement RemindPasswordBtn => driver.FindElement(By.XPath("//button[@id='remindBtn']"));
+        public RemindPasswordView RemindPasswordForm => new RemindPasswordView(driver, RemindPasswordBtn);
 
         public string ErrorMessage
         {

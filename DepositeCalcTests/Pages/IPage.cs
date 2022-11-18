@@ -1,6 +1,6 @@
 ﻿namespace DepositeCalcTests.Pages
 {
-    internal interface IPage
+    public interface IPage
     {
         public bool IsOpened();
     }

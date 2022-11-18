@@ -1,12 +1,12 @@
-﻿using OpenQA.Selenium;
+﻿using DepositeCalcTests.Utilities;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
-using SeleniumExtras.WaitHelpers;
 using System;
-using System.Threading;
+using System.Linq;
 
 namespace DepositeCalcTests.Pages
 {
-    internal class RegisterPage : BasePage
+    public class RegisterPage : BasePage
     {
         public RegisterPage(IWebDriver driver) : base(driver)
         {
@@ -38,8 +38,7 @@ namespace DepositeCalcTests.Pages
 
         public bool IsOpened()
         {
-            bool isConfirmPasswordFldPresent = driver.FindElements(By.XPath("//th[text()='Confirm password:']/..//input")).Count > 0;
-            return isConfirmPasswordFldPresent;
+            return driver.FindElements(By.XPath("//th[text()='Confirm password:']")).Any();
         }
 
         public (bool IsSuccessful, string Message) Register(string login, string email, string password, string confirmPassword)
@@ -49,11 +48,8 @@ namespace DepositeCalcTests.Pages
             PassworldFld.SendKeys(password);
             ConfirmPasswordFld.SendKeys(confirmPassword);
             RegisterBtn.Click();
-            Thread.Sleep(500);
-            if (IsAlertPresent())
+            if (AlertHelper.IsAlertPresent(driver))
             {
-                var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(1));
-                wait.Until(ExpectedConditions.AlertIsPresent());
                 IAlert alert = driver.SwitchTo().Alert();
                 var result = (true, alert.Text);
                 alert.Accept();
@@ -62,19 +58,6 @@ namespace DepositeCalcTests.Pages
             else
             {
                 return (false, ErrorMessage);
-            }
-        }
-
-        public bool IsAlertPresent()
-        {
-            try
-            {
-                IAlert alert = driver.SwitchTo().Alert();
-                return true;
-            }
-            catch (NoAlertPresentException Ex)
-            {
-                return false;
             }
         }
     }

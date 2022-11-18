@@ -3,7 +3,7 @@ using DepositeCalcTests.Pages;
 
 namespace DepositeCalcTests.Tests
 {
-    internal class SettingsPageTests : BaseTest
+    public class SettingsPageTests : BaseTest
     {
         private SettingsPage settingsPage;
 
