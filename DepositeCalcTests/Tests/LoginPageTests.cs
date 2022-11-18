@@ -61,7 +61,7 @@ namespace DepositeCalcTests.Tests
             Assert.Multiple(() =>
             {
                 Assert.IsFalse(sendRemindResult.IsSuccessful, "Operation was not successful");
-                Assert.AreEqual(sendRemindResult.Message, errorMessage);
+                Assert.AreEqual(errorMessage, sendRemindResult.Message);
             });
         }
 
@@ -87,7 +87,7 @@ namespace DepositeCalcTests.Tests
             Assert.Multiple(() =>
             {
                 Assert.IsTrue(sendRemindResult.IsSuccessful, "Operation was not successful");
-                Assert.AreEqual(sendRemindResult.Message, "Email with instructions was sent to test@test.com");
+                Assert.AreEqual("Email with instructions was sent to test@test.com", sendRemindResult.Message);
             });
         }
     }

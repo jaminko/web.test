@@ -1,5 +1,6 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
 using System;
 
 namespace DepositeCalcTests.Pages
@@ -17,7 +18,7 @@ namespace DepositeCalcTests.Pages
         private IWebElement ReturnToLoginLnk => driver.FindElement(By.XPath("//div[@onclick='Logout()']"));
         private IWebElement RegisterBtn => driver.FindElement(By.XPath("//button[@id='register']"));
 
-        public LoginPage Login()
+        public LoginPage ReturnToLogin()
         {
             ReturnToLoginLnk.Click();
             return new LoginPage(driver);
@@ -34,20 +35,45 @@ namespace DepositeCalcTests.Pages
             }
         }
 
-        public LoginPage Login(string login, string email, string password)
-        {
-            LoginFld.SendKeys(login);
-            EmailFld.SendKeys(email);
-            PassworldFld.SendKeys(password);
-            ConfirmPasswordFld.SendKeys(password);
-            RegisterBtn.Click();
-            return new LoginPage(driver);
-        }
-
         public bool IsOpened()
         {
             bool isConfirmPasswordFldPresent = driver.FindElements(By.XPath("//th[text()='Confirm password:']/..//input")).Count > 0;
             return isConfirmPasswordFldPresent;
+        }
+
+        public (bool IsSuccessful, string Message) Register(string login, string email, string password, string confirmPassword)
+        {
+            LoginFld.SendKeys(login);
+            EmailFld.SendKeys(email);
+            PassworldFld.SendKeys(password);
+            ConfirmPasswordFld.SendKeys(confirmPassword);
+            RegisterBtn.Click();
+            if (IsAlertPresent())
+            {
+                var wait = new WebDriverWait(driver, TimeSpan.FromMilliseconds(300));
+                wait.Until(ExpectedConditions.AlertIsPresent());
+                IAlert alert = driver.SwitchTo().Alert();
+                var result = (true, alert.Text);
+                alert.Accept();
+                return result;
+            }
+            else
+            {
+                return (false, ErrorMessage);
+            }
+        }
+
+        public bool IsAlertPresent()
+        {
+            try
+            {
+                IAlert alert = driver.SwitchTo().Alert();
+                return true;
+            }
+            catch (NoAlertPresentException Ex)
+            {
+                return false;
+            }
         }
     }
 }
