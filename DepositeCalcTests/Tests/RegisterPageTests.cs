@@ -14,7 +14,7 @@ namespace DepositeCalcTests.Tests
         {
             InitDriver("https://localhost:5001/Register");
             registerPage = new RegisterPage(driver);
-            //AssertPageTitle("Register");
+            AssertPageTitle("Register");
             apiHelper = new ApiHelper();
             apiHelper.Delete("tomcruise");
         }
