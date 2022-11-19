@@ -1,4 +1,5 @@
 using DepositeCalcTests.Pages;
+using DepositeCalcTests.Utilities;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 
@@ -7,6 +8,15 @@ namespace DepositeCalcTests.Tests
     public class LoginPageTests : BaseTest
     {
         private LoginPage loginPage;
+
+        [OneTimeSetUp]
+        public void OneTimeSetup()
+        {
+            ApiHelper.Delete("tomcruise");
+            InitDriver("https://localhost:5001/Register");
+            new RegisterPage(driver).Register("tomcruise", "tomcruise@test.com", "esiurcmot", "esiurcmot");
+            driver.Quit();
+        }
 
         [SetUp]
         public void Setup()
@@ -28,11 +38,12 @@ namespace DepositeCalcTests.Tests
             Assert.AreEqual("Incorrect credentials", loginPage.ErrorMessage, "Incorrect error message");
         }
 
-        [Test]
-        public void ValidLoginTest()
+        [TestCase("test", "newyork1")]
+        [TestCase("tomcruise", "esiurcmot")]
+        public void ValidLoginTest(string login, string password)
         {
             // Act
-            CalculatorPage calculatorPage = loginPage.Login();
+            CalculatorPage calculatorPage = loginPage.Login(login, password);
             calculatorPage.WeitForReady();
 
             // Assert
