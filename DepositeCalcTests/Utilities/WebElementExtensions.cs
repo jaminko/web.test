@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace DepositeCalcTests.Utilities
 {
-    internal static class WebElementExtensions
+    public static class WebElementExtensions
     {
         public static List<string> GetDropDownOptions(this IWebElement dropDown)
         {

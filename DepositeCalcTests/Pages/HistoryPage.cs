@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace DepositeCalcTests.Pages
 {
-    internal class HistoryPage : BasePage, IPage
+    public class HistoryPage : BasePage, IPage
     {
         public HistoryPage(IWebDriver driver) : base(driver)
         {

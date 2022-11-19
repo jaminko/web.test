@@ -4,7 +4,7 @@ using System;
 
 namespace DepositeCalcTests.Pages
 {
-    internal class LoginPage : BasePage, IPage
+    public class LoginPage : BasePage, IPage
     {
         public LoginPage(IWebDriver driver) : base(driver)
         {
@@ -13,6 +13,7 @@ namespace DepositeCalcTests.Pages
         private IWebElement LoginFld => driver.FindElement(By.XPath("//th[text()='User:']/..//input"));
         private IWebElement LoginBtn => driver.FindElement(By.XPath("//button[@id='loginBtn']"));
         private IWebElement PassworldFld => driver.FindElement(By.XPath("//th[text()='Password:']/..//input"));
+        private IWebElement RegisterLnk => driver.FindElement(By.XPath("//div[@onclick='Register()']"));
         private IWebElement RemindPasswordBtn => driver.FindElement(By.XPath("//button[@id='remindBtn']"));
         public RemindPasswordView RemindPasswordForm => new RemindPasswordView(driver, RemindPasswordBtn);
 
@@ -40,76 +41,11 @@ namespace DepositeCalcTests.Pages
             bool isLoginFldPresent = driver.FindElements(By.XPath("//th[text()='User:']/..//input")).Count > 0;
             return isLoginFldPresent;
         }
-    }
 
-    public class RemindPasswordView
-    {
-        private IWebDriver driver;
-        private IWebElement openButton;
-        public RemindPasswordView(IWebDriver driver, IWebElement openButton)
+        public RegisterPage Register()
         {
-            this.driver = driver;
-            this.openButton = openButton;
+            RegisterLnk.Click();
+            return new RegisterPage(driver);
         }
-
-        private string _frameId = "remindPasswordView";
-        private IWebElement RemindPasswordForm => driver.FindElement(By.Id(_frameId));
-        private IWebElement CloseBtn => driver.FindElement(By.XPath("//button[text()='x']"));
-        public bool IsShown => RemindPasswordForm.Displayed;
-        private IWebElement EmailFld => driver.FindElement(By.XPath("//input[@placeholder='Email address']"));
-        private IWebElement SendBtn => driver.FindElement(By.XPath("//button[text()='Send']"));
-
-        public string ErrMessageForRemindPasswordForm
-        {
-            get
-            {
-                var locator = By.Id("message");
-                IWebElement errMessageForRemindPasswordForm = driver.FindElement(locator);
-                new WebDriverWait(driver, TimeSpan.FromSeconds(2)).Until(_ => errMessageForRemindPasswordForm.Text.Length > 0);
-                return errMessageForRemindPasswordForm.Text;
-            }
-        }
-
-        public void Open()
-        {
-            openButton.Click();
-        }
-
-        public void Close()
-        {
-            driver.SwitchTo().Frame(_frameId);
-            CloseBtn.Click();
-            driver.SwitchTo().DefaultContent();
-        }
-
-        public (bool IsSuccessful, string Message) RemindPassword(string email)
-        {
-            driver.SwitchTo().Frame(_frameId);
-            EmailFld.SendKeys(email);
-            SendBtn.Click();
-            if (IsAlertPresent())
-            {
-                IAlert alert = driver.SwitchTo().Alert();
-                var result = (true, alert.Text);
-                alert.Accept();
-                return result;
-            }
-            else
-            {
-                return (false, ErrMessageForRemindPasswordForm);
-            }
-        }
-
-        public bool IsAlertPresent()
-        {
-            try
-            {
-                IAlert alert = driver.SwitchTo().Alert(); return true;
-            }
-            catch (NoAlertPresentException Ex)
-            {
-                return false;
-            }
-        }   
     }
 }

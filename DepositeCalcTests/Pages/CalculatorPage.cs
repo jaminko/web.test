@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace DepositeCalcTests.Pages
 {
-    internal class CalculatorPage : BasePage, IPage
+    public class CalculatorPage : BasePage, IPage
     {
         public CalculatorPage(IWebDriver driver) : base(driver)
         {
@@ -55,7 +55,6 @@ namespace DepositeCalcTests.Pages
                     FinancialYear360DaysBtn.Click();
                     return;
                 }
-
                 else if (value == "365")
                 {
                     FinancialYear365DaysBtn.Click();
@@ -109,7 +108,7 @@ namespace DepositeCalcTests.Pages
             return new SettingsPage(driver);
         }
 
-        public string Currency  => CurrentCurrency.Text;
+        public string Currency => CurrentCurrency.Text;
 
         public bool IsOpened()
         {

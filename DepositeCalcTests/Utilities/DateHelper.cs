@@ -4,7 +4,7 @@ using System.Globalization;
 
 namespace DepositeCalcTests.Utilities
 {
-    internal static class DateHelper
+    public static class DateHelper
     {
         public static string NumberOfMonthToNameOfMonth(string monthNumber)
         {

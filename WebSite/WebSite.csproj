@@ -7,10 +7,17 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.WebApi.HelpPage" Version="5.2.7" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.115.5" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.1" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Update="wwwroot\**\*"> <CopyToOutputDirectory>Always</CopyToOutputDirectory> </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="api.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

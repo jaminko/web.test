@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace DepositeCalcTests.Tests
 {
-    internal class CalculatorPageTests : BaseTest
+    public class CalculatorPageTests : BaseTest
     {
         private CalculatorPage calculatorPage;
 

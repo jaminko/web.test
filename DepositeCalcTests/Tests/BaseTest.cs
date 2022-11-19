@@ -14,7 +14,6 @@ namespace DepositeCalcTests.Tests
             var chromeDriverService = ChromeDriverService.CreateDefaultService();
             chromeDriverService.HideCommandPromptWindow = true;
             chromeDriverService.SuppressInitialDiagnosticInformation = true;
-            
             var options = new ChromeOptions
             {
                 UnhandledPromptBehavior = UnhandledPromptBehavior.Ignore,
@@ -22,7 +21,6 @@ namespace DepositeCalcTests.Tests
             };
             options.AddArgument("--silent");
             options.AddArgument("log-level=3");
-            
             driver = new ChromeDriver(chromeDriverService, options);
             driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(3);
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(300);

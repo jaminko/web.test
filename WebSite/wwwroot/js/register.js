@@ -14,7 +14,7 @@ Register = function () {
         contentType: 'application/json',
         data: JSON.stringify({ 'login': login, 'password': password1, 'password2': password2, 'email': email }),
         success: function (response) {
-            alert("Registration was successful.");
+            alert("Registration was successful");
             window.location.href = '/';
         },
         error: function (error) {
